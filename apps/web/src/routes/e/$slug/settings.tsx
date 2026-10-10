@@ -55,15 +55,16 @@ function EventSettings() {
     }
   }
 
-  const toggle = (key: 'guest_upload' | 'guest_view') => async (value: boolean) => {
-    queryClient.setQueryData(keys.event(slug), { ...event, [key]: value })
-    try {
-      await patch({ [key]: value })
-    } catch {
-      queryClient.setQueryData(keys.event(slug), event)
-      toast(t('common.error'))
+  const toggle =
+    (key: 'guest_upload' | 'guest_view' | 'faces_enabled') => async (value: boolean) => {
+      queryClient.setQueryData(keys.event(slug), { ...event, [key]: value })
+      try {
+        await patch({ [key]: value })
+      } catch {
+        queryClient.setQueryData(keys.event(slug), event)
+        toast(t('common.error'))
+      }
     }
-  }
 
   return (
     <>
@@ -107,6 +108,11 @@ function EventSettings() {
             label={t('eventSettings.guestView')}
             checked={event.guest_view}
             onChange={toggle('guest_view')}
+          />
+          <SwitchRow
+            label={t('eventSettings.faces')}
+            checked={event.faces_enabled !== false}
+            onChange={toggle('faces_enabled')}
           />
         </section>
       </main>

@@ -42,3 +42,22 @@
   font-size: var(--t-12);
   color: var(--muted);
 }
+
+.lg {
+  width: 112px;
+}
+
+.lg .face {
+  width: 96px;
+  height: 96px;
+}
+
+.selected .face {
+  outline: 3px solid var(--ink);
+  outline-offset: 2px;
+}
+
+.chip:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}

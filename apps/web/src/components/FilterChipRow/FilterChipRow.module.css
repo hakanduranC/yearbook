@@ -42,3 +42,7 @@
   font-size: var(--t-12);
   opacity: 0.7;
 }
+
+.chipSaved {
+  border-style: dashed;
+}

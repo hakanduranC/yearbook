@@ -1,8 +1,16 @@
 import type { MediaFilter } from '~/lib/api/types'
 
-/** Key convention: ['me'], ['events'], ['event', slug, ...sub], ['media', id]. */
+/** Key convention: ['me', ...], ['events'], ['event', slug, ...sub], ['media', id, ...], ['person', id], ['album', id]. */
 export const keys = {
   me: () => ['me'] as const,
+  myPeople: () => ['me', 'people'] as const,
+  suggestions: () => ['me', 'suggestions'] as const,
+  years: () => ['me', 'years'] as const,
+  year: (year: number) => ['me', 'years', year] as const,
+  library: (unassigned: boolean) => ['me', 'library', unassigned] as const,
+  libraryAll: () => ['me', 'library'] as const,
+  imports: () => ['me', 'imports'] as const,
+  import: (id: string) => ['me', 'imports', id] as const,
   events: () => ['events'] as const,
   event: (slug: string) => ['event', slug] as const,
   eventAll: (slug: string) => ['event', slug] as const,
@@ -10,5 +18,16 @@ export const keys = {
   mediaAll: (slug: string) => ['event', slug, 'media'] as const,
   status: (slug: string) => ['event', slug, 'status'] as const,
   hostUploads: (slug: string) => ['event', slug, 'uploads'] as const,
+  people: (slug: string) => ['event', slug, 'people'] as const,
+  highlights: (slug: string) => ['event', slug, 'best'] as const,
+  albums: (slug: string) => ['event', slug, 'albums'] as const,
+  search: (slug: string | null, q: string) => ['search', slug ?? '*', q] as const,
+  savedCommands: (slug: string | null) => ['commands', slug ?? '*'] as const,
   mediaDetail: (id: string) => ['media', id] as const,
+  mediaFaces: (id: string) => ['media', id, 'faces'] as const,
+  person: (id: string) => ['person', id] as const,
+  personFaces: (id: string) => ['person', id, 'faces'] as const,
+  personAll: () => ['person'] as const,
+  album: (id: string) => ['album', id] as const,
+  share: (shareId: string) => ['share', shareId] as const,
 }

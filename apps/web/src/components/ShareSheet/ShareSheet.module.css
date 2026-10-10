@@ -1,0 +1,27 @@
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+
+.link {
+  display: block;
+  min-height: var(--tap);
+  padding: var(--s-3);
+  border: 1px solid var(--border);
+  background: var(--surface-raised);
+  font-size: var(--t-14);
+  word-break: break-all;
+}
+
+.hint {
+  font-size: var(--t-13);
+  color: var(--muted);
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  margin-top: var(--s-2);
+}

@@ -10,6 +10,11 @@ export type EmptyKind =
   | 'mine'
   | 'not-found'
   | 'share'
+  | 'no-people'
+  | 'search'
+  | 'no-year'
+  | 'no-highlights'
+  | 'library'
 
 const copy: Record<
   EmptyKind,
@@ -22,6 +27,11 @@ const copy: Record<
   mine: { title: 'empty.mine.title', body: 'empty.mine.body' },
   'not-found': { title: 'empty.notFound.title', body: 'empty.notFound.body' },
   share: { title: 'empty.share.title', body: 'empty.share.body' },
+  'no-people': { title: 'people.empty.title', body: 'people.empty.body' },
+  search: { title: 'search.empty.title', body: 'search.tryThese' },
+  'no-year': { title: 'year.empty.title', body: 'year.empty.body' },
+  'no-highlights': { title: 'best.empty.title', body: 'best.empty.body' },
+  library: { title: 'library.title', body: 'library.empty' },
 }
 
 export function EmptyState({

@@ -1,21 +1,12 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { EmptyState } from '~/components/EmptyState'
-import { PageHeader } from '~/components/PageHeader'
-import { useT } from '~/i18n'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 
+/** "Photos of me" lives in the gallery under the `me` filter; this path stays for old links. */
 export const Route = createFileRoute('/e/$slug/me')({
-  component: Page,
+  beforeLoad: ({ params }) => {
+    throw redirect({
+      to: '/e/$slug/photos',
+      params: { slug: params.slug },
+      search: { filter: 'me' },
+    })
+  },
 })
-
-function Page() {
-  const t = useT()
-  const { slug } = Route.useParams()
-  return (
-    <>
-      <PageHeader title={t('me.title')} back="/e/$slug" backParams={{ slug }} />
-      <main className="page page--narrow">
-        <EmptyState kind="coming-soon" />
-      </main>
-    </>
-  )
-}

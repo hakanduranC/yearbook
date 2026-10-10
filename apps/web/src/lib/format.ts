@@ -1,4 +1,4 @@
-import type { Locale } from '~/i18n'
+import { intlTag, type Locale } from '~/i18n'
 
 const dateCache = new Map<string, Intl.DateTimeFormat>()
 
@@ -10,7 +10,7 @@ function formatter(
   const key = `${locale}|${timeZone ?? ''}|${JSON.stringify(options)}`
   let f = dateCache.get(key)
   if (!f) {
-    f = new Intl.DateTimeFormat(locale, { ...options, timeZone })
+    f = new Intl.DateTimeFormat(intlTag(locale), { ...options, timeZone })
     dateCache.set(key, f)
   }
   return f
@@ -72,4 +72,17 @@ export function toDateTimeLocal(iso: string): string {
 export function fromDateTimeLocal(value: string): string {
   const d = new Date(value)
   return Number.isNaN(d.getTime()) ? '' : d.toISOString()
+}
+
+/** "14. Juni 2026" / "June 14, 2026" / "14 Haziran 2026" */
+export function formatLongDate(iso: string, locale: Locale, timeZone?: string): string {
+  const date = new Date(iso)
+  if (Number.isNaN(date.getTime())) return ''
+  return formatter(locale, { day: 'numeric', month: 'long', year: 'numeric' }, timeZone).format(
+    date,
+  )
+}
+
+export function formatNumber(value: number, locale: Locale): string {
+  return new Intl.NumberFormat(intlTag(locale)).format(value)
 }

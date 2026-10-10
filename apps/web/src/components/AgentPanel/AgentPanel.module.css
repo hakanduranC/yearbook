@@ -1,0 +1,65 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+  padding: 0 var(--page-x) var(--s-12);
+  max-width: 720px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.scope {
+  font-size: var(--t-12);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.suggestions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+.turns {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-6);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.turn {
+  padding-top: var(--s-4);
+  border-top: 1px solid var(--border);
+}
+
+.turn:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.thinking {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+
+.thinkingLine {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: var(--t-18);
+  color: var(--muted);
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.saveForm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+}

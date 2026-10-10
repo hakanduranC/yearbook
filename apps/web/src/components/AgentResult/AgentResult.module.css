@@ -1,0 +1,68 @@
+.result {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+
+.notice {
+  font-size: var(--t-13);
+  color: var(--muted);
+  padding: var(--s-2) 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.understood {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: var(--t-18);
+  color: var(--you);
+}
+
+.title {
+  font-size: var(--t-14);
+  font-weight: 500;
+}
+
+.question {
+  font-family: var(--font-display);
+  font-size: var(--t-24);
+  line-height: 1.15;
+}
+
+.value {
+  font-family: var(--font-display);
+  font-size: var(--t-40);
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+
+.detail {
+  font-size: var(--t-14);
+  color: var(--muted);
+}
+
+.faces {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+}
+
+.album {
+  border: 1px solid var(--border);
+  background: var(--surface-raised);
+  padding: var(--s-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+.albumActions {
+  display: flex;
+  gap: var(--s-2);
+  margin-top: var(--s-2);
+}
+
+.save {
+  display: flex;
+  justify-content: flex-start;
+}

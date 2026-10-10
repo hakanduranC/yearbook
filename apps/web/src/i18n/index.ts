@@ -1,6 +1,7 @@
 import { createContext, useContext } from 'react'
 import { de } from './de'
 import { en } from './en'
+import { tr } from './tr'
 import type { Entry, Locale, Plural } from './types'
 
 export type { Locale } from './types'
@@ -8,16 +9,16 @@ export type { Locale } from './types'
 export type Key = keyof typeof de
 export type Params = Record<string, string | number>
 
-export const locales: readonly Locale[] = ['de', 'en']
+export const locales: readonly Locale[] = ['de', 'en', 'tr']
 export const defaultLocale: Locale = 'de'
 
-const dictionaries: Record<Locale, Record<Key, Entry>> = { de, en }
+const dictionaries: Record<Locale, Record<Key, Entry>> = { de, en, tr }
 
 const pluralRules = new Map<Locale, Intl.PluralRules>()
 function rules(locale: Locale): Intl.PluralRules {
   let r = pluralRules.get(locale)
   if (!r) {
-    r = new Intl.PluralRules(locale)
+    r = new Intl.PluralRules(intlTag(locale))
     pluralRules.set(locale, r)
   }
   return r
@@ -46,7 +47,12 @@ export function t(locale: Locale, key: Key, params?: Params): string {
 }
 
 export function isLocale(value: unknown): value is Locale {
-  return value === 'de' || value === 'en'
+  return value === 'de' || value === 'en' || value === 'tr'
+}
+
+/** BCP 47 tag for Intl APIs. Turkish formats as tr-TR. */
+export function intlTag(locale: Locale): string {
+  return locale === 'tr' ? 'tr-TR' : locale
 }
 
 /** Picks a locale from the yb_lang cookie, then Accept-Language, then German. */
@@ -89,4 +95,4 @@ export function useT(): Translate {
   return (key, params) => t(locale, key, params)
 }
 
-export { de, en }
+export { de, en, tr }

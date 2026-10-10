@@ -1,6 +1,13 @@
 import { infiniteQueryOptions, queryOptions } from '@tanstack/react-query'
-import { api, ok } from '~/lib/api/client'
-import type { LikeResult, MediaDetail, MediaFilter, MediaPage, ZipTicket } from '~/lib/api/types'
+import { api, ok, okVoid } from '~/lib/api/client'
+import type {
+  GridItem,
+  LikeResult,
+  MediaDetail,
+  MediaFilter,
+  MediaPage,
+  ZipTicket,
+} from '~/lib/api/types'
 import { keys } from './keys'
 
 export const PAGE_SIZE = 60
@@ -39,7 +46,29 @@ export async function unlikeMedia(id: string): Promise<LikeResult> {
 }
 
 export async function deleteMedia(id: string): Promise<void> {
-  ok(await api.DELETE('/media/{media_id}', { params: { path: { media_id: id } } }))
+  okVoid(await api.DELETE('/media/{media_id}', { params: { path: { media_id: id } } }))
+}
+
+export function highlightsQuery(slug: string, limit = 24) {
+  return queryOptions({
+    queryKey: keys.highlights(slug),
+    queryFn: async (): Promise<MediaPage> =>
+      ok(await api.GET('/events/{slug}/best', { params: { path: { slug }, query: { limit } } })),
+  })
+}
+
+/** Loads grid items by id, for agent results that carry media_ids without items. */
+export async function fetchMediaByIds(ids: string[], max = 60): Promise<GridItem[]> {
+  const detail = await Promise.all(
+    ids.slice(0, max).map(async (id) => {
+      try {
+        return ok(await api.GET('/media/{media_id}', { params: { path: { media_id: id } } }))
+      } catch {
+        return null
+      }
+    }),
+  )
+  return detail.filter((d): d is MediaDetail => d !== null)
 }
 
 export async function createZip(media_ids: string[]): Promise<ZipTicket> {

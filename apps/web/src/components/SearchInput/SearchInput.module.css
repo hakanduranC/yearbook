@@ -35,3 +35,25 @@
 .go:disabled {
   opacity: 0.5;
 }
+
+.inline {
+  position: sticky;
+  top: calc(56px + var(--safe-top));
+  bottom: auto;
+  left: 0;
+  right: 0;
+  margin: 0;
+  max-width: none;
+  z-index: var(--z-sticky);
+}
+
+.go[aria-busy="true"] {
+  opacity: 0.6;
+}
+
+/* With the keyboard open on phones the visual viewport shrinks; keep the input reachable. */
+@supports (bottom: env(keyboard-inset-height)) {
+  .wrap:not(.inline) {
+    bottom: calc(var(--bar-h) + var(--safe-bottom) + var(--s-3) + env(keyboard-inset-height, 0px));
+  }
+}

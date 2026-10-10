@@ -1345,6 +1345,15 @@ export type components = {
             result: components["schemas"]["AgentResult"];
             suggestions: components["schemas"]["Chip"][];
             saveable: boolean;
+            /** @description Files the agent produced in the sandbox (charts, collages); short-lived URLs */
+            attachments?: components["schemas"]["Attachment"][];
+        };
+        Attachment: {
+            name: string;
+            url: string;
+            mime: string;
+            width?: number;
+            height?: number;
         };
         SavedCommand: {
             id: components["schemas"]["Id"];
@@ -1360,6 +1369,13 @@ export type components = {
             };
             /** @description Approved by the host for every guest of the event */
             shared?: boolean;
+            /**
+             * @description python tools run only in the sandbox
+             * @enum {string}
+             */
+            kind?: "sql" | "search" | "python";
+            created_by_agent?: boolean;
+            run_count?: number;
         };
         Album: {
             id: components["schemas"]["Id"];

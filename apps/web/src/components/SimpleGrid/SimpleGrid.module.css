@@ -1,0 +1,53 @@
+.grid {
+  display: grid;
+  gap: var(--grid-gap);
+}
+
+.three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (min-width: 600px) {
+  .three {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+  .two {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .three {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+  .two {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.skeleton {
+  display: block;
+  aspect-ratio: 1;
+  background: var(--placeholder-2);
+  animation: shimmer 1.8s var(--ease) infinite;
+}
+
+@keyframes shimmer {
+  0%,
+  100% {
+    background-color: var(--placeholder-1);
+  }
+  50% {
+    background-color: var(--placeholder-3);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+  }
+}

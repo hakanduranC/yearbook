@@ -1,5 +1,5 @@
 import { queryOptions } from '@tanstack/react-query'
-import { api, ok } from '~/lib/api/client'
+import { api, ok, okVoid } from '~/lib/api/client'
 import type { Event, EventCreate, EventStatus, EventUpdate, Guest } from '~/lib/api/types'
 import { keys } from './keys'
 
@@ -32,6 +32,10 @@ export async function createEvent(body: EventCreate): Promise<Event> {
 
 export async function updateEvent(slug: string, body: EventUpdate): Promise<Event> {
   return ok(await api.PATCH('/events/{slug}', { params: { path: { slug } }, body }))
+}
+
+export async function deleteEvent(slug: string): Promise<void> {
+  okVoid(await api.DELETE('/events/{slug}', { params: { path: { slug } } }))
 }
 
 export async function ensureGuest(slug: string): Promise<Guest> {

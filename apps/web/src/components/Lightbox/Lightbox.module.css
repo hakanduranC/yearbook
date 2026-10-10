@@ -129,3 +129,8 @@
   color: var(--like);
   border-color: var(--like);
 }
+
+.danger {
+  color: var(--like);
+  border-color: var(--like);
+}

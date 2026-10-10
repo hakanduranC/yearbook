@@ -1,5 +1,5 @@
 import type { InfiniteData, QueryClient } from '@tanstack/react-query'
-import type { GridItem, MediaFilter, MediaPage } from '~/lib/api/types'
+import { type GridItem, isMediaFilter, type MediaFilter, type MediaPage } from '~/lib/api/types'
 import { keys } from '~/lib/queries/keys'
 
 export type LiveEvent =
@@ -30,14 +30,21 @@ export function filterAdmits(filter: MediaFilter, item: GridItem): boolean {
       return item.kind === 'video'
     case 'mine':
       return item.mine === true
+    case 'me':
+      return item.me === true
     case 'best':
       return item.score !== null && item.score !== undefined
+    case 'library':
+      return false
   }
+  if (filter.startsWith('person:')) return item.person_ids.includes(filter.slice(7))
+  // album:{id}: membership is curated, never inferred from a live event.
+  return false
 }
 
 function filterOfKey(key: readonly unknown[]): MediaFilter | null {
   const f = key[3]
-  return f === 'all' || f === 'best' || f === 'videos' || f === 'mine' ? f : null
+  return isMediaFilter(f) ? f : null
 }
 
 function mapPages(data: MediaData, fn: (page: MediaPage, index: number) => MediaPage): MediaData {
@@ -145,7 +152,12 @@ export function applyLiveEvent(queryClient: QueryClient, slug: string, event: Li
       queryClient.invalidateQueries({ queryKey: keys.event(slug) })
       return
     case 'people.updated':
-      queryClient.invalidateQueries({ queryKey: keys.eventAll(slug) })
+      // media.analyzed is not sent: people lists, person details and the event counts
+      // (people, faces_done, of_you) all refresh here.
+      queryClient.invalidateQueries({ queryKey: keys.people(slug) })
+      queryClient.invalidateQueries({ queryKey: keys.event(slug), exact: true })
+      queryClient.invalidateQueries({ queryKey: keys.personAll() })
+      queryClient.invalidateQueries({ queryKey: keys.media(slug, 'me') })
       return
   }
 }

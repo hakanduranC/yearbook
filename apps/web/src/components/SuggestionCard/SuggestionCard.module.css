@@ -1,0 +1,45 @@
+.card {
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  gap: var(--s-4);
+  align-items: start;
+  padding: var(--s-4);
+  border: 1px solid var(--you);
+  background: var(--you-soft);
+}
+
+.crop {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--placeholder-2);
+  display: block;
+  border: 2px solid var(--you);
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-1);
+  min-width: 0;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: var(--t-20);
+  line-height: 1.15;
+  color: var(--you);
+}
+
+.meta {
+  font-size: var(--t-13);
+  color: var(--muted);
+}
+
+.actions {
+  display: flex;
+  gap: var(--s-2);
+  margin-top: var(--s-2);
+}

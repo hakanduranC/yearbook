@@ -23,6 +23,10 @@ interface Props {
   onNavigate: (id: string) => void
   onToggleLike: (id: string, liked: boolean) => void
   onShared?: (how: 'native' | 'copied') => void
+  /** Opens the people sheet (faces in this photo). */
+  onPeople?: () => void
+  /** Asks to delete; shown only when the detail says `can_delete`. */
+  onDelete?: () => void
 }
 
 function Heart({ filled }: { filled: boolean }) {
@@ -49,6 +53,8 @@ export function Lightbox({
   onNavigate,
   onToggleLike,
   onShared,
+  onPeople,
+  onDelete,
 }: Props) {
   const t = useT()
   const locale = useLocale()
@@ -257,6 +263,25 @@ export function Lightbox({
             {t('common.share')}
           </button>
         </div>
+        {onPeople || (onDelete && detail.can_delete) ? (
+          <div className={styles.actions}>
+            {onPeople ? (
+              <button type="button" className={styles.action} onClick={onPeople} data-people>
+                {t('lightbox.people')}
+              </button>
+            ) : null}
+            {onDelete && detail.can_delete ? (
+              <button
+                type="button"
+                className={`${styles.action} ${styles.danger}`}
+                onClick={onDelete}
+                data-delete
+              >
+                {t('common.delete')}
+              </button>
+            ) : null}
+          </div>
+        ) : null}
       </div>
     </dialog>
   )

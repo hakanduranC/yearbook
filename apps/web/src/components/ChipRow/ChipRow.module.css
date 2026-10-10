@@ -1,0 +1,53 @@
+.row {
+  display: flex;
+  gap: var(--s-2);
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: var(--s-2) 0;
+  -webkit-overflow-scrolling: touch;
+}
+
+.row::-webkit-scrollbar {
+  display: none;
+}
+
+.wrap {
+  flex-wrap: wrap;
+  overflow: visible;
+}
+
+.chip {
+  flex: none;
+  min-height: 40px;
+  padding: 0 var(--s-4);
+  border: 1px solid var(--border-strong);
+  background: transparent;
+  color: var(--ink);
+  font-size: var(--t-14);
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  text-align: left;
+}
+
+.active {
+  background: var(--ink);
+  color: var(--on-primary);
+}
+
+.you {
+  border-color: var(--you);
+  color: var(--you);
+}
+
+.you.active {
+  background: var(--you);
+  color: #fff;
+}
+
+.quiet {
+  border-color: var(--border);
+  color: var(--muted);
+  font-weight: 400;
+}

@@ -1,5 +1,5 @@
 import { queryOptions } from '@tanstack/react-query'
-import { api, ok } from '~/lib/api/client'
+import { api, ok, okVoid } from '~/lib/api/client'
 import type { Me, MeUpdate } from '~/lib/api/types'
 import { keys } from './keys'
 
@@ -17,7 +17,7 @@ export async function updateMe(body: MeUpdate): Promise<Me> {
 
 export async function requestMagicLink(body: {
   email: string
-  locale?: 'de' | 'en'
+  locale?: 'de' | 'en' | 'tr'
   next?: string
 }) {
   return ok(await api.POST('/auth/magic', { body }))
@@ -29,4 +29,8 @@ export async function verifyMagicLink(token: string) {
 
 export async function logout() {
   return ok(await api.POST('/auth/logout'))
+}
+
+export async function deleteMyFaceData(): Promise<void> {
+  okVoid(await api.DELETE('/me/face-data'))
 }
