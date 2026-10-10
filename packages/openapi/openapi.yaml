@@ -19,6 +19,12 @@ tags:
   - name: uploads
   - name: media
   - name: host
+  - name: people
+  - name: search
+  - name: agent
+  - name: albums
+  - name: yearbook
+  - name: import
 
 paths:
   /health:
@@ -300,7 +306,14 @@ paths:
       parameters:
         - name: filter
           in: query
-          schema: { type: string, enum: [all, best, videos, mine], default: all }
+          description: all | best | videos | mine | me | person:{id} | album:{id} | library
+          schema: { type: string, default: all }
+        - name: age_min
+          in: query
+          schema: { type: integer, minimum: 0 }
+        - name: age_max
+          in: query
+          schema: { type: integer, minimum: 0 }
         - name: cursor
           in: query
           schema: { type: string }
@@ -404,6 +417,563 @@ paths:
             application/zip:
               schema: { type: string, format: binary }
 
+  # ---------------------------------------------------------------- people
+  /events/{slug}/people:
+    parameters: [{ $ref: "#/components/parameters/Slug" }]
+    get:
+      operationId: listPeople
+      tags: [people]
+      responses:
+        "200":
+          description: Face clusters of the event, biggest first; hidden persons omitted unless they are the viewer
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PeopleList" }
+  /people/{person_id}:
+    parameters: [{ $ref: "#/components/parameters/PersonId" }]
+    get:
+      operationId: getPerson
+      tags: [people]
+      responses:
+        "200":
+          description: One person
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Person" }
+    patch:
+      operationId: updatePerson
+      tags: [people]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/PersonUpdate" }
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Person" }
+  /people/{person_id}/claim:
+    parameters: [{ $ref: "#/components/parameters/PersonId" }]
+    post:
+      operationId: claimPerson
+      tags: [people]
+      description: Links the person to the caller's identity ("This is me"). Guests get an identity tied to their cookie.
+      responses:
+        "200":
+          description: Linked
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Person" }
+    delete:
+      operationId: unclaimPerson
+      tags: [people]
+      responses:
+        "200":
+          description: Unlinked
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Person" }
+  /people/merge:
+    post:
+      operationId: mergePeople
+      tags: [people]
+      description: Host, or the claimant for persons that are them. Keeps the first id.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [person_ids]
+              properties:
+                person_ids:
+                  type: array
+                  minItems: 2
+                  items: { $ref: "#/components/schemas/Id" }
+      responses:
+        "200":
+          description: The surviving person
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Person" }
+  /people/{person_id}/split:
+    parameters: [{ $ref: "#/components/parameters/PersonId" }]
+    post:
+      operationId: splitPerson
+      tags: [people]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [face_ids]
+              properties:
+                face_ids:
+                  type: array
+                  minItems: 1
+                  items: { $ref: "#/components/schemas/Id" }
+      responses:
+        "200":
+          description: The new person made of the given faces
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Person" }
+  /faces/{face_id}/not-person:
+    parameters: [{ $ref: "#/components/parameters/FaceId" }]
+    post:
+      operationId: faceNotPerson
+      tags: [people]
+      description: Marks the face as wrongly assigned; records a cannot-link constraint and reclusters.
+      responses:
+        "204": { description: Recorded }
+  /faces/{face_id}/crop.jpg:
+    parameters: [{ $ref: "#/components/parameters/FaceId" }]
+    get:
+      operationId: getFaceCrop
+      tags: [people]
+      responses:
+        "200":
+          description: Private face crop, served through the API
+          content:
+            image/jpeg:
+              schema: { type: string, format: binary }
+  /media/{media_id}/faces:
+    parameters: [{ $ref: "#/components/parameters/MediaId" }]
+    get:
+      operationId: listMediaFaces
+      tags: [people]
+      responses:
+        "200":
+          description: Faces in one item with boxes and persons
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [faces]
+                properties:
+                  faces:
+                    type: array
+                    items: { $ref: "#/components/schemas/Face" }
+  /me/people:
+    get:
+      operationId: listMyPeople
+      tags: [people]
+      security: [{ session: [] }]
+      responses:
+        "200":
+          description: Persons linked to my identity, across events
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PeopleList" }
+  /me/suggestions:
+    get:
+      operationId: listMySuggestions
+      tags: [people]
+      security: [{ session: [] }]
+      responses:
+        "200":
+          description: Unclaimed persons in my events that are probably me
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [suggestions]
+                properties:
+                  suggestions:
+                    type: array
+                    items: { $ref: "#/components/schemas/Suggestion" }
+  /me/face-data:
+    delete:
+      operationId: deleteMyFaceData
+      tags: [people]
+      security: [{ session: [] }]
+      description: Removes identity links and the faces of linked persons. Photos stay.
+      responses:
+        "204": { description: Deleted }
+
+  # ---------------------------------------------------------------- search and agent
+  /events/{slug}/search:
+    parameters: [{ $ref: "#/components/parameters/Slug" }]
+    get:
+      operationId: searchEventMedia
+      tags: [search]
+      description: Hybrid text search without the language model (vector + full text + tags).
+      parameters:
+        - { name: q, in: query, required: true, schema: { type: string, minLength: 1, maxLength: 200 } }
+        - { name: limit, in: query, schema: { type: integer, minimum: 1, maximum: 200, default: 60 } }
+      responses:
+        "200":
+          description: Matching items, best match first
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/MediaPage" }
+  /search:
+    get:
+      operationId: searchMyMedia
+      tags: [search]
+      security: [{ session: [] }]
+      parameters:
+        - { name: q, in: query, required: true, schema: { type: string, minLength: 1, maxLength: 200 } }
+        - { name: limit, in: query, schema: { type: integer, minimum: 1, maximum: 200, default: 60 } }
+      responses:
+        "200":
+          description: Matching items across my events and library
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/MediaPage" }
+  /agent/messages:
+    post:
+      operationId: sendAgentMessage
+      tags: [agent]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/AgentRequest" }
+      responses:
+        "200":
+          description: A structured result the UI renders
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AgentResponse" }
+        "503": { $ref: "#/components/responses/Error" }
+  /agent/commands:
+    get:
+      operationId: listSavedCommands
+      tags: [agent]
+      parameters:
+        - { name: event_slug, in: query, schema: { type: string } }
+      responses:
+        "200":
+          description: Saved commands visible in this scope
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [commands]
+                properties:
+                  commands:
+                    type: array
+                    items: { $ref: "#/components/schemas/SavedCommand" }
+    post:
+      operationId: saveCommand
+      tags: [agent]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [turn_id, label]
+              properties:
+                turn_id: { $ref: "#/components/schemas/Id" }
+                label: { type: string, minLength: 1, maxLength: 30 }
+      responses:
+        "201":
+          description: Saved
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SavedCommand" }
+  /agent/commands/{command_id}:
+    parameters:
+      - { name: command_id, in: path, required: true, schema: { $ref: "#/components/schemas/Id" } }
+    delete:
+      operationId: deleteSavedCommand
+      tags: [agent]
+      responses:
+        "204": { description: Deleted }
+  /agent/commands/{command_id}/run:
+    parameters:
+      - { name: command_id, in: path, required: true, schema: { $ref: "#/components/schemas/Id" } }
+    post:
+      operationId: runSavedCommand
+      tags: [agent]
+      description: Runs a saved command with no language model call.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                event_slug: { type: string }
+                params: { type: object, additionalProperties: true }
+      responses:
+        "200":
+          description: Result
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AgentResponse" }
+  /media/{media_id}/describe:
+    parameters: [{ $ref: "#/components/parameters/MediaId" }]
+    post:
+      operationId: describeMedia
+      tags: [agent]
+      description: User-initiated. Sends this one image to the vision model and returns a description.
+      responses:
+        "200":
+          description: Description
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [text]
+                properties:
+                  text: { type: string }
+        "503": { $ref: "#/components/responses/Error" }
+
+  # ---------------------------------------------------------------- albums, highlights, shares
+  /events/{slug}/best:
+    parameters: [{ $ref: "#/components/parameters/Slug" }]
+    get:
+      operationId: listEventHighlights
+      tags: [media]
+      parameters:
+        - { name: limit, in: query, schema: { type: integer, minimum: 1, maximum: 100, default: 24 } }
+      responses:
+        "200":
+          description: Auto-picked best photos, diverse across time, one per burst
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/MediaPage" }
+  /events/{slug}/albums:
+    parameters: [{ $ref: "#/components/parameters/Slug" }]
+    get:
+      operationId: listEventAlbums
+      tags: [albums]
+      responses:
+        "200":
+          description: Albums of the event the viewer may see
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [albums]
+                properties:
+                  albums:
+                    type: array
+                    items: { $ref: "#/components/schemas/Album" }
+  /albums:
+    post:
+      operationId: createAlbum
+      tags: [albums]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/AlbumCreate" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Album" }
+  /albums/{album_id}:
+    parameters: [{ $ref: "#/components/parameters/AlbumId" }]
+    get:
+      operationId: getAlbum
+      tags: [albums]
+      responses:
+        "200":
+          description: Album with items
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AlbumDetail" }
+    patch:
+      operationId: updateAlbum
+      tags: [albums]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/AlbumUpdate" }
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AlbumDetail" }
+    delete:
+      operationId: deleteAlbum
+      tags: [albums]
+      responses:
+        "204": { description: Deleted }
+  /albums/{album_id}/share:
+    parameters: [{ $ref: "#/components/parameters/AlbumId" }]
+    post:
+      operationId: shareAlbum
+      tags: [albums]
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                expires_days: { type: integer, minimum: 1, maximum: 365 }
+                allow_download: { type: boolean, default: true }
+      responses:
+        "201":
+          description: Share link
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Share" }
+  /s/{share_id}:
+    parameters:
+      - { name: share_id, in: path, required: true, schema: { $ref: "#/components/schemas/Id" } }
+    get:
+      operationId: getSharedAlbum
+      tags: [albums]
+      security: []
+      responses:
+        "200":
+          description: Read-only album for anyone with the link
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AlbumDetail" }
+        "404": { $ref: "#/components/responses/Error" }
+
+  # ---------------------------------------------------------------- yearbook
+  /me/years:
+    get:
+      operationId: listMyYears
+      tags: [yearbook]
+      security: [{ session: [] }]
+      responses:
+        "200":
+          description: Years with the events I appear in
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [years]
+                properties:
+                  years:
+                    type: array
+                    items: { $ref: "#/components/schemas/YearSummary" }
+  /me/years/{year}:
+    parameters:
+      - { name: year, in: path, required: true, schema: { type: integer } }
+    get:
+      operationId: getMyYear
+      tags: [yearbook]
+      security: [{ session: [] }]
+      responses:
+        "200":
+          description: Recap of one year
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/YearRecap" }
+
+  # ---------------------------------------------------------------- import
+  /imports:
+    get:
+      operationId: listImports
+      tags: [import]
+      security: [{ session: [] }]
+      responses:
+        "200":
+          description: My imports, newest first
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [imports]
+                properties:
+                  imports:
+                    type: array
+                    items: { $ref: "#/components/schemas/Import" }
+    post:
+      operationId: createImport
+      tags: [import]
+      security: [{ session: [] }]
+      description: Starts an import. For zip and takeout the response carries presigned multipart URLs for the archive.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ImportCreate" }
+      responses:
+        "201":
+          description: Import created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ImportInit" }
+  /imports/{import_id}:
+    parameters: [{ $ref: "#/components/parameters/ImportId" }]
+    get:
+      operationId: getImport
+      tags: [import]
+      security: [{ session: [] }]
+      responses:
+        "200":
+          description: Import status
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Import" }
+    delete:
+      operationId: cancelImport
+      tags: [import]
+      security: [{ session: [] }]
+      responses:
+        "204": { description: Cancelled }
+  /imports/{import_id}/complete:
+    parameters: [{ $ref: "#/components/parameters/ImportId" }]
+    post:
+      operationId: completeImport
+      tags: [import]
+      security: [{ session: [] }]
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/UploadComplete" }
+      responses:
+        "200":
+          description: Archive received, processing queued
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Import" }
+  /me/library:
+    get:
+      operationId: listMyLibrary
+      tags: [import]
+      security: [{ session: [] }]
+      parameters:
+        - { name: cursor, in: query, schema: { type: string } }
+        - { name: limit, in: query, schema: { type: integer, minimum: 1, maximum: 200, default: 60 } }
+        - { name: unassigned, in: query, schema: { type: boolean, default: false }, description: Only items not matched to an event }
+      responses:
+        "200":
+          description: My personal library (imports and uploads without an event)
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/MediaPage" }
+  /media/{media_id}/event:
+    parameters: [{ $ref: "#/components/parameters/MediaId" }]
+    put:
+      operationId: assignMediaEvent
+      tags: [import]
+      security: [{ session: [] }]
+      description: Moves a library item into one of my events, or out of it with event_slug null.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                event_slug: { type: [string, "null"] }
+      responses:
+        "200":
+          description: Updated item
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/GridItem" }
+
 components:
   securitySchemes:
     session:
@@ -423,6 +993,26 @@ components:
       schema: { type: string }
     MediaId:
       name: media_id
+      in: path
+      required: true
+      schema: { $ref: "#/components/schemas/Id" }
+    PersonId:
+      name: person_id
+      in: path
+      required: true
+      schema: { $ref: "#/components/schemas/Id" }
+    FaceId:
+      name: face_id
+      in: path
+      required: true
+      schema: { $ref: "#/components/schemas/Id" }
+    AlbumId:
+      name: album_id
+      in: path
+      required: true
+      schema: { $ref: "#/components/schemas/Id" }
+    ImportId:
+      name: import_id
       in: path
       required: true
       schema: { $ref: "#/components/schemas/Id" }
@@ -467,7 +1057,7 @@ components:
       required: [email]
       properties:
         email: { type: string, format: email }
-        locale: { type: string, enum: [de, en] }
+        locale: { type: string, enum: [de, en, tr] }
         next: { type: string, description: Path on the web origin to return to }
     VerifyRequest:
       type: object
@@ -490,14 +1080,19 @@ components:
         email: { type: string }
         display_name: { type: string }
         birthdate: { type: string, format: date }
-        locale: { type: string, enum: [de, en] }
+        locale: { type: string, enum: [de, en, tr] }
+        link_across: { type: boolean }
+        hide_from_people: { type: boolean }
+        has_claimed_person: { type: boolean }
     MeUpdate:
       type: object
       properties:
         display_name: { type: string, minLength: 1, maxLength: 80 }
         birthdate: { type: string, format: date }
         clear_birthdate: { type: boolean, description: Remove the stored birthdate }
-        locale: { type: string, enum: [de, en] }
+        locale: { type: string, enum: [de, en, tr] }
+        link_across: { type: boolean, description: Allow cross-event face suggestions }
+        hide_from_people: { type: boolean, description: Hide my linked persons from People tabs }
 
     Viewer:
       type: object
@@ -528,6 +1123,8 @@ components:
         processing: { type: integer }
         failed: { type: integer }
         of_you: { type: integer, description: Photos the viewer appears in, once claimed }
+        people: { type: integer }
+        faces_done: { type: integer, description: Media items that finished face analysis }
     Event:
       type: object
       required: [id, slug, title, starts_at, timezone, guest_upload, guest_view, host, counts, viewer, created_at]
@@ -547,6 +1144,8 @@ components:
             display_name: { type: string }
         guest_upload: { type: boolean }
         guest_view: { type: boolean }
+        faces_enabled: { type: boolean }
+        clustered_at: { type: [string, "null"], format: date-time }
         counts: { $ref: "#/components/schemas/EventCounts" }
         viewer: { $ref: "#/components/schemas/Viewer" }
         created_at: { type: string, format: date-time }
@@ -570,6 +1169,7 @@ components:
         cover_media_id: { $ref: "#/components/schemas/Id" }
         guest_upload: { type: boolean }
         guest_view: { type: boolean }
+        faces_enabled: { type: boolean }
     EventList:
       type: object
       required: [items]
@@ -699,6 +1299,7 @@ components:
           items: { $ref: "#/components/schemas/Id" }
         score: { type: [number, "null"] }
         processing: { type: boolean }
+        analyzed: { type: boolean, description: Faces, embedding and quality are done }
     MediaGroup:
       type: object
       required: [label, start, end, count]
@@ -792,3 +1393,290 @@ components:
           type: array
           items: { $ref: "#/components/schemas/HostUploader" }
         status: { $ref: "#/components/schemas/EventStatus" }
+
+    # ---------------------------------------------------------------- people
+    Person:
+      type: object
+      required: [id, event_slug, face_count, is_me, named, hidden]
+      properties:
+        id: { $ref: "#/components/schemas/Id" }
+        event_slug: { type: string }
+        display_name: { type: [string, "null"] }
+        named: { type: boolean }
+        crop_url: { type: string, description: "Crop URL of the cover face, served by the API" }
+        face_count: { type: integer }
+        media_count: { type: integer }
+        is_me: { type: boolean }
+        suggested_me: { type: boolean, description: Heuristic guess that this is the viewer }
+        linked: { type: boolean, description: Linked to any identity }
+        hidden: { type: boolean }
+        can_edit: { type: boolean }
+    PersonUpdate:
+      type: object
+      properties:
+        display_name: { type: [string, "null"], maxLength: 80 }
+        hidden: { type: boolean }
+    PeopleList:
+      type: object
+      required: [persons]
+      properties:
+        persons:
+          type: array
+          items: { $ref: "#/components/schemas/Person" }
+        unnamed_count: { type: integer }
+        analyzing: { type: boolean, description: Face analysis still running for some items }
+    Face:
+      type: object
+      required: [id, media_id, bbox]
+      properties:
+        id: { $ref: "#/components/schemas/Id" }
+        media_id: { $ref: "#/components/schemas/Id" }
+        person_id: { $ref: "#/components/schemas/Id" }
+        bbox:
+          type: array
+          minItems: 4
+          maxItems: 4
+          items: { type: integer }
+          description: x, y, w, h in original pixels
+        crop_url: { type: string }
+        age_est: { type: [number, "null"] }
+        quality: { type: [number, "null"] }
+    Suggestion:
+      type: object
+      required: [person, event_title, confidence]
+      properties:
+        person: { $ref: "#/components/schemas/Person" }
+        event_title: { type: string }
+        event_starts_at: { type: string, format: date-time }
+        confidence: { type: number }
+
+    # ---------------------------------------------------------------- agent
+    AgentRequest:
+      type: object
+      required: [text]
+      properties:
+        text: { type: string, minLength: 1, maxLength: 500 }
+        event_slug: { type: string, description: Scope to one event; omitted = all my events and library }
+        conversation_id: { $ref: "#/components/schemas/Id" }
+    Chip:
+      type: object
+      required: [label, text]
+      properties:
+        label: { type: string }
+        text: { type: string, description: The message to send when tapped }
+        command_id: { $ref: "#/components/schemas/Id" }
+    AgentResult:
+      oneOf:
+        - type: object
+          required: [kind, title, media_ids]
+          properties:
+            kind: { type: string, enum: [media] }
+            title: { type: string }
+            media_ids:
+              type: array
+              items: { $ref: "#/components/schemas/Id" }
+            items:
+              type: array
+              items: { $ref: "#/components/schemas/GridItem" }
+            group_by: { type: string, enum: [time, person, none] }
+        - type: object
+          required: [kind, title, persons]
+          properties:
+            kind: { type: string, enum: [people] }
+            title: { type: string }
+            persons:
+              type: array
+              items: { $ref: "#/components/schemas/Person" }
+        - type: object
+          required: [kind, title, value]
+          properties:
+            kind: { type: string, enum: [stat] }
+            title: { type: string }
+            value: { type: string }
+            detail: { type: string }
+            items:
+              type: array
+              items: { $ref: "#/components/schemas/GridItem" }
+        - type: object
+          required: [kind, album]
+          properties:
+            kind: { type: string, enum: [album] }
+            album: { $ref: "#/components/schemas/Album" }
+        - type: object
+          required: [kind, question, options]
+          properties:
+            kind: { type: string, enum: [clarify] }
+            question: { type: string }
+            options:
+              type: array
+              items: { type: string }
+        - type: object
+          required: [kind, title]
+          properties:
+            kind: { type: string, enum: [empty] }
+            title: { type: string }
+      discriminator:
+        propertyName: kind
+    AgentResponse:
+      type: object
+      required: [conversation_id, turn_id, understood, result, suggestions, saveable]
+      properties:
+        conversation_id: { $ref: "#/components/schemas/Id" }
+        turn_id: { $ref: "#/components/schemas/Id" }
+        understood: { type: string }
+        result: { $ref: "#/components/schemas/AgentResult" }
+        suggestions:
+          type: array
+          items: { $ref: "#/components/schemas/Chip" }
+        saveable: { type: boolean }
+    SavedCommand:
+      type: object
+      required: [id, name, label, description, params, scope]
+      properties:
+        id: { $ref: "#/components/schemas/Id" }
+        name: { type: string }
+        label: { type: string }
+        description: { type: string }
+        scope: { type: string, enum: [event, global] }
+        event_slug: { type: string }
+        params: { type: object, additionalProperties: true, description: JSON schema of parameters }
+        shared: { type: boolean, description: Approved by the host for every guest of the event }
+
+    # ---------------------------------------------------------------- albums
+    Album:
+      type: object
+      required: [id, title, kind, count]
+      properties:
+        id: { $ref: "#/components/schemas/Id" }
+        event_slug: { type: string }
+        title: { type: string }
+        kind: { type: string, enum: [highlights, manual, agent] }
+        count: { type: integer }
+        cover: { $ref: "#/components/schemas/Variants" }
+        can_edit: { type: boolean }
+    AlbumCreate:
+      type: object
+      required: [title, media_ids]
+      properties:
+        event_slug: { type: string }
+        title: { type: string, minLength: 1, maxLength: 120 }
+        media_ids:
+          type: array
+          items: { $ref: "#/components/schemas/Id" }
+    AlbumUpdate:
+      type: object
+      properties:
+        title: { type: string, minLength: 1, maxLength: 120 }
+        add:
+          type: array
+          items: { $ref: "#/components/schemas/Id" }
+        remove:
+          type: array
+          items: { $ref: "#/components/schemas/Id" }
+    AlbumDetail:
+      allOf:
+        - $ref: "#/components/schemas/Album"
+        - type: object
+          required: [items, allow_download]
+          properties:
+            items:
+              type: array
+              items: { $ref: "#/components/schemas/GridItem" }
+            allow_download: { type: boolean }
+            event_title: { type: string }
+    Share:
+      type: object
+      required: [share_id, url, allow_download]
+      properties:
+        share_id: { $ref: "#/components/schemas/Id" }
+        url: { type: string }
+        expires_at: { type: [string, "null"], format: date-time }
+        allow_download: { type: boolean }
+
+    # ---------------------------------------------------------------- yearbook
+    EventSummary:
+      type: object
+      required: [slug, title, starts_at, photos, of_you]
+      properties:
+        slug: { type: string }
+        title: { type: string }
+        starts_at: { type: string, format: date-time }
+        photos: { type: integer }
+        of_you: { type: integer }
+        cover: { $ref: "#/components/schemas/Variants" }
+        of_you_items:
+          type: array
+          items: { $ref: "#/components/schemas/GridItem" }
+          description: Up to 4 best photos of the viewer in this event, for the fanned stack
+        analyzing: { type: boolean }
+    YearSummary:
+      type: object
+      required: [year, events, moments]
+      properties:
+        year: { type: integer }
+        moments: { type: integer, description: Photos of you this year }
+        events:
+          type: array
+          items: { $ref: "#/components/schemas/EventSummary" }
+    TopPerson:
+      type: object
+      required: [display_name, count]
+      properties:
+        person_id: { $ref: "#/components/schemas/Id" }
+        display_name: { type: string }
+        count: { type: integer }
+        crop_url: { type: string }
+    YearRecap:
+      type: object
+      required: [year, moments, events, best_of_you, top_people]
+      properties:
+        year: { type: integer }
+        moments: { type: integer }
+        events:
+          type: array
+          items: { $ref: "#/components/schemas/EventSummary" }
+        best_of_you:
+          type: array
+          items: { $ref: "#/components/schemas/GridItem" }
+        top_people:
+          type: array
+          items: { $ref: "#/components/schemas/TopPerson" }
+        portrait: { $ref: "#/components/schemas/GridItem" }
+
+    # ---------------------------------------------------------------- import
+    ImportCreate:
+      type: object
+      required: [kind]
+      properties:
+        kind: { type: string, enum: [takeout, zip, folder] }
+        event_slug: { type: string, description: Put everything into this event instead of matching by time }
+        filename: { type: string }
+        size: { type: integer, minimum: 1 }
+        path: { type: string, description: Server-side directory, CLI and operators only }
+    ImportInit:
+      allOf:
+        - $ref: "#/components/schemas/Import"
+        - type: object
+          properties:
+            upload: { $ref: "#/components/schemas/UploadInit" }
+    Import:
+      type: object
+      required: [id, kind, state, created_at, stats]
+      properties:
+        id: { $ref: "#/components/schemas/Id" }
+        kind: { type: string, enum: [takeout, zip, folder] }
+        state: { type: string, enum: [uploading, queued, running, done, failed, cancelled] }
+        event_slug: { type: string }
+        stats:
+          type: object
+          required: [found, imported, duplicates, failed, matched]
+          properties:
+            found: { type: integer }
+            imported: { type: integer }
+            duplicates: { type: integer }
+            failed: { type: integer }
+            matched: { type: integer, description: Items auto-assigned to an event by time }
+            people_seeded: { type: integer, description: Takeout people names applied }
+        error: { type: [string, "null"] }
+        created_at: { type: string, format: date-time }
+        finished_at: { type: [string, "null"], format: date-time }

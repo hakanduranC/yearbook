@@ -40,3 +40,51 @@ While a failed `ingest` job waits for its backoff retry, the worker sets `media.
 
 ## Dev URLs
 API `http://localhost:8080`, web `http://localhost:3000` (Vite proxies `/api` to the API, so cookies are same-origin), S3 `http://localhost:8333`, Mailpit UI `http://localhost:8025`, SMTP `localhost:1025`, Postgres `localhost:5432`.
+
+---
+
+# Round 2 additions (faces, search, agent, import)
+
+## Job kinds
+| Kind | Payload | Who runs it | What |
+|---|---|---|---|
+| `ingest` | `{media_id}` | light worker | as before; at the end enqueues `analyze` for the same media |
+| `analyze` | `{media_id}` | ML worker (`yearbook-worker run --kinds analyze`, concurrency 1–2, models loaded once) | faces (only if `events.faces_enabled`, always for library items of a user), SigLIP embedding, quality + aesthetic, tags/OCR, age; sets `media.analyzed_at`; NOTIFY `media_events {type: media.analyzed, event_id, media_id}`; then enqueues a debounced `cluster_event` |
+| `cluster_event` | `{event_id}` | ML worker | incremental assignment + HDBSCAN per SDD §8.2; respects `person_constraints`; sets `events.clustered_at`; NOTIFY `media_events {type: people.updated, event_id}` |
+| `import` | `{import_id}` | light worker | reads the archive or folder, writes originals + media rows, enqueues `ingest` per item, updates `imports.stats`, state → done/failed |
+| `recompute_scores` | `{event_id}` | light worker | refreshes `media_quality.score` after likes change (batched by the API, debounced 60 s) |
+
+Debounced enqueue (cluster_event, recompute_scores): `insert into jobs (kind, payload, run_after) select $1, $2, now() + interval '60 seconds' where not exists (select 1 from jobs where kind = $1 and payload->>'event_id' = $3 and done_at is null)`.
+
+## NOTIFY `media_events` types
+`media.ready`, `media.failed`, `media.analyzed`, `people.updated` (event_id), `import.progress` (import_id, stats, state). The API relays `people.updated {event_slug}` on the event SSE stream. Import progress is polled by the web app (`GET /imports/{id}` every 3 s while running).
+
+## Models and vectors
+Face embeddings: ArcFace 512-d (InsightFace `antelopev2`), L2-normalized. Image embeddings: SigLIP 2 `so400m` family, 1152-d, L2-normalized, stored in `media_embeddings` (column is `vector(1152)`; do not switch to a 768-d model without a migration). Text embeddings for search come from the same SigLIP 2 text tower.
+
+## ML server
+`yearbook-worker serve --port 8090` (FastAPI inside the worker package) exposes `GET /health` and `POST /embed/text {"texts": [...]} -> {"vectors": [[...]], "model": "..."}`. The API reads `ML_URL` (default `http://localhost:8090`); when unreachable, text search falls back to full-text + tags only and reports `degraded: true` is not in the contract, so just log a warning.
+
+## Hybrid search (API)
+One SQL: candidates = top 200 by cosine on `media_embeddings` ∪ `caption_tsv @@ websearch_to_tsquery` ∪ `media_tags.tag % q`; fuse with reciprocal rank fusion (k = 60); apply structured filters; return as `MediaPage` ordered by fused score.
+
+## Quality score
+`score = 0.35*aesthetic_norm + 0.25*sharpness + 0.15*faces_term + 0.15*eyes_smile + 0.10*likes_norm`, each term 0..1, `faces_term = 1` for 1–6 faces, 0.6 for 0, 0.4 for more than 6. `aesthetic_norm = clamp((aesthetic-3)/5)`. `likes_norm = likes / max(likes in event)`. Highlights (`/events/{slug}/best`): top N by score, one per duplicate group, at most 3 per 30-minute window until N is filled.
+
+## Face crops
+Private bucket `f/{face_id}.jpg`, 20 % padded, max 512 px. Served only by `GET /api/v1/faces/{face_id}/crop.jpg` with `Cache-Control: private, max-age=86400`.
+
+## Person suggestions
+`suggested_me` inside an event: the person with the most faces among photos uploaded by the viewer's guest/user, if it has ≥ 3 faces and ≥ 2× the runner-up. Cross-event (`GET /me/suggestions`): reference set = up to 30 best faces of the identity's claimed persons; candidate persons in the user's other events with max cosine ≥ 0.45; if a birthdate is known and the capture years differ by more than 8 from the reference, require `|age_est − exact_age| ≤ 6`.
+
+## Age filters
+`age_min`/`age_max` on media lists and `search_media`: exact when the person is linked to an identity with a birthdate (`captured_at::date − birthdate`), else `faces.age_est`. Results carry no age numbers per face in public payloads.
+
+## Agent
+Env: `OPENAI_API_KEY`, `OPENAI_MODEL` (a current GPT-5-family model id; the API checks `GET /v1/models` at startup and logs which one it uses), `OPENAI_BASE_URL` optional. Without a key `POST /agent/messages` returns `503 {code: internal, message: "agent_not_configured"}` and the web app shows a calm message. Only text and metadata are sent; `POST /media/{id}/describe` is the single user-initiated image exception. `run_query` executes as role `agent_ro` over the `v_*` views with `SET LOCAL app.actor = '<base64 of actor id>'`, `SET LOCAL app.event = '<base64 of event id or empty>'`, `statement_timeout = 2000`, row cap 500.
+
+## Import archives
+Zip or Takeout archives go to the private bucket under `imports/{import_id}.zip` via the same presigned multipart flow as media. Takeout layout: `Takeout/Google Photos/<album>/<file>` with sidecars `<file>.json` or `<file>.supplemental-metadata.json` (and truncated variants) holding `photoTakenTime.timestamp`, `geoData`, `people[].name`. Matching to events: `captured_at` within `[starts_at − 2 h, coalesce(ends_at, starts_at + 12 h) + 2 h]` of one of the owner's events; otherwise the item stays in the library (`event_id null`). People names from sidecars are stored in `media_person_hints` and applied as person display names when a cluster has ≥ 3 faces whose media share the same hint.
+
+## Locales
+`de`, `en`, `tr` everywhere: `users.locale`, magic-link emails, web dictionaries, agent `understood` lines (the agent answers in the user's locale).
