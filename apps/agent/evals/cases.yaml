@@ -1,0 +1,332 @@
+# Evaluation cases for `yearbook-agent eval`. 30 utterances in de/en/tr with the expected tool
+# sequence (in order, before `present`), the `present` call the fake model issues, and whether the
+# turn is saveable. Ids are the fake MCP server's fixture ids (src/yearbook_agent/testing/fake_mcp.py).
+# With --real the model's own tool sequence and result kind are scored against these.
+anchors:
+  me: &me cGVyc29uLW1lLTAwMDAwMA
+  anna: &anna cGVyc29uLWFubmEtMDAwMA
+  ben: &ben cGVyc29uLWJlbi0wMDAwMA
+  m0: &m0 bWVkaWEtMDAwMDAwMDAwMA
+  m1: &m1 bWVkaWEtMDAwMDAwMDAwMQ
+  m2: &m2 bWVkaWEtMDAwMDAwMDAwMg
+  album: &album YWxidW0tMDAwMDAwMDAtMQ
+
+cases:
+  - id: en_me_and_anna
+    locale: en
+    text: photos of me and Anna
+    steps:
+      - { tool: resolve_people, args: { names: [Anna] } }
+      - { tool: search_media, args: { me: true, people_all: [*anna], order_by: recent, limit: 60 } }
+    present:
+      understood: Photos with you and Anna
+      result: { kind: media, title: You and Anna, media_ids: [*m0, *m1], group_by: time,
+                refine: [{ label: Only the best, text: only the best photos of me and Anna }] }
+    saveable: true
+
+  - id: de_ich_und_anna
+    locale: de
+    text: Fotos von mir und Anna
+    steps:
+      - { tool: resolve_people, args: { names: [Anna] } }
+      - { tool: search_media, args: { me: true, people_all: [*anna], limit: 60 } }
+    present:
+      understood: Fotos mit dir und Anna
+      result: { kind: media, title: Du und Anna, media_ids: [*m0, *m1], group_by: time }
+    saveable: true
+
+  - id: tr_ben_ve_anna
+    locale: tr
+    text: Anna ile fotoğraflarım
+    steps:
+      - { tool: resolve_people, args: { names: [Anna] } }
+      - { tool: search_media, args: { me: true, people_all: [*anna], limit: 60 } }
+    present:
+      understood: Sen ve Anna'nın olduğu fotoğraflar
+      result: { kind: media, title: Sen ve Anna, media_ids: [*m0, *m1], group_by: time }
+    saveable: true
+
+  - id: en_photos_of_me
+    locale: en
+    text: photos of me
+    steps:
+      - { tool: search_media, args: { me: true, limit: 60 } }
+    present:
+      understood: Photos of you
+      result: { kind: media, title: Photos of you, media_ids: [*m0, *m2], group_by: time }
+    saveable: false
+
+  - id: de_beste_abend
+    locale: de
+    text: Zeig mir die besten Fotos vom Abend
+    steps:
+      - { tool: search_media, args: { day_part: evening, order_by: best, min_score: 0.6, limit: 40 } }
+    present:
+      understood: Die besten Fotos vom Abend
+      result: { kind: media, title: Die besten Fotos vom Abend, media_ids: [*m1], group_by: none }
+    saveable: true
+
+  - id: tr_en_iyiler
+    locale: tr
+    text: en iyi fotoğraflar
+    steps:
+      - { tool: rank_best, args: { limit: 20 } }
+    present:
+      understood: En iyi fotoğraflar
+      result: { kind: media, title: En iyiler, media_ids: [*m1, *m0], group_by: none }
+    saveable: false
+
+  - id: en_videos
+    locale: en
+    text: all videos
+    steps:
+      - { tool: search_media, args: { kind: video, limit: 100 } }
+    present:
+      understood: All videos
+      result: { kind: media, title: Videos, media_ids: [bWVkaWEtMDAwMDAwMDAwOQ], group_by: time }
+    saveable: false
+
+  - id: de_videos_von_ben
+    locale: de
+    text: Videos mit Ben
+    steps:
+      - { tool: resolve_people, args: { names: [Ben] } }
+      - { tool: search_media, args: { kind: video, people_all: [*ben], limit: 60 } }
+    present:
+      understood: Videos mit Ben
+      result: { kind: empty, title: Keine Videos mit Ben,
+                suggestions: [{ label: Fotos mit Ben, text: Fotos mit Ben }] }
+    saveable: true
+
+  - id: en_who_most_time
+    locale: en
+    text: who did I spend the most time with?
+    steps:
+      - { tool: run_query, args: { sql: "select p.id, p.display_name, count(*) as n from v_faces f join v_persons p on p.id = f.person_id where not p.is_me group by p.id, p.display_name order by n desc limit 5" } }
+    present:
+      understood: Who appears with you most often
+      result: { kind: people, title: Most often with you, person_ids: [*anna, *ben] }
+    saveable: true
+
+  - id: de_mit_wem_am_meisten
+    locale: de
+    text: Mit wem war ich am meisten zusammen?
+    steps:
+      - { tool: run_query, args: { sql: "select p.id, p.display_name, count(*) as n from v_faces f join v_persons p on p.id = f.person_id where not p.is_me group by p.id, p.display_name order by n desc limit 5" } }
+    present:
+      understood: Wer am häufigsten mit dir auf Fotos ist
+      result: { kind: people, title: Am häufigsten mit dir, person_ids: [*anna, *ben] }
+    saveable: true
+
+  - id: tr_en_cok_kiminle
+    locale: tr
+    text: en çok kiminle fotoğrafım var?
+    steps:
+      - { tool: run_query, args: { sql: "select p.id, p.display_name, count(*) as n from v_faces f join v_persons p on p.id = f.person_id where not p.is_me group by p.id, p.display_name order by n desc limit 5" } }
+    present:
+      understood: En çok birlikte göründüğün kişiler
+      result: { kind: people, title: En çok seninle, person_ids: [*anna, *ben] }
+    saveable: true
+
+  - id: de_wie_viele_von_mir
+    locale: de
+    text: Wie viele Fotos gibt es von mir?
+    steps:
+      - { tool: search_media, args: { me: true, limit: 200 } }
+    present:
+      understood: Anzahl der Fotos mit dir
+      result: { kind: stat, title: Fotos von dir, value: "7", detail: Von 12 Fotos im Event, media_ids: [*m0] }
+    saveable: false
+
+  - id: en_how_many_photos
+    locale: en
+    text: how many photos are there?
+    steps:
+      - { tool: event_stats, args: {} }
+    present:
+      understood: Number of photos in the event
+      result: { kind: stat, title: Photos in this event, value: "412", detail: 398 photos and 14 videos }
+    saveable: false
+
+  - id: tr_kac_fotograf
+    locale: tr
+    text: kaç fotoğraf var?
+    steps:
+      - { tool: event_stats, args: {} }
+    present:
+      understood: Etkinlikteki fotoğraf sayısı
+      result: { kind: stat, title: Bu etkinlikteki fotoğraflar, value: "412" }
+    saveable: false
+
+  - id: en_busiest_hour
+    locale: en
+    text: when were most photos taken?
+    steps:
+      - { tool: event_stats, args: {} }
+    present:
+      understood: The busiest hour
+      result: { kind: stat, title: Busiest hour, value: "21:00", detail: 72 photos between 21:00 and 22:00 }
+    saveable: false
+
+  - id: en_album_kids_cake
+    locale: en
+    text: make an album of the kids at the cake
+    steps:
+      - { tool: search_media, args: { text: children at the birthday cake, age_max: 12, limit: 40 } }
+      - { tool: create_album, args: { title: Kids at the cake, media_ids: [*m0, *m1] } }
+    present:
+      understood: Album of the kids at the cake
+      result: { kind: album, album_id: *album, title: Kids at the cake }
+    saveable: false
+
+  - id: de_album_anna
+    locale: de
+    text: Mach ein Album mit allen Fotos von Anna
+    steps:
+      - { tool: resolve_people, args: { names: [Anna] } }
+      - { tool: search_media, args: { people_all: [*anna], limit: 200 } }
+      - { tool: create_album, args: { title: Anna, media_ids: [*m0, *m1] } }
+    present:
+      understood: Album mit allen Fotos von Anna
+      result: { kind: album, album_id: *album, title: Anna }
+    saveable: false
+
+  - id: tr_album_olustur
+    locale: tr
+    text: Ben ile fotoğraflardan bir albüm yap
+    steps:
+      - { tool: resolve_people, args: { names: [Ben] } }
+      - { tool: search_media, args: { people_all: [*ben], limit: 200 } }
+      - { tool: create_album, args: { title: Ben, media_ids: [*m0] } }
+    present:
+      understood: Ben'in fotoğraflarından albüm
+      result: { kind: album, album_id: *album, title: Ben }
+    saveable: false
+
+  - id: de_welche_anna
+    locale: de
+    text: Fotos mit Anna K.
+    steps:
+      - { tool: resolve_people, args: { names: [Anna K.] } }
+    present:
+      understood: Fotos mit Anna
+      result: { kind: clarify, question: "Welche Anna meinst du?", options: [Anna M., Anna K.] }
+    saveable: false
+
+  - id: en_unknown_person
+    locale: en
+    text: photos of Zed
+    steps:
+      - { tool: resolve_people, args: { names: [Zed] } }
+    present:
+      understood: Photos of Zed
+      result: { kind: empty, title: Nobody here is named Zed yet,
+                suggestions: [{ label: Show people, text: show me the people in this event }] }
+    saveable: false
+
+  - id: tr_bilinmeyen_kisi
+    locale: tr
+    text: Zed'in fotoğrafları
+    steps:
+      - { tool: resolve_people, args: { names: [Zed] } }
+    present:
+      understood: Zed'in fotoğrafları
+      result: { kind: empty, title: Burada Zed adında kimse yok,
+                suggestions: [{ label: Kişileri göster, text: bu etkinlikteki kişileri göster }] }
+    saveable: false
+
+  - id: en_people_list
+    locale: en
+    text: who is in this event?
+    steps:
+      - { tool: list_people, args: {} }
+    present:
+      understood: People in this event
+      result: { kind: people, title: People, person_ids: [*me, *anna, *ben] }
+    saveable: false
+
+  - id: de_nur_ich
+    locale: de
+    text: Fotos, auf denen ich allein bin
+    steps:
+      - { tool: search_media, args: { me: true, faces_max: 1, limit: 60 } }
+    present:
+      understood: Fotos, auf denen nur du bist
+      result: { kind: media, title: Nur du, media_ids: [*m2], group_by: time }
+    saveable: true
+
+  - id: en_zebra_nothing
+    locale: en
+    text: photos with a zebra
+    steps:
+      - { tool: search_media, args: { text: zebra, limit: 40 } }
+    present:
+      understood: Photos with a zebra
+      result: { kind: empty, title: No zebra in this event,
+                suggestions: [{ label: Animals, text: photos with animals }] }
+    saveable: false
+
+  - id: tr_gece_videolar
+    locale: tr
+    text: gece çekilen videolar
+    steps:
+      - { tool: search_media, args: { kind: video, day_part: night, limit: 60 } }
+    present:
+      understood: Gece çekilen videolar
+      result: { kind: media, title: Gece videoları, media_ids: [bWVkaWEtMDAwMDAwMDAwOQ], group_by: none }
+    saveable: true
+
+  - id: en_liked_by_me
+    locale: en
+    text: the photos I liked
+    steps:
+      - { tool: search_media, args: { liked_by_me: true, limit: 100 } }
+    present:
+      understood: Photos you liked
+      result: { kind: media, title: Your likes, media_ids: [*m0, *m1], group_by: time }
+    saveable: false
+
+  - id: de_anna_ohne_ben
+    locale: de
+    text: Fotos von Anna ohne Ben
+    steps:
+      - { tool: resolve_people, args: { names: [Anna, Ben] } }
+      - { tool: search_media, args: { people_all: [*anna], people_exclude: [*ben], limit: 60 } }
+    present:
+      understood: Fotos von Anna ohne Ben
+      result: { kind: media, title: Anna ohne Ben, media_ids: [*m0, *m1], group_by: time }
+    saveable: true
+
+  - id: en_export_zip
+    locale: en
+    text: download all photos of me and Anna
+    steps:
+      - { tool: resolve_people, args: { names: [Anna] } }
+      - { tool: search_media, args: { me: true, people_all: [*anna], limit: 200 } }
+      - { tool: export_zip, args: { media_ids: [*m0, *m1] } }
+    present:
+      understood: Zip of you and Anna
+      result: { kind: stat, title: Your download is ready, value: 2 photos, detail: "http://web.test/api/v1/media/zip/abc" }
+    saveable: false
+
+  - id: en_chart_uploads
+    locale: en
+    text: chart of uploads per hour
+    steps:
+      - { tool: run_query, args: { sql: "select date_trunc('hour', captured_at) as h, count(*) as n from v_media group by h order by h" } }
+      - { tool: run_python, args: { code: "import json\nprint(json.dumps({'total': 412}))", inputs: { rows: [] } } }
+    present:
+      understood: Uploads per hour as a chart
+      result: { kind: stat, title: Uploads per hour, value: 412 photos, detail: Peak at 21:00 }
+    saveable: false
+
+  - id: tr_global_en_cok_etkinlik
+    locale: tr
+    scope: global
+    text: hangi etkinlikte en çok fotoğrafım var?
+    steps:
+      - { tool: run_query, args: { sql: "select e.title, count(*) as n from v_media m join v_events e on e.id = m.event_id group by e.title order by n desc limit 1" } }
+    present:
+      understood: En çok fotoğrafının olduğu etkinlik
+      result: { kind: stat, title: En çok fotoğrafın olduğu etkinlik, value: Sommerfest, detail: 37 fotoğraf }
+    saveable: true

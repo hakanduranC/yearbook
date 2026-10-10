@@ -1,0 +1,164 @@
+# Few-shot examples rendered into the system prompt. Ids are placeholders; the model must use
+# ids from real tool results. Keep this list between 6 and 10 entries, all three locales.
+- locale: en
+  scope: event
+  user: photos of me and Anna
+  steps:
+    - tool: resolve_people
+      args: { names: ["Anna"] }
+      note: returns Anna = P_ANNA
+    - tool: search_media
+      args: { me: true, people_all: ["P_ANNA"], order_by: recent, limit: 60 }
+      note: 14 ids
+    - tool: present
+      args:
+        understood: Photos with you and Anna
+        result:
+          kind: media
+          title: You and Anna
+          media_ids: ["..."]
+          group_by: time
+          refine:
+            - { label: Only the best, text: only the best photos of me and Anna }
+            - { label: Evening, text: photos of me and Anna in the evening }
+- locale: de
+  scope: event
+  user: Zeig mir die besten Fotos vom Abend
+  steps:
+    - tool: search_media
+      args: { day_part: evening, order_by: best, min_score: 0.6, limit: 40 }
+    - tool: present
+      args:
+        understood: Die besten Fotos vom Abend
+        result:
+          kind: media
+          title: Die besten Fotos vom Abend
+          media_ids: ["..."]
+          group_by: none
+          refine:
+            - { label: Nur Videos, text: Videos vom Abend }
+            - { label: Mit mir, text: die besten Fotos von mir am Abend }
+- locale: tr
+  scope: event
+  user: Anna ile fotoğraflarım
+  steps:
+    - tool: resolve_people
+      args: { names: ["Anna"] }
+    - tool: search_media
+      args: { me: true, people_all: ["P_ANNA"], limit: 60 }
+    - tool: present
+      args:
+        understood: Sen ve Anna'nın olduğu fotoğraflar
+        result:
+          kind: media
+          title: Sen ve Anna
+          media_ids: ["..."]
+          group_by: time
+          refine:
+            - { label: Sadece en iyiler, text: Anna ile en iyi fotoğraflarım }
+- locale: en
+  scope: event
+  user: who did I spend the most time with?
+  steps:
+    - tool: run_query
+      args:
+        sql: >-
+          select p.id, p.display_name, count(distinct f.media_id) as n
+          from v_faces f join v_persons p on p.id = f.person_id
+          where f.media_id in (select f2.media_id from v_faces f2 join v_persons p2 on p2.id = f2.person_id where p2.is_me)
+            and not p.is_me
+          group by p.id, p.display_name order by n desc limit 5
+    - tool: present
+      args:
+        understood: Who appears with you most often
+        result:
+          kind: people
+          title: Most often with you
+          person_ids: ["P_ANNA", "P_BEN"]
+- locale: de
+  scope: event
+  user: Wie viele Fotos gibt es von mir?
+  steps:
+    - tool: search_media
+      args: { me: true, limit: 200 }
+      note: count 37
+    - tool: present
+      args:
+        understood: Anzahl der Fotos mit dir
+        result:
+          kind: stat
+          title: Fotos von dir
+          value: "37"
+          detail: Von 412 Fotos im Event
+          media_ids: ["..."]
+- locale: en
+  scope: event
+  user: make an album of the kids at the cake
+  steps:
+    - tool: search_media
+      args: { text: children at the birthday cake, age_max: 12, limit: 40 }
+    - tool: create_album
+      args: { title: Kids at the cake, media_ids: ["..."] }
+      note: returns album A1
+    - tool: present
+      args:
+        understood: Album of the kids at the cake
+        result: { kind: album, album_id: A1, title: Kids at the cake }
+- locale: de
+  scope: event
+  user: Fotos mit Anna
+  steps:
+    - tool: resolve_people
+      args: { names: ["Anna"] }
+      note: two persons match, Anna M. and Anna K.
+    - tool: present
+      args:
+        understood: Fotos mit Anna
+        result:
+          kind: clarify
+          question: Welche Anna meinst du?
+          options: ["Anna M.", "Anna K."]
+- locale: tr
+  scope: global
+  user: hangi etkinlikte en çok fotoğrafım var?
+  steps:
+    - tool: run_query
+      args:
+        sql: >-
+          select e.title, count(*) as n from v_media m join v_events e on e.id = m.event_id
+          join v_faces f on f.media_id = m.id join v_persons p on p.id = f.person_id
+          where p.is_me group by e.title order by n desc limit 1
+    - tool: present
+      args:
+        understood: En çok fotoğrafının olduğu etkinlik
+        result: { kind: stat, title: En çok fotoğrafın olduğu etkinlik, value: Yaz pikniği, detail: 58 fotoğraf }
+- locale: en
+  scope: event
+  user: photos of Zed
+  steps:
+    - tool: resolve_people
+      args: { names: ["Zed"] }
+      note: no match
+    - tool: present
+      args:
+        understood: Photos of Zed
+        result:
+          kind: empty
+          title: Nobody here is named Zed yet
+          suggestions:
+            - { label: Show people, text: show me the people in this event }
+            - { label: All photos, text: all photos }
+- locale: en
+  scope: event
+  user: chart of uploads per hour
+  steps:
+    - tool: run_query
+      args: { sql: "select date_trunc('hour', captured_at) as h, count(*) as n from v_media group by h order by h" }
+    - tool: run_python
+      args:
+        code: "import json, matplotlib; matplotlib.use('Agg'); import matplotlib.pyplot as plt\ninp = json.load(open('/work/inputs.json'))\nxs = [r[0][11:16] for r in inp['rows']]; ys = [r[1] for r in inp['rows']]\nplt.figure(figsize=(8,3)); plt.bar(xs, ys); plt.tight_layout(); plt.savefig('/work/out/uploads.png')\nprint(json.dumps({'total': sum(ys), 'peak': xs[ys.index(max(ys))]}))"
+        inputs: { rows: ["..."] }
+    - tool: present
+      args:
+        understood: Uploads per hour as a chart
+        result: { kind: stat, title: Uploads per hour, value: 412 photos, detail: Peak at 21:00 }
