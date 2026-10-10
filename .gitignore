@@ -33,3 +33,6 @@ infra/.data/
 .idea/
 .vscode/
 .DS_Store
+
+# local notes and conversation exports at the repo root
+/*.txt
