@@ -52,6 +52,11 @@ description = "Run the LangGraph agent service on :8091"
 dir = "apps/agent"
 run = "uv run yearbook-agent serve --port 8091"
 
+[tasks.sandbox]
+description = "Run the sandbox execution service on :8092 (builds the sandbox image first)"
+dir = "apps/sandbox"
+run = ["sh image/build.sh", "uv run yearbook-sandbox serve --port 8092"]
+
 [tasks.ml]
 description = "Run the ML server for text embeddings on :8090"
 dir = "apps/worker"

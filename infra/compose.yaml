@@ -99,6 +99,10 @@ services:
       SMTP_FROM: "Yearbook <hello@yearbook.local>"
       ML_URL: http://ml:8090
       AGENT_URL: http://agent:8091
+      SANDBOX_URL: http://sandbox:8092
+      LANGSMITH_TRACING: ${LANGSMITH_TRACING:-false}
+      LANGSMITH_API_KEY: ${LANGSMITH_API_KEY:-}
+      LANGSMITH_PROJECT: ${LANGSMITH_PROJECT:-yearbook}
       MCP_URL: http://api:8080/mcp
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
       OPENAI_MODEL: ${OPENAI_MODEL:-}
@@ -174,6 +178,16 @@ services:
     expose: ["8091"]
     depends_on:
       migrate: { condition: service_completed_successfully }
+
+  sandbox:
+    # The only service that may start containers. Runs agent-written code in throwaway,
+    # network-less containers. Needs the Docker socket; in production use gVisor (SANDBOX_RUNTIME=runsc).
+    profiles: ["app"]
+    build: { context: ../apps/sandbox }
+    environment: *app_env
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    expose: ["8092"]
 
   gateway:
     profiles: ["app"]
