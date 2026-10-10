@@ -288,7 +288,11 @@ func (s *Server) ListEventUploads(ctx context.Context, req api.ListEventUploadsR
 		created := r.CreatedAt
 		item := api.HostUploadItem{
 			Id: ids.Encode(r.ID), Kind: api.HostUploadItemKind(r.Kind), State: api.HostUploadItemState(r.State),
-			Error: r.Error, CreatedAt: &created,
+			Error: r.Error, CreatedAt: &created, Name: r.OriginalFilename,
+		}
+		if r.OriginalBytes != nil {
+			size := int(*r.OriginalBytes)
+			item.Size = &size
 		}
 		if r.ThumbKey != "" {
 			thumb := s.Store.PublicURL(r.ThumbKey)

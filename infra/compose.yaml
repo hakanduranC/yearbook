@@ -70,6 +70,74 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
+  # ---------------------------------------------------------------------------
+  # Full stack in containers: `docker compose --profile app up --build`
+  # Everything is served through the gateway at http://localhost:8000
+  # ---------------------------------------------------------------------------
+  migrate:
+    profiles: ["app"]
+    build: { context: .., dockerfile: apps/api/Dockerfile }
+    entrypoint: ["/app/ybctl", "migrate"]
+    environment: &app_env
+      DATABASE_URL: postgres://yearbook:yearbook@postgres:5432/yearbook?sslmode=disable
+      S3_ENDPOINT: http://s3:8333
+      S3_PRESIGN_ENDPOINT: http://localhost:8333
+      S3_REGION: us-east-1
+      S3_ACCESS_KEY: yearbook
+      S3_SECRET_KEY: yearbooksecret
+      S3_FORCE_PATH_STYLE: "true"
+      S3_BUCKET_PRIVATE: yearbook-private
+      S3_BUCKET_PUBLIC: yearbook-public
+      PUBLIC_BASE_URL: http://localhost:8333/yearbook-public
+      API_ADDR: ":8080"
+      WEB_ORIGIN: http://localhost:8000
+      ALLOWED_ORIGINS: http://localhost:8000
+      COOKIE_SECURE: "false"
+      SESSION_SECRET: compose-only-change-me-32-bytes-minimum!!
+      SMTP_HOST: mailpit
+      SMTP_PORT: "1025"
+      SMTP_FROM: "Yearbook <hello@yearbook.local>"
+    depends_on:
+      postgres: { condition: service_healthy }
+
+  api:
+    profiles: ["app"]
+    build: { context: .., dockerfile: apps/api/Dockerfile }
+    environment: *app_env
+    volumes:
+      - ../apps/worker/fixtures:/fixtures:ro   # for `ybctl seed --fixtures /fixtures`
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+      s3-init: { condition: service_completed_successfully }
+      mailpit: { condition: service_started }
+    ports: ["8080:8080"]
+
+  worker:
+    profiles: ["app"]
+    build: { context: ../apps/worker }
+    command: ["run", "--concurrency", "2"]
+    environment: *app_env
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+      s3-init: { condition: service_completed_successfully }
+
+  web:
+    profiles: ["app"]
+    build: { context: .., dockerfile: apps/web/Dockerfile }
+    environment:
+      API_INTERNAL_URL: http://api:8080/api/v1
+      PUBLIC_WEB_ORIGIN: http://localhost:8000
+    depends_on:
+      api: { condition: service_started }
+
+  gateway:
+    profiles: ["app"]
+    image: caddy:2.11.4
+    ports: ["8000:8000"]
+    volumes:
+      - ./caddy/Caddyfile.app:/etc/caddy/Caddyfile:ro
+    depends_on: [api, web]
+
 volumes:
   pgdata:
   s3data:

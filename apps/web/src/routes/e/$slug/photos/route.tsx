@@ -144,10 +144,15 @@ function PhotosPage() {
           </>
         ) : (
           <>
-            <ButtonLink to="/e/$slug/upload" params={{ slug }} variant="secondary">
+            <ButtonLink to="/e/$slug/upload" params={{ slug }}>
               {t('photos.addPhotos')}
             </ButtonLink>
-            <Button onClick={selection.start} disabled={items.length === 0} data-select>
+            <Button
+              onClick={selection.start}
+              disabled={items.length === 0}
+              variant="secondary"
+              data-select
+            >
               {t('photos.select')}
             </Button>
           </>

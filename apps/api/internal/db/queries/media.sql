@@ -30,6 +30,13 @@ delete from media where id = $1;
 -- name: RemoveMedia :exec
 update media set state = 'removed', removed_at = now() where id = $1;
 
+-- name: GetEventCoverFallback :one
+-- Newest ready photo of an event, used as the cover when none is set.
+select m.id from media m
+where m.event_id = $1 and m.state = 'ready' and m.kind = 'photo' and m.is_best_of_dup
+order by coalesce(m.captured_at, m.created_at) desc, m.id desc
+limit 1;
+
 -- name: GetVariants :many
 select * from media_variants where media_id = $1;
 
@@ -84,6 +91,7 @@ where m.id = any(@ids::bytea[]) and m.state = 'ready';
 
 -- name: ListHostUploads :many
 select m.id, m.kind, m.state, m.error, m.created_at, m.uploader_guest, m.uploader_user,
+       m.original_filename, m.original_bytes,
        coalesce(g.display_name, u.display_name, '')::text as uploader_name,
        coalesce((select v.key from media_variants v where v.media_id = m.id and v.name = 'thumb'), '')::text as thumb_key
 from media m

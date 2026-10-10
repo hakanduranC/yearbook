@@ -295,8 +295,17 @@ func (s *Server) eventJSON(ctx context.Context, e db.Event, ownerName string, v 
 	if v.p.User != nil {
 		out.Viewer.DisplayName = &v.p.User.DisplayName
 	}
-	if e.CoverMedia != nil {
-		variants, err := s.Q.GetVariants(ctx, e.CoverMedia)
+	coverID := e.CoverMedia
+	if coverID == nil {
+		// No explicit cover yet: fall back to the newest ready photo so link previews have an image.
+		if id, err := s.Q.GetEventCoverFallback(ctx, e.ID); err == nil {
+			coverID = id
+		} else if !errors.Is(err, pgx.ErrNoRows) {
+			return api.Event{}, err
+		}
+	}
+	if coverID != nil {
+		variants, err := s.Q.GetVariants(ctx, coverID)
 		if err != nil {
 			return api.Event{}, err
 		}

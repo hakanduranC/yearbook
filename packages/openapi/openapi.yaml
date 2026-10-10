@@ -495,7 +495,8 @@ components:
       type: object
       properties:
         display_name: { type: string, minLength: 1, maxLength: 80 }
-        birthdate: { type: [string, "null"], format: date }
+        birthdate: { type: string, format: date }
+        clear_birthdate: { type: boolean, description: Remove the stored birthdate }
         locale: { type: string, enum: [de, en] }
 
     Viewer:
@@ -630,6 +631,7 @@ components:
         part_size: { type: integer }
         expires_at: { type: string, format: date-time }
         duplicate_of: { $ref: "#/components/schemas/Id" }
+        item: { $ref: "#/components/schemas/GridItem", description: The existing item when mode is duplicate }
     UploadIntentResponse:
       type: object
       required: [uploads]
@@ -764,6 +766,8 @@ components:
         kind: { type: string, enum: [photo, video] }
         state: { type: string, enum: [uploading, queued, processing, ready, failed, removed] }
         thumb: { type: string }
+        name: { type: [string, "null"], description: Original filename }
+        size: { type: [integer, "null"], description: Original bytes }
         error: { type: [string, "null"] }
         created_at: { type: string, format: date-time }
     HostUploader:

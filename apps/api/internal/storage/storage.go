@@ -44,9 +44,19 @@ func New(ctx context.Context, cfg config.Config) (*Client, error) {
 		o.BaseEndpoint = aws.String(cfg.S3Endpoint)
 		o.UsePathStyle = cfg.S3ForcePathStyle
 	})
+	// Presigned URLs embed the host in the signature, so they are signed against the
+	// endpoint the browser will use, which may differ from the one the API uses internally.
+	presignEndpoint := cfg.S3PresignEndpoint
+	if presignEndpoint == "" {
+		presignEndpoint = cfg.S3Endpoint
+	}
+	presignClient := s3.NewFromConfig(awsCfg, func(o *s3.Options) {
+		o.BaseEndpoint = aws.String(presignEndpoint)
+		o.UsePathStyle = cfg.S3ForcePathStyle
+	})
 	return &Client{
 		s3:            client,
-		presign:       s3.NewPresignClient(client),
+		presign:       s3.NewPresignClient(presignClient),
 		Private:       cfg.S3BucketPrivate,
 		Public:        cfg.S3BucketPublic,
 		publicBaseURL: strings.TrimRight(cfg.PublicBaseURL, "/"),

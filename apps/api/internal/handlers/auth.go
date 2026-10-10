@@ -136,7 +136,10 @@ func (s *Server) UpdateMe(ctx context.Context, req api.UpdateMeRequestObject) (a
 		}
 		params.Locale = &loc
 	}
-	if req.Body.Birthdate != nil {
+	if req.Body.ClearBirthdate != nil && *req.Body.ClearBirthdate {
+		params.SetBirthdate = true
+		params.Birthdate = nil
+	} else if req.Body.Birthdate != nil {
 		t := req.Body.Birthdate.Time
 		if t.After(time.Now()) {
 			return nil, apperr.BadRequestf("birthdate must be in the past")

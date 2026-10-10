@@ -2,7 +2,7 @@
 #   docker build -f apps/web/Dockerfile -t yearbook-web .
 FROM node:26-slim AS build
 ENV PNPM_HOME=/pnpm PATH=/pnpm:$PATH CI=true
-RUN corepack enable && corepack prepare pnpm@10.34.6 --activate
+RUN npm install -g pnpm@10.34.6
 WORKDIR /repo
 COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
 COPY packages/openapi/package.json packages/openapi/

@@ -114,6 +114,21 @@ func (q *Queries) FindReadyDuplicate(ctx context.Context, arg FindReadyDuplicate
 	return id, err
 }
 
+const getEventCoverFallback = `-- name: GetEventCoverFallback :one
+select m.id from media m
+where m.event_id = $1 and m.state = 'ready' and m.kind = 'photo' and m.is_best_of_dup
+order by coalesce(m.captured_at, m.created_at) desc, m.id desc
+limit 1
+`
+
+// Newest ready photo of an event, used as the cover when none is set.
+func (q *Queries) GetEventCoverFallback(ctx context.Context, eventID []byte) ([]byte, error) {
+	row := q.db.QueryRow(ctx, getEventCoverFallback, eventID)
+	var id []byte
+	err := row.Scan(&id)
+	return id, err
+}
+
 const getGridRows = `-- name: GetGridRows :many
 select
   m.id, m.event_id, m.kind, m.state, m.captured_at, m.captured_src, m.created_at,
@@ -289,6 +304,7 @@ func (q *Queries) GetVariants(ctx context.Context, mediaID []byte) ([]MediaVaria
 
 const listHostUploads = `-- name: ListHostUploads :many
 select m.id, m.kind, m.state, m.error, m.created_at, m.uploader_guest, m.uploader_user,
+       m.original_filename, m.original_bytes,
        coalesce(g.display_name, u.display_name, '')::text as uploader_name,
        coalesce((select v.key from media_variants v where v.media_id = m.id and v.name = 'thumb'), '')::text as thumb_key
 from media m
@@ -299,15 +315,17 @@ order by m.created_at desc
 `
 
 type ListHostUploadsRow struct {
-	ID            []byte     `json:"id"`
-	Kind          string     `json:"kind"`
-	State         MediaState `json:"state"`
-	Error         *string    `json:"error"`
-	CreatedAt     time.Time  `json:"created_at"`
-	UploaderGuest []byte     `json:"uploader_guest"`
-	UploaderUser  []byte     `json:"uploader_user"`
-	UploaderName  string     `json:"uploader_name"`
-	ThumbKey      string     `json:"thumb_key"`
+	ID               []byte     `json:"id"`
+	Kind             string     `json:"kind"`
+	State            MediaState `json:"state"`
+	Error            *string    `json:"error"`
+	CreatedAt        time.Time  `json:"created_at"`
+	UploaderGuest    []byte     `json:"uploader_guest"`
+	UploaderUser     []byte     `json:"uploader_user"`
+	OriginalFilename *string    `json:"original_filename"`
+	OriginalBytes    *int64     `json:"original_bytes"`
+	UploaderName     string     `json:"uploader_name"`
+	ThumbKey         string     `json:"thumb_key"`
 }
 
 func (q *Queries) ListHostUploads(ctx context.Context, eventID []byte) ([]ListHostUploadsRow, error) {
@@ -327,6 +345,8 @@ func (q *Queries) ListHostUploads(ctx context.Context, eventID []byte) ([]ListHo
 			&i.CreatedAt,
 			&i.UploaderGuest,
 			&i.UploaderUser,
+			&i.OriginalFilename,
+			&i.OriginalBytes,
 			&i.UploaderName,
 			&i.ThumbKey,
 		); err != nil {

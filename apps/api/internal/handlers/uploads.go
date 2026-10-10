@@ -87,9 +87,14 @@ func (s *Server) CreateUploads(ctx context.Context, req api.CreateUploadsRequest
 				return nil, err
 			} else if ok {
 				dupID := ids.Encode(dup)
-				out = append(out, api.UploadInit{
+				init := api.UploadInit{
 					ClientId: f.ClientId, MediaId: dupID, Mode: api.UploadInitModeDuplicate, DuplicateOf: &dupID, ExpiresAt: time.Now().UTC(),
-				})
+				}
+				// Hand the client the existing item so it can show it without another request.
+				if item, err := s.gridItem(ctx, dup, v); err == nil {
+					init.Item = &item
+				}
+				out = append(out, init)
 				continue
 			}
 		}

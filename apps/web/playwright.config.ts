@@ -38,7 +38,7 @@ export default defineConfig({
     {
       command: 'pnpm dev',
       url: 'http://localhost:3000/api/health',
-      reuseExistingServer: false,
+      reuseExistingServer: live,
       timeout: 60_000,
       env: {
         API_PROXY_TARGET: apiTarget,

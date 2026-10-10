@@ -440,7 +440,9 @@ export type components = {
         MeUpdate: {
             display_name?: string;
             /** Format: date */
-            birthdate?: string | null;
+            birthdate?: string;
+            /** @description Remove the stored birthdate */
+            clear_birthdate?: boolean;
             /** @enum {string} */
             locale?: "de" | "en";
         };
@@ -555,6 +557,8 @@ export type components = {
             /** Format: date-time */
             expires_at: string;
             duplicate_of?: components["schemas"]["Id"];
+            /** @description The existing item when mode is duplicate */
+            item?: components["schemas"]["GridItem"];
         };
         UploadIntentResponse: {
             uploads: components["schemas"]["UploadInit"][];
@@ -660,6 +664,10 @@ export type components = {
             /** @enum {string} */
             state: "uploading" | "queued" | "processing" | "ready" | "failed" | "removed";
             thumb?: string;
+            /** @description Original filename */
+            name?: string | null;
+            /** @description Original bytes */
+            size?: number | null;
             error?: string | null;
             /** Format: date-time */
             created_at?: string;
