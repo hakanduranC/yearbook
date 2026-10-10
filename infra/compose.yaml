@@ -76,7 +76,11 @@ services:
   # ---------------------------------------------------------------------------
   migrate:
     profiles: ["app"]
-    build: { context: .., dockerfile: apps/api/Dockerfile }
+    build: &api_build
+      context: ..
+      dockerfile: apps/api/Dockerfile
+      args:
+        GOPROXY: ${GOPROXY:-https://proxy.golang.org,direct}
     entrypoint: ["/app/ybctl", "migrate"]
     environment: &app_env
       DATABASE_URL: postgres://yearbook:yearbook@postgres:5432/yearbook?sslmode=disable
@@ -116,7 +120,7 @@ services:
 
   api:
     profiles: ["app"]
-    build: { context: .., dockerfile: apps/api/Dockerfile }
+    build: *api_build
     environment: *app_env
     volumes:
       - ../apps/worker/fixtures:/fixtures:ro   # for `ybctl seed --fixtures /fixtures`
