@@ -38,9 +38,19 @@ dir = "apps/api"
 run = "air"
 
 [tasks.worker]
-description = "Run the Python worker with reload"
+description = "Run the light worker (ingest, import) with reload"
 dir = "apps/worker"
-run = "uv run watchfiles --filter python 'python -m yearbook_worker run' src"
+run = "uv run watchfiles --filter python 'python -m yearbook_worker run --kinds ingest,import,recompute_scores' src"
+
+[tasks."ml-worker"]
+description = "Run the ML worker (faces, embeddings, quality, tags, age, clustering)"
+dir = "apps/worker"
+run = "uv run yearbook-worker run --kinds analyze,cluster_event --concurrency 1"
+
+[tasks.ml]
+description = "Run the ML server for text embeddings on :8090"
+dir = "apps/worker"
+run = "uv run yearbook-worker serve --port 8090"
 
 [tasks.web]
 description = "Run the web app"

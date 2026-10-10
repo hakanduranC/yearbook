@@ -97,6 +97,14 @@ services:
       SMTP_HOST: mailpit
       SMTP_PORT: "1025"
       SMTP_FROM: "Yearbook <hello@yearbook.local>"
+      ML_URL: http://ml:8090
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENAI_MODEL: ${OPENAI_MODEL:-}
+      OPERATOR_EMAIL: ${OPERATOR_EMAIL:-demo@yearbook.local}
+      AGENT_DB_PASSWORD: ${AGENT_DB_PASSWORD:-agent-ro-dev}
+      HF_HOME: /models/hf
+      INSIGHTFACE_HOME: /models/insightface
+      WORKER_TAGS_ENABLED: ${WORKER_TAGS_ENABLED:-true}
     depends_on:
       postgres: { condition: service_healthy }
 
@@ -113,13 +121,39 @@ services:
     ports: ["8080:8080"]
 
   worker:
+    # light pipeline: variants, hashes, dedupe, imports
     profiles: ["app"]
     build: { context: ../apps/worker }
-    command: ["run", "--concurrency", "2"]
+    command: ["run", "--kinds", "ingest,import,recompute_scores", "--concurrency", "2"]
     environment: *app_env
     depends_on:
       migrate: { condition: service_completed_successfully }
       s3-init: { condition: service_completed_successfully }
+
+  ml-worker:
+    # faces, embeddings, quality, tags, age, clustering. Models download on first run into the models volume.
+    profiles: ["app"]
+    build: { context: ../apps/worker }
+    command: ["run", "--kinds", "analyze,cluster_event", "--concurrency", "1"]
+    environment: *app_env
+    volumes: [models:/models]
+    deploy:
+      resources:
+        limits: { memory: 8g }
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+      s3-init: { condition: service_completed_successfully }
+
+  ml:
+    # text embeddings for search (SigLIP 2 text tower)
+    profiles: ["app"]
+    build: { context: ../apps/worker }
+    command: ["serve", "--port", "8090"]
+    environment: *app_env
+    volumes: [models:/models]
+    expose: ["8090"]
+    depends_on:
+      migrate: { condition: service_completed_successfully }
 
   web:
     profiles: ["app"]
@@ -141,3 +175,4 @@ services:
 volumes:
   pgdata:
   s3data:
+  models:
