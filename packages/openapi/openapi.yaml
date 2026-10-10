@@ -1529,6 +1529,19 @@ components:
           type: array
           items: { $ref: "#/components/schemas/Chip" }
         saveable: { type: boolean }
+        attachments:
+          type: array
+          description: Files the agent produced in the sandbox (charts, collages); short-lived URLs
+          items: { $ref: "#/components/schemas/Attachment" }
+    Attachment:
+      type: object
+      required: [name, url, mime]
+      properties:
+        name: { type: string }
+        url: { type: string }
+        mime: { type: string }
+        width: { type: integer }
+        height: { type: integer }
     SavedCommand:
       type: object
       required: [id, name, label, description, params, scope]
@@ -1541,6 +1554,9 @@ components:
         event_slug: { type: string }
         params: { type: object, additionalProperties: true, description: JSON schema of parameters }
         shared: { type: boolean, description: Approved by the host for every guest of the event }
+        kind: { type: string, enum: [sql, search, python], description: python tools run only in the sandbox }
+        created_by_agent: { type: boolean }
+        run_count: { type: integer }
 
     # ---------------------------------------------------------------- albums
     Album:

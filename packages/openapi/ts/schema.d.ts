@@ -391,6 +391,551 @@ export type paths = {
         patch?: never;
         trace?: never;
     };
+    "/events/{slug}/people": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: components["parameters"]["Slug"];
+            };
+            cookie?: never;
+        };
+        get: operations["listPeople"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/people/{person_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                person_id: components["parameters"]["PersonId"];
+            };
+            cookie?: never;
+        };
+        get: operations["getPerson"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["updatePerson"];
+        trace?: never;
+    };
+    "/people/{person_id}/claim": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                person_id: components["parameters"]["PersonId"];
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Links the person to the caller's identity ("This is me"). Guests get an identity tied to their cookie. */
+        post: operations["claimPerson"];
+        delete: operations["unclaimPerson"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/people/merge": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Host, or the claimant for persons that are them. Keeps the first id. */
+        post: operations["mergePeople"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/people/{person_id}/split": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                person_id: components["parameters"]["PersonId"];
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["splitPerson"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/faces/{face_id}/not-person": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                face_id: components["parameters"]["FaceId"];
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Marks the face as wrongly assigned; records a cannot-link constraint and reclusters. */
+        post: operations["faceNotPerson"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/faces/{face_id}/crop.jpg": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                face_id: components["parameters"]["FaceId"];
+            };
+            cookie?: never;
+        };
+        get: operations["getFaceCrop"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/media/{media_id}/faces": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                media_id: components["parameters"]["MediaId"];
+            };
+            cookie?: never;
+        };
+        get: operations["listMediaFaces"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/people": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["listMyPeople"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/suggestions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["listMySuggestions"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/face-data": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** @description Removes identity links and the faces of linked persons. Photos stay. */
+        delete: operations["deleteMyFaceData"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/events/{slug}/search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: components["parameters"]["Slug"];
+            };
+            cookie?: never;
+        };
+        /** @description Hybrid text search without the language model (vector + full text + tags). */
+        get: operations["searchEventMedia"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["searchMyMedia"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/agent/messages": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["sendAgentMessage"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/agent/commands": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["listSavedCommands"];
+        put?: never;
+        post: operations["saveCommand"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/agent/commands/{command_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                command_id: components["schemas"]["Id"];
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: operations["deleteSavedCommand"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/agent/commands/{command_id}/run": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                command_id: components["schemas"]["Id"];
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Runs a saved command with no language model call. */
+        post: operations["runSavedCommand"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/media/{media_id}/describe": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                media_id: components["parameters"]["MediaId"];
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description User-initiated. Sends this one image to the vision model and returns a description. */
+        post: operations["describeMedia"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/events/{slug}/best": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: components["parameters"]["Slug"];
+            };
+            cookie?: never;
+        };
+        get: operations["listEventHighlights"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/events/{slug}/albums": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: components["parameters"]["Slug"];
+            };
+            cookie?: never;
+        };
+        get: operations["listEventAlbums"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/albums": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["createAlbum"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/albums/{album_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                album_id: components["parameters"]["AlbumId"];
+            };
+            cookie?: never;
+        };
+        get: operations["getAlbum"];
+        put?: never;
+        post?: never;
+        delete: operations["deleteAlbum"];
+        options?: never;
+        head?: never;
+        patch: operations["updateAlbum"];
+        trace?: never;
+    };
+    "/albums/{album_id}/share": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                album_id: components["parameters"]["AlbumId"];
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["shareAlbum"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/s/{share_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                share_id: components["schemas"]["Id"];
+            };
+            cookie?: never;
+        };
+        get: operations["getSharedAlbum"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/years": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["listMyYears"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/years/{year}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                year: number;
+            };
+            cookie?: never;
+        };
+        get: operations["getMyYear"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/imports": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["listImports"];
+        put?: never;
+        /** @description Starts an import. For zip and takeout the response carries presigned multipart URLs for the archive. */
+        post: operations["createImport"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/imports/{import_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                import_id: components["parameters"]["ImportId"];
+            };
+            cookie?: never;
+        };
+        get: operations["getImport"];
+        put?: never;
+        post?: never;
+        delete: operations["cancelImport"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/imports/{import_id}/complete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                import_id: components["parameters"]["ImportId"];
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["completeImport"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/library": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["listMyLibrary"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/media/{media_id}/event": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                media_id: components["parameters"]["MediaId"];
+            };
+            cookie?: never;
+        };
+        get?: never;
+        /** @description Moves a library item into one of my events, or out of it with event_slug null. */
+        put: operations["assignMediaEvent"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 };
 export type webhooks = Record<string, never>;
 export type components = {
@@ -416,7 +961,7 @@ export type components = {
             /** Format: email */
             email: string;
             /** @enum {string} */
-            locale?: "de" | "en";
+            locale?: "de" | "en" | "tr";
             /** @description Path on the web origin to return to */
             next?: string;
         };
@@ -435,7 +980,10 @@ export type components = {
             /** Format: date */
             birthdate?: string;
             /** @enum {string} */
-            locale: "de" | "en";
+            locale: "de" | "en" | "tr";
+            link_across?: boolean;
+            hide_from_people?: boolean;
+            has_claimed_person?: boolean;
         };
         MeUpdate: {
             display_name?: string;
@@ -444,7 +992,11 @@ export type components = {
             /** @description Remove the stored birthdate */
             clear_birthdate?: boolean;
             /** @enum {string} */
-            locale?: "de" | "en";
+            locale?: "de" | "en" | "tr";
+            /** @description Allow cross-event face suggestions */
+            link_across?: boolean;
+            /** @description Hide my linked persons from People tabs */
+            hide_from_people?: boolean;
         };
         Viewer: {
             /** @enum {string} */
@@ -467,6 +1019,9 @@ export type components = {
             failed: number;
             /** @description Photos the viewer appears in */
             of_you?: number;
+            people?: number;
+            /** @description Media items that finished face analysis */
+            faces_done?: number;
         };
         Event: {
             id: components["schemas"]["Id"];
@@ -484,6 +1039,9 @@ export type components = {
             };
             guest_upload: boolean;
             guest_view: boolean;
+            faces_enabled?: boolean;
+            /** Format: date-time */
+            clustered_at?: string | null;
             counts: components["schemas"]["EventCounts"];
             viewer: components["schemas"]["Viewer"];
             /** Format: date-time */
@@ -510,6 +1068,7 @@ export type components = {
             cover_media_id?: components["schemas"]["Id"];
             guest_upload?: boolean;
             guest_view?: boolean;
+            faces_enabled?: boolean;
         };
         EventList: {
             items: components["schemas"]["Event"][];
@@ -617,6 +1176,8 @@ export type components = {
             person_ids: components["schemas"]["Id"][];
             score?: number | null;
             processing: boolean;
+            /** @description Faces */
+            analyzed?: boolean;
         };
         MediaGroup: {
             /** @description Localized later by the client from start/end; server sends a key like evening */
@@ -687,6 +1248,219 @@ export type components = {
             uploaders: components["schemas"]["HostUploader"][];
             status: components["schemas"]["EventStatus"];
         };
+        Person: {
+            id: components["schemas"]["Id"];
+            event_slug: string;
+            display_name?: string | null;
+            named: boolean;
+            /** @description Crop URL of the cover face, served by the API */
+            crop_url?: string;
+            face_count: number;
+            media_count?: number;
+            is_me: boolean;
+            /** @description Heuristic guess that this is the viewer */
+            suggested_me?: boolean;
+            /** @description Linked to any identity */
+            linked?: boolean;
+            hidden: boolean;
+            can_edit?: boolean;
+        };
+        PersonUpdate: {
+            display_name?: string | null;
+            hidden?: boolean;
+        };
+        PeopleList: {
+            persons: components["schemas"]["Person"][];
+            unnamed_count?: number;
+            /** @description Face analysis still running for some items */
+            analyzing?: boolean;
+        };
+        Face: {
+            id: components["schemas"]["Id"];
+            media_id: components["schemas"]["Id"];
+            person_id?: components["schemas"]["Id"];
+            /** @description x, y, w, h in original pixels */
+            bbox: number[];
+            crop_url?: string;
+            age_est?: number | null;
+            quality?: number | null;
+        };
+        Suggestion: {
+            person: components["schemas"]["Person"];
+            event_title: string;
+            /** Format: date-time */
+            event_starts_at?: string;
+            confidence: number;
+        };
+        AgentRequest: {
+            text: string;
+            /** @description Scope to one event; omitted = all my events and library */
+            event_slug?: string;
+            conversation_id?: components["schemas"]["Id"];
+        };
+        Chip: {
+            label: string;
+            /** @description The message to send when tapped */
+            text: string;
+            command_id?: components["schemas"]["Id"];
+        };
+        AgentResult: {
+            /** @enum {string} */
+            kind: "media";
+            title: string;
+            media_ids: components["schemas"]["Id"][];
+            items?: components["schemas"]["GridItem"][];
+            /** @enum {string} */
+            group_by?: "time" | "person" | "none";
+        } | {
+            /** @enum {string} */
+            kind: "people";
+            title: string;
+            persons: components["schemas"]["Person"][];
+        } | {
+            /** @enum {string} */
+            kind: "stat";
+            title: string;
+            value: string;
+            detail?: string;
+            items?: components["schemas"]["GridItem"][];
+        } | {
+            /** @enum {string} */
+            kind: "album";
+            album: components["schemas"]["Album"];
+        } | {
+            /** @enum {string} */
+            kind: "clarify";
+            question: string;
+            options: string[];
+        } | {
+            /** @enum {string} */
+            kind: "empty";
+            title: string;
+        };
+        AgentResponse: {
+            conversation_id: components["schemas"]["Id"];
+            turn_id: components["schemas"]["Id"];
+            understood: string;
+            result: components["schemas"]["AgentResult"];
+            suggestions: components["schemas"]["Chip"][];
+            saveable: boolean;
+        };
+        SavedCommand: {
+            id: components["schemas"]["Id"];
+            name: string;
+            label: string;
+            description: string;
+            /** @enum {string} */
+            scope: "event" | "global";
+            event_slug?: string;
+            /** @description JSON schema of parameters */
+            params: {
+                [key: string]: unknown;
+            };
+            /** @description Approved by the host for every guest of the event */
+            shared?: boolean;
+        };
+        Album: {
+            id: components["schemas"]["Id"];
+            event_slug?: string;
+            title: string;
+            /** @enum {string} */
+            kind: "highlights" | "manual" | "agent";
+            count: number;
+            cover?: components["schemas"]["Variants"];
+            can_edit?: boolean;
+        };
+        AlbumCreate: {
+            event_slug?: string;
+            title: string;
+            media_ids: components["schemas"]["Id"][];
+        };
+        AlbumUpdate: {
+            title?: string;
+            add?: components["schemas"]["Id"][];
+            remove?: components["schemas"]["Id"][];
+        };
+        AlbumDetail: components["schemas"]["Album"] & {
+            items: components["schemas"]["GridItem"][];
+            allow_download: boolean;
+            event_title?: string;
+        };
+        Share: {
+            share_id: components["schemas"]["Id"];
+            url: string;
+            /** Format: date-time */
+            expires_at?: string | null;
+            allow_download: boolean;
+        };
+        EventSummary: {
+            slug: string;
+            title: string;
+            /** Format: date-time */
+            starts_at: string;
+            photos: number;
+            of_you: number;
+            cover?: components["schemas"]["Variants"];
+            /** @description Up to 4 best photos of the viewer in this event, for the fanned stack */
+            of_you_items?: components["schemas"]["GridItem"][];
+            analyzing?: boolean;
+        };
+        YearSummary: {
+            year: number;
+            /** @description Photos of you this year */
+            moments: number;
+            events: components["schemas"]["EventSummary"][];
+        };
+        TopPerson: {
+            person_id?: components["schemas"]["Id"];
+            display_name: string;
+            count: number;
+            crop_url?: string;
+        };
+        YearRecap: {
+            year: number;
+            moments: number;
+            events: components["schemas"]["EventSummary"][];
+            best_of_you: components["schemas"]["GridItem"][];
+            top_people: components["schemas"]["TopPerson"][];
+            portrait?: components["schemas"]["GridItem"];
+        };
+        ImportCreate: {
+            /** @enum {string} */
+            kind: "takeout" | "zip" | "folder";
+            /** @description Put everything into this event instead of matching by time */
+            event_slug?: string;
+            filename?: string;
+            size?: number;
+            /** @description Server-side directory */
+            path?: string;
+        };
+        ImportInit: components["schemas"]["Import"] & {
+            upload?: components["schemas"]["UploadInit"];
+        };
+        Import: {
+            id: components["schemas"]["Id"];
+            /** @enum {string} */
+            kind: "takeout" | "zip" | "folder";
+            /** @enum {string} */
+            state: "uploading" | "queued" | "running" | "done" | "failed" | "cancelled";
+            event_slug?: string;
+            stats: {
+                found: number;
+                imported: number;
+                duplicates: number;
+                failed: number;
+                /** @description Items auto-assigned to an event by time */
+                matched: number;
+                /** @description Takeout people names applied */
+                people_seeded?: number;
+            };
+            error?: string | null;
+            /** Format: date-time */
+            created_at: string;
+            /** Format: date-time */
+            finished_at?: string | null;
+        };
     };
     responses: {
         /** @description Error */
@@ -702,6 +1476,10 @@ export type components = {
     parameters: {
         Slug: string;
         MediaId: components["schemas"]["Id"];
+        PersonId: components["schemas"]["Id"];
+        FaceId: components["schemas"]["Id"];
+        AlbumId: components["schemas"]["Id"];
+        ImportId: components["schemas"]["Id"];
     };
     requestBodies: never;
     headers: never;
@@ -1190,7 +1968,10 @@ export interface operations {
     listEventMedia: {
         parameters: {
             query?: {
-                filter?: "all" | "best" | "videos" | "mine";
+                /** @description all | best | videos | mine | me | person:{id} | album:{id} | library */
+                filter?: string;
+                age_min?: number;
+                age_max?: number;
                 cursor?: string;
                 limit?: number;
             };
@@ -1383,6 +2164,904 @@ export interface operations {
                 };
                 content: {
                     "application/zip": string;
+                };
+            };
+        };
+    };
+    listPeople: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: components["parameters"]["Slug"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Face clusters of the event, biggest first; hidden persons omitted unless they are the viewer */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PeopleList"];
+                };
+            };
+        };
+    };
+    getPerson: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                person_id: components["parameters"]["PersonId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description One person */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Person"];
+                };
+            };
+        };
+    };
+    updatePerson: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                person_id: components["parameters"]["PersonId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PersonUpdate"];
+            };
+        };
+        responses: {
+            /** @description Updated */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Person"];
+                };
+            };
+        };
+    };
+    claimPerson: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                person_id: components["parameters"]["PersonId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Linked */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Person"];
+                };
+            };
+        };
+    };
+    unclaimPerson: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                person_id: components["parameters"]["PersonId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Unlinked */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Person"];
+                };
+            };
+        };
+    };
+    mergePeople: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    person_ids: components["schemas"]["Id"][];
+                };
+            };
+        };
+        responses: {
+            /** @description The surviving person */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Person"];
+                };
+            };
+        };
+    };
+    splitPerson: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                person_id: components["parameters"]["PersonId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    face_ids: components["schemas"]["Id"][];
+                };
+            };
+        };
+        responses: {
+            /** @description The new person made of the given faces */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Person"];
+                };
+            };
+        };
+    };
+    faceNotPerson: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                face_id: components["parameters"]["FaceId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Recorded */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getFaceCrop: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                face_id: components["parameters"]["FaceId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Private face crop, served through the API */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "image/jpeg": string;
+                };
+            };
+        };
+    };
+    listMediaFaces: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                media_id: components["parameters"]["MediaId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Faces in one item with boxes and persons */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        faces: components["schemas"]["Face"][];
+                    };
+                };
+            };
+        };
+    };
+    listMyPeople: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Persons linked to my identity, across events */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PeopleList"];
+                };
+            };
+        };
+    };
+    listMySuggestions: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Unclaimed persons in my events that are probably me */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        suggestions: components["schemas"]["Suggestion"][];
+                    };
+                };
+            };
+        };
+    };
+    deleteMyFaceData: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Deleted */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    searchEventMedia: {
+        parameters: {
+            query: {
+                q: string;
+                limit?: number;
+            };
+            header?: never;
+            path: {
+                slug: components["parameters"]["Slug"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Matching items, best match first */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MediaPage"];
+                };
+            };
+        };
+    };
+    searchMyMedia: {
+        parameters: {
+            query: {
+                q: string;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Matching items across my events and library */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MediaPage"];
+                };
+            };
+        };
+    };
+    sendAgentMessage: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AgentRequest"];
+            };
+        };
+        responses: {
+            /** @description A structured result the UI renders */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AgentResponse"];
+                };
+            };
+            503: components["responses"]["Error"];
+        };
+    };
+    listSavedCommands: {
+        parameters: {
+            query?: {
+                event_slug?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Saved commands visible in this scope */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        commands: components["schemas"]["SavedCommand"][];
+                    };
+                };
+            };
+        };
+    };
+    saveCommand: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    turn_id: components["schemas"]["Id"];
+                    label: string;
+                };
+            };
+        };
+        responses: {
+            /** @description Saved */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SavedCommand"];
+                };
+            };
+        };
+    };
+    deleteSavedCommand: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                command_id: components["schemas"]["Id"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Deleted */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    runSavedCommand: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                command_id: components["schemas"]["Id"];
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    event_slug?: string;
+                    params?: {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+        };
+        responses: {
+            /** @description Result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AgentResponse"];
+                };
+            };
+        };
+    };
+    describeMedia: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                media_id: components["parameters"]["MediaId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Description */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        text: string;
+                    };
+                };
+            };
+            503: components["responses"]["Error"];
+        };
+    };
+    listEventHighlights: {
+        parameters: {
+            query?: {
+                limit?: number;
+            };
+            header?: never;
+            path: {
+                slug: components["parameters"]["Slug"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Auto-picked best photos, diverse across time, one per burst */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MediaPage"];
+                };
+            };
+        };
+    };
+    listEventAlbums: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: components["parameters"]["Slug"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Albums of the event the viewer may see */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        albums: components["schemas"]["Album"][];
+                    };
+                };
+            };
+        };
+    };
+    createAlbum: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AlbumCreate"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Album"];
+                };
+            };
+        };
+    };
+    getAlbum: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                album_id: components["parameters"]["AlbumId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Album with items */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AlbumDetail"];
+                };
+            };
+        };
+    };
+    deleteAlbum: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                album_id: components["parameters"]["AlbumId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Deleted */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    updateAlbum: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                album_id: components["parameters"]["AlbumId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AlbumUpdate"];
+            };
+        };
+        responses: {
+            /** @description Updated */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AlbumDetail"];
+                };
+            };
+        };
+    };
+    shareAlbum: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                album_id: components["parameters"]["AlbumId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    expires_days?: number;
+                    /** @default true */
+                    allow_download?: boolean;
+                };
+            };
+        };
+        responses: {
+            /** @description Share link */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Share"];
+                };
+            };
+        };
+    };
+    getSharedAlbum: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                share_id: components["schemas"]["Id"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Read-only album for anyone with the link */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AlbumDetail"];
+                };
+            };
+            404: components["responses"]["Error"];
+        };
+    };
+    listMyYears: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Years with the events I appear in */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        years: components["schemas"]["YearSummary"][];
+                    };
+                };
+            };
+        };
+    };
+    getMyYear: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                year: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Recap of one year */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["YearRecap"];
+                };
+            };
+        };
+    };
+    listImports: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description My imports, newest first */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        imports: components["schemas"]["Import"][];
+                    };
+                };
+            };
+        };
+    };
+    createImport: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ImportCreate"];
+            };
+        };
+        responses: {
+            /** @description Import created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ImportInit"];
+                };
+            };
+        };
+    };
+    getImport: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                import_id: components["parameters"]["ImportId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Import status */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Import"];
+                };
+            };
+        };
+    };
+    cancelImport: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                import_id: components["parameters"]["ImportId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Cancelled */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    completeImport: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                import_id: components["parameters"]["ImportId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["UploadComplete"];
+            };
+        };
+        responses: {
+            /** @description Archive received, processing queued */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Import"];
+                };
+            };
+        };
+    };
+    listMyLibrary: {
+        parameters: {
+            query?: {
+                cursor?: string;
+                limit?: number;
+                /** @description Only items not matched to an event */
+                unassigned?: boolean;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description My personal library (imports and uploads without an event) */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MediaPage"];
+                };
+            };
+        };
+    };
+    assignMediaEvent: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                media_id: components["parameters"]["MediaId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    event_slug?: string | null;
+                };
+            };
+        };
+        responses: {
+            /** @description Updated item */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GridItem"];
                 };
             };
         };
