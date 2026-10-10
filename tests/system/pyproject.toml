@@ -1,0 +1,13 @@
+[project]
+name = "yearbook-system-tests"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = ["pytest>=8", "requests>=2.32", "sseclient-py>=1.8", "pillow>=11"]
+
+[tool.pytest.ini_options]
+testpaths = ["."]
+addopts = "-ra --tb=short"
+markers = [
+  "round2: needs the people / search / agent / import endpoints",
+  "ml: needs the ML worker with models (slow)",
+]

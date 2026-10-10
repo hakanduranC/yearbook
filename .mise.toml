@@ -70,3 +70,8 @@ run = [
 [tasks.ci]
 depends = ["gen", "lint", "test"]
 run = "git diff --exit-code -- apps/api/internal/gen packages/openapi/ts"
+
+[tasks."test:system"]
+description = "System tests against the running stack (BASE_URL, default http://localhost:8000)"
+dir = "tests/system"
+run = "uv run pytest -q"
