@@ -186,19 +186,22 @@ services:
   sandbox:
     # The only service that may start containers. Runs agent-written code in throwaway,
     # network-less containers. Needs the Docker socket; in production use gVisor (SANDBOX_RUNTIME=runsc).
+    # Explicit image name: the default (yearbook-sandbox) would collide with the runtime image tag.
     profiles: ["app"]
+    image: yearbook-sandbox-service
     build: { context: ../apps/sandbox }
     environment:
       <<: *app_env
-      SANDBOX_WORK_DIR: /var/lib/yearbook-sandbox
+      # Must be a HOST directory bound at the identical path inside this container: the paths this
+      # service hands to the Docker daemon are host paths (a named volume would not resolve).
+      SANDBOX_WORK_DIR: ${SANDBOX_WORK_DIR:-${HOME}/.cache/yearbook-sandbox}
       SANDBOX_IMAGE: yearbook-sandbox:latest
     # Runs as root inside its own container because it needs the Docker socket and must create
-    # run directories the daemon can bind-mount. The work dir is bound at the same path on host and
-    # container because paths handed to the daemon are host paths.
+    # run directories the daemon can bind-mount.
     user: "0:0"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - sandboxwork:/var/lib/yearbook-sandbox
+      - ${SANDBOX_WORK_DIR:-${HOME}/.cache/yearbook-sandbox}:${SANDBOX_WORK_DIR:-${HOME}/.cache/yearbook-sandbox}
     expose: ["8092"]
 
   gateway:
@@ -213,4 +216,3 @@ volumes:
   pgdata:
   s3data:
   models:
-  sandboxwork:
