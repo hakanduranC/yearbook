@@ -33,14 +33,14 @@ FIXTURES = REPO / "apps" / "worker" / "fixtures"
 
 def _up(url: str) -> bool:
     try:
-        return requests.get(url, timeout=3).status_code < 500
+        return requests.get(url, timeout=10).status_code < 500
     except requests.RequestException:
         return False
 
 
 @pytest.fixture(scope="session", autouse=True)
 def stack_is_up():
-    missing = [u for u in (f"{API}/health", f"{BASE_URL}/", f"{MAILPIT}/api/v1/info") if not _up(u)]
+    missing = [u for u in (f"{API}/health", f"{BASE_URL}/", f"{MAILPIT}/api/v1/messages?limit=1") if not _up(u)]
     if missing:
         pytest.exit(f"stack not reachable: {missing}. Start it with `docker compose -f infra/compose.yaml --profile app up -d`", returncode=2)
 
