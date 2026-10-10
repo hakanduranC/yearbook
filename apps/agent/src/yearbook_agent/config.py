@@ -11,6 +11,8 @@ class Settings(BaseSettings):
 
     openai_api_key: str | None = Field(default=None, alias="OPENAI_API_KEY")
     openai_model: str | None = Field(default=None, alias="OPENAI_MODEL")
+    # Model for the single user-initiated "describe this photo" call; defaults to OPENAI_MODEL.
+    openai_vision_model: str | None = Field(default=None, alias="OPENAI_VISION_MODEL")
     openai_base_url: str | None = Field(default=None, alias="OPENAI_BASE_URL")
 
     mcp_url: str = Field(default="http://localhost:8080/mcp", alias="MCP_URL")

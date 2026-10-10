@@ -88,11 +88,11 @@ class ModelProvider:
         self.settings = settings
         self.model_id = model_id
 
-    def _make(self, **kwargs: Any) -> BaseChatModel:
+    def _make(self, model_id: str | None = None, **kwargs: Any) -> BaseChatModel:
         from langchain_openai import ChatOpenAI
 
         return ChatOpenAI(
-            model=self.model_id,
+            model=model_id or self.model_id,
             api_key=self.settings.openai_api_key,
             base_url=self.settings.openai_base_url,
             use_responses_api=True,
@@ -111,4 +111,5 @@ class ModelProvider:
         return self._make().with_structured_output(schema, method="json_schema")
 
     def vision(self) -> BaseChatModel:
-        return self._make()
+        """Model for image descriptions: OPENAI_VISION_MODEL when set, else the planner model."""
+        return self._make(self.settings.openai_vision_model or None)
