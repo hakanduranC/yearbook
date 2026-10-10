@@ -29,6 +29,12 @@ Payload is JSON: `{"type": "media.ready" | "media.failed", "event_id": "<id or n
 ## Cookies
 `yb_session`: 32 random bytes base64url; server stores sha256 in `sessions.token_hash`; HttpOnly, SameSite=Lax, Path=/, Secure when `COOKIE_SECURE=true`, 90 days sliding. `yb_guest`: the 22-char `guest_cookies.id`; HttpOnly, SameSite=Lax, Path=/, 1 year. Set only by `POST /events/{slug}/guests` (and reused on later events). Mutations require an `Origin` header in `ALLOWED_ORIGINS` or `Sec-Fetch-Site: same-origin`.
 
+## Coordinates
+`media.gps` is a Postgres `point(longitude, latitude)`, x = longitude. Any reader must keep that order.
+
+## Media retries
+While a failed `ingest` job waits for its backoff retry, the worker sets `media.state` back to `queued` so the grid keeps showing a processing cell; only a dead job yields `failed`.
+
 ## Time grouping
 `MediaPage.groups` are computed by the API in the event timezone with keys `morning` (05–11), `afternoon` (11–17), `evening` (17–22), `night` (22–05), one group per calendar day and day part, ordered newest first. The web app localizes labels.
 

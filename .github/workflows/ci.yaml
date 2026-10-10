@@ -20,6 +20,7 @@ jobs:
     env:
       DATABASE_URL: postgres://yearbook:yearbook@localhost:5432/yearbook?sslmode=disable
       TEST_DATABASE_URL: postgres://yearbook:yearbook@localhost:5432/yearbook_test?sslmode=disable
+      WORKER_TEST_DATABASE_URL: postgres://yearbook:yearbook@localhost:5432/yearbook_test_worker?sslmode=disable
       S3_ENDPOINT: http://localhost:8333
       S3_REGION: us-east-1
       S3_ACCESS_KEY: yearbook
@@ -59,8 +60,10 @@ jobs:
       - name: Create test database and migrate
         run: |
           docker run --rm --network host postgres:16 psql "$DATABASE_URL" -c 'create database yearbook_test'
+          docker run --rm --network host postgres:16 psql "$DATABASE_URL" -c 'create database yearbook_test_worker'
           mise run migrate
           goose -dir infra/migrations postgres "$TEST_DATABASE_URL" up
+          goose -dir infra/migrations postgres "$WORKER_TEST_DATABASE_URL" up
       - run: pnpm install --frozen-lockfile
       - run: mise run gen
       - name: Generated code is committed

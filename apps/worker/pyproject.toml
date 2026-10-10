@@ -1,0 +1,49 @@
+[project]
+name = "yearbook-worker"
+version = "0.1.0"
+description = "Yearbook ingestion worker: claims jobs from Postgres, produces variants, hashes and duplicate groups."
+requires-python = "==3.12.*"
+dependencies = [
+  "psycopg[binary,pool]>=3.2,<4",
+  "boto3>=1.35",
+  "pillow>=11",
+  "pillow-heif>=0.20",
+  "ImageHash>=4.3",
+  "numpy>=2",
+  "pydantic-settings>=2.6",
+  "structlog>=24",
+]
+
+[project.scripts]
+yearbook-worker = "yearbook_worker.cli:main"
+
+[dependency-groups]
+dev = [
+  "pytest>=8",
+  "ruff>=0.8",
+  "watchfiles>=1",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/yearbook_worker"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF", "ANN"]
+ignore = ["ANN401"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["ANN"]
+"fixtures/*" = ["ANN"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["integration: needs Postgres and S3"]
