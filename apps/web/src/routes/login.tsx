@@ -48,6 +48,14 @@ function Login() {
           <>
             <h2 className={styles.title}>{t('login.sentTitle')}</h2>
             <p className={styles.lead}>{t('login.sentBody', { email: sent })}</p>
+            {isLocalHost() ? (
+              <p className={styles.lead}>
+                {t('login.devHint')}{' '}
+                <a href="http://localhost:8025" target="_blank" rel="noreferrer">
+                  {t('login.devHintLink')}
+                </a>
+              </p>
+            ) : null}
           </>
         ) : (
           <form className={styles.form} onSubmit={submit}>
@@ -72,5 +80,14 @@ function Login() {
         )}
       </main>
     </>
+  )
+}
+
+/** True when the app runs on a developer machine, where mail goes to Mailpit instead of an inbox. */
+function isLocalHost(): boolean {
+  if (typeof window === 'undefined') return false
+  const h = window.location.hostname
+  return (
+    h === 'localhost' || h === '127.0.0.1' || h.endsWith('.local') || /^(10|192\.168)\./.test(h)
   )
 }

@@ -47,6 +47,8 @@ export const en = {
   'login.submit': 'Send link',
   'login.sentTitle': 'Check your email',
   'login.sentBody': 'The link sent to {email} is valid for 15 minutes. You can close this tab.',
+  'login.devHint': 'Local development: emails do not reach your inbox, they land in Mailpit.',
+  'login.devHintLink': 'Open Mailpit',
   'login.rateLimited': 'Too many attempts. Try again in an hour.',
 
   'verify.working': 'Signing you in …',

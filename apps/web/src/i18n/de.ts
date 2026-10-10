@@ -44,6 +44,9 @@ export const de = {
   'login.submit': 'Link schicken',
   'login.sentTitle': 'Schau in dein Postfach',
   'login.sentBody': 'Der Link an {email} gilt 15 Minuten. Du kannst diesen Tab schließen.',
+  'login.devHint':
+    'Lokale Entwicklung: E-Mails landen nicht in deinem Postfach, sondern in Mailpit.',
+  'login.devHintLink': 'Mailpit öffnen',
   'login.rateLimited': 'Zu viele Versuche. Probier es in einer Stunde nochmal.',
 
   'verify.working': 'Du wirst angemeldet …',

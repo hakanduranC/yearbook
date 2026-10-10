@@ -32,7 +32,9 @@ Then open http://localhost:8000. To get an event to look at:
 docker compose -f infra/compose.yaml --profile app run --rm --entrypoint /app/ybctl api seed --fixtures /fixtures
 ```
 
-It prints the event link and a sign-in link for the demo host. Magic-link emails land in Mailpit at http://localhost:8025.
+It prints the event link and a sign-in link for the demo host.
+
+**Email in development never reaches a real inbox.** Every magic link lands in Mailpit at http://localhost:8025; open the newest message there and click the button. Production uses a real SMTP provider (Resend, Postmark) through `SMTP_HOST`, `SMTP_PORT` and `SMTP_FROM`; no code changes.
 
 What runs: Postgres with pgvector, SeaweedFS as the S3 store (`:8333`), Mailpit, the API, two worker processes, the web server, and a Caddy gateway on `:8000` that serves the web app and routes `/api` to the API so cookies stay on one origin.
 
