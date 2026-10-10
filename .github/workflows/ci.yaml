@@ -103,8 +103,23 @@ jobs:
       - name: Lint
         run: mise run lint
 
-      - name: Unit and integration tests
-        run: mise run test
+      - name: Install ffmpeg (worker video tests)
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg >/dev/null && ffmpeg -version | head -1
+
+      - name: Tests · API (Go, real Postgres + S3)
+        run: cd apps/api && go test ./... -count=1 -short
+
+      - name: Tests · worker (no ML models)
+        run: cd apps/worker && uv run pytest -q -m 'not ml'
+
+      - name: Tests · agent service
+        run: cd apps/agent && uv run pytest -q
+
+      - name: Tests · sandbox (real Docker)
+        run: cd apps/sandbox && uv run pytest -q
+
+      - name: Tests · web (Vitest)
+        run: cd apps/web && pnpm test
 
       - name: Browser tests (mock API)
         run: |
