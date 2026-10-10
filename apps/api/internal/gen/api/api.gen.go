@@ -24,6 +24,48 @@ import (
 	openapi_types "github.com/oapi-codegen/runtime/types"
 )
 
+// Defines values for AlbumKind.
+const (
+	AlbumKindAgent      AlbumKind = "agent"
+	AlbumKindHighlights AlbumKind = "highlights"
+	AlbumKindManual     AlbumKind = "manual"
+)
+
+// Valid indicates whether the value is a known member of the AlbumKind enum.
+func (e AlbumKind) Valid() bool {
+	switch e {
+	case AlbumKindAgent:
+		return true
+	case AlbumKindHighlights:
+		return true
+	case AlbumKindManual:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for AlbumDetailKind.
+const (
+	AlbumDetailKindAgent      AlbumDetailKind = "agent"
+	AlbumDetailKindHighlights AlbumDetailKind = "highlights"
+	AlbumDetailKindManual     AlbumDetailKind = "manual"
+)
+
+// Valid indicates whether the value is a known member of the AlbumDetailKind enum.
+func (e AlbumDetailKind) Valid() bool {
+	switch e {
+	case AlbumDetailKindAgent:
+		return true
+	case AlbumDetailKindHighlights:
+		return true
+	case AlbumDetailKindManual:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for ErrorResponseErrorCode.
 const (
 	BadRequest       ErrorResponseErrorCode = "bad_request"
@@ -201,10 +243,134 @@ func (e HostUploadItemState) Valid() bool {
 	}
 }
 
+// Defines values for ImportKind.
+const (
+	ImportKindFolder  ImportKind = "folder"
+	ImportKindTakeout ImportKind = "takeout"
+	ImportKindZip     ImportKind = "zip"
+)
+
+// Valid indicates whether the value is a known member of the ImportKind enum.
+func (e ImportKind) Valid() bool {
+	switch e {
+	case ImportKindFolder:
+		return true
+	case ImportKindTakeout:
+		return true
+	case ImportKindZip:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for ImportState.
+const (
+	ImportStateCancelled ImportState = "cancelled"
+	ImportStateDone      ImportState = "done"
+	ImportStateFailed    ImportState = "failed"
+	ImportStateQueued    ImportState = "queued"
+	ImportStateRunning   ImportState = "running"
+	ImportStateUploading ImportState = "uploading"
+)
+
+// Valid indicates whether the value is a known member of the ImportState enum.
+func (e ImportState) Valid() bool {
+	switch e {
+	case ImportStateCancelled:
+		return true
+	case ImportStateDone:
+		return true
+	case ImportStateFailed:
+		return true
+	case ImportStateQueued:
+		return true
+	case ImportStateRunning:
+		return true
+	case ImportStateUploading:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for ImportCreateKind.
+const (
+	ImportCreateKindFolder  ImportCreateKind = "folder"
+	ImportCreateKindTakeout ImportCreateKind = "takeout"
+	ImportCreateKindZip     ImportCreateKind = "zip"
+)
+
+// Valid indicates whether the value is a known member of the ImportCreateKind enum.
+func (e ImportCreateKind) Valid() bool {
+	switch e {
+	case ImportCreateKindFolder:
+		return true
+	case ImportCreateKindTakeout:
+		return true
+	case ImportCreateKindZip:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for ImportInitKind.
+const (
+	ImportInitKindFolder  ImportInitKind = "folder"
+	ImportInitKindTakeout ImportInitKind = "takeout"
+	ImportInitKindZip     ImportInitKind = "zip"
+)
+
+// Valid indicates whether the value is a known member of the ImportInitKind enum.
+func (e ImportInitKind) Valid() bool {
+	switch e {
+	case ImportInitKindFolder:
+		return true
+	case ImportInitKindTakeout:
+		return true
+	case ImportInitKindZip:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for ImportInitState.
+const (
+	ImportInitStateCancelled ImportInitState = "cancelled"
+	ImportInitStateDone      ImportInitState = "done"
+	ImportInitStateFailed    ImportInitState = "failed"
+	ImportInitStateQueued    ImportInitState = "queued"
+	ImportInitStateRunning   ImportInitState = "running"
+	ImportInitStateUploading ImportInitState = "uploading"
+)
+
+// Valid indicates whether the value is a known member of the ImportInitState enum.
+func (e ImportInitState) Valid() bool {
+	switch e {
+	case ImportInitStateCancelled:
+		return true
+	case ImportInitStateDone:
+		return true
+	case ImportInitStateFailed:
+		return true
+	case ImportInitStateQueued:
+		return true
+	case ImportInitStateRunning:
+		return true
+	case ImportInitStateUploading:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for MagicLinkRequestLocale.
 const (
 	MagicLinkRequestLocaleDe MagicLinkRequestLocale = "de"
 	MagicLinkRequestLocaleEn MagicLinkRequestLocale = "en"
+	MagicLinkRequestLocaleTr MagicLinkRequestLocale = "tr"
 )
 
 // Valid indicates whether the value is a known member of the MagicLinkRequestLocale enum.
@@ -213,6 +379,8 @@ func (e MagicLinkRequestLocale) Valid() bool {
 	case MagicLinkRequestLocaleDe:
 		return true
 	case MagicLinkRequestLocaleEn:
+		return true
+	case MagicLinkRequestLocaleTr:
 		return true
 	default:
 		return false
@@ -223,6 +391,7 @@ func (e MagicLinkRequestLocale) Valid() bool {
 const (
 	MeLocaleDe MeLocale = "de"
 	MeLocaleEn MeLocale = "en"
+	MeLocaleTr MeLocale = "tr"
 )
 
 // Valid indicates whether the value is a known member of the MeLocale enum.
@@ -231,6 +400,8 @@ func (e MeLocale) Valid() bool {
 	case MeLocaleDe:
 		return true
 	case MeLocaleEn:
+		return true
+	case MeLocaleTr:
 		return true
 	default:
 		return false
@@ -241,6 +412,7 @@ func (e MeLocale) Valid() bool {
 const (
 	MeUpdateLocaleDe MeUpdateLocale = "de"
 	MeUpdateLocaleEn MeUpdateLocale = "en"
+	MeUpdateLocaleTr MeUpdateLocale = "tr"
 )
 
 // Valid indicates whether the value is a known member of the MeUpdateLocale enum.
@@ -249,6 +421,8 @@ func (e MeUpdateLocale) Valid() bool {
 	case MeUpdateLocaleDe:
 		return true
 	case MeUpdateLocaleEn:
+		return true
+	case MeUpdateLocaleTr:
 		return true
 	default:
 		return false
@@ -330,6 +504,45 @@ func (e MediaDetailState) Valid() bool {
 	}
 }
 
+// Defines values for SavedCommandKind.
+const (
+	Python SavedCommandKind = "python"
+	Search SavedCommandKind = "search"
+	Sql    SavedCommandKind = "sql"
+)
+
+// Valid indicates whether the value is a known member of the SavedCommandKind enum.
+func (e SavedCommandKind) Valid() bool {
+	switch e {
+	case Python:
+		return true
+	case Search:
+		return true
+	case Sql:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for SavedCommandScope.
+const (
+	SavedCommandScopeEvent  SavedCommandScope = "event"
+	SavedCommandScopeGlobal SavedCommandScope = "global"
+)
+
+// Valid indicates whether the value is a known member of the SavedCommandScope enum.
+func (e SavedCommandScope) Valid() bool {
+	switch e {
+	case SavedCommandScopeEvent:
+		return true
+	case SavedCommandScopeGlobal:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for UploadInitMode.
 const (
 	UploadInitModeDuplicate UploadInitMode = "duplicate"
@@ -396,28 +609,102 @@ func (e ViewerRole) Valid() bool {
 	}
 }
 
-// Defines values for ListEventMediaParamsFilter.
-const (
-	All    ListEventMediaParamsFilter = "all"
-	Best   ListEventMediaParamsFilter = "best"
-	Mine   ListEventMediaParamsFilter = "mine"
-	Videos ListEventMediaParamsFilter = "videos"
-)
+// AgentRequest defines model for AgentRequest.
+type AgentRequest struct {
+	// ConversationId 16 random bytes, base64url without padding
+	ConversationId *Id `json:"conversation_id,omitempty"`
 
-// Valid indicates whether the value is a known member of the ListEventMediaParamsFilter enum.
-func (e ListEventMediaParamsFilter) Valid() bool {
-	switch e {
-	case All:
-		return true
-	case Best:
-		return true
-	case Mine:
-		return true
-	case Videos:
-		return true
-	default:
-		return false
-	}
+	// EventSlug Scope to one event; omitted = all my events and library
+	EventSlug *string `json:"event_slug,omitempty"`
+	Text      string  `json:"text"`
+}
+
+// AgentResponse defines model for AgentResponse.
+type AgentResponse struct {
+	// Attachments Files the agent produced in the sandbox (charts, collages); short-lived URLs
+	Attachments *[]Attachment `json:"attachments,omitempty"`
+
+	// ConversationId 16 random bytes, base64url without padding
+	ConversationId Id          `json:"conversation_id"`
+	Result         AgentResult `json:"result"`
+	Saveable       bool        `json:"saveable"`
+	Suggestions    []Chip      `json:"suggestions"`
+
+	// TurnId 16 random bytes, base64url without padding
+	TurnId     Id     `json:"turn_id"`
+	Understood string `json:"understood"`
+}
+
+// Album defines model for Album.
+type Album struct {
+	CanEdit *bool `json:"can_edit,omitempty"`
+	Count   int   `json:"count"`
+
+	// Cover Public CDN URLs by size. Absent while processing.
+	Cover     *Variants `json:"cover,omitempty"`
+	EventSlug *string   `json:"event_slug,omitempty"`
+
+	// Id 16 random bytes, base64url without padding
+	Id    Id        `json:"id"`
+	Kind  AlbumKind `json:"kind"`
+	Title string    `json:"title"`
+}
+
+// AlbumKind defines model for Album.Kind.
+type AlbumKind string
+
+// AlbumCreate defines model for AlbumCreate.
+type AlbumCreate struct {
+	EventSlug *string `json:"event_slug,omitempty"`
+	MediaIds  []Id    `json:"media_ids"`
+	Title     string  `json:"title"`
+}
+
+// AlbumDetail defines model for AlbumDetail.
+type AlbumDetail struct {
+	AllowDownload bool  `json:"allow_download"`
+	CanEdit       *bool `json:"can_edit,omitempty"`
+	Count         int   `json:"count"`
+
+	// Cover Public CDN URLs by size. Absent while processing.
+	Cover      *Variants `json:"cover,omitempty"`
+	EventSlug  *string   `json:"event_slug,omitempty"`
+	EventTitle *string   `json:"event_title,omitempty"`
+
+	// Id 16 random bytes, base64url without padding
+	Id    Id              `json:"id"`
+	Items []GridItem      `json:"items"`
+	Kind  AlbumDetailKind `json:"kind"`
+	Title string          `json:"title"`
+}
+
+// AlbumDetailKind defines model for AlbumDetail.Kind.
+type AlbumDetailKind string
+
+// AlbumUpdate defines model for AlbumUpdate.
+type AlbumUpdate struct {
+	Add    *[]Id   `json:"add,omitempty"`
+	Remove *[]Id   `json:"remove,omitempty"`
+	Title  *string `json:"title,omitempty"`
+}
+
+// Attachment defines model for Attachment.
+type Attachment struct {
+	Height *int   `json:"height,omitempty"`
+	Mime   string `json:"mime"`
+	Name   string `json:"name"`
+	Url    string `json:"url"`
+	Width  *int   `json:"width,omitempty"`
+}
+
+// Chip defines model for Chip.
+type Chip struct {
+	// CommandId 16 random bytes, base64url without padding
+	CommandId *Id    `json:"command_id,omitempty"`
+	Label     string `json:"label"`
+
+	// Text The message to send when tapped
+	Text string `json:"text"`
 }
 
 // CompletedPart defines model for CompletedPart.
@@ -440,15 +727,17 @@ type ErrorResponseErrorCode string
 
 // Event defines model for Event.
 type Event struct {
-	Counts EventCounts `json:"counts"`
+	ClusteredAt *time.Time  `json:"clustered_at,omitempty"`
+	Counts      EventCounts `json:"counts"`
 
 	// Cover Public CDN URLs by size. Absent while processing.
-	Cover       *Variants  `json:"cover,omitempty"`
-	CreatedAt   time.Time  `json:"created_at"`
-	EndsAt      *time.Time `json:"ends_at,omitempty"`
-	GuestUpload bool       `json:"guest_upload"`
-	GuestView   bool       `json:"guest_view"`
-	Host        struct {
+	Cover        *Variants  `json:"cover,omitempty"`
+	CreatedAt    time.Time  `json:"created_at"`
+	EndsAt       *time.Time `json:"ends_at,omitempty"`
+	FacesEnabled *bool      `json:"faces_enabled,omitempty"`
+	GuestUpload  bool       `json:"guest_upload"`
+	GuestView    bool       `json:"guest_view"`
+	Host         struct {
 		DisplayName string `json:"display_name"`
 	} `json:"host"`
 
@@ -464,10 +753,13 @@ type Event struct {
 
 // EventCounts defines model for EventCounts.
 type EventCounts struct {
-	Failed int `json:"failed"`
+	// FacesDone Media items that finished face analysis
+	FacesDone *int `json:"faces_done,omitempty"`
+	Failed    int  `json:"failed"`
 
 	// OfYou Photos the viewer appears in
 	OfYou      *int `json:"of_you,omitempty"`
+	People     *int `json:"people,omitempty"`
 	Photos     int  `json:"photos"`
 	Processing int  `json:"processing"`
 	Ready      int  `json:"ready"`
@@ -498,11 +790,28 @@ type EventStatus struct {
 	Total       int        `json:"total"`
 }
 
+// EventSummary defines model for EventSummary.
+type EventSummary struct {
+	Analyzing *bool `json:"analyzing,omitempty"`
+
+	// Cover Public CDN URLs by size. Absent while processing.
+	Cover *Variants `json:"cover,omitempty"`
+	OfYou int       `json:"of_you"`
+
+	// OfYouItems Up to 4 best photos of the viewer in this event, for the fanned stack
+	OfYouItems *[]GridItem `json:"of_you_items,omitempty"`
+	Photos     int         `json:"photos"`
+	Slug       string      `json:"slug"`
+	StartsAt   time.Time   `json:"starts_at"`
+	Title      string      `json:"title"`
+}
+
 // EventUpdate defines model for EventUpdate.
 type EventUpdate struct {
 	// CoverMediaId 16 random bytes, base64url without padding
 	CoverMediaId *Id        `json:"cover_media_id,omitempty"`
 	EndsAt       *time.Time `json:"ends_at,omitempty"`
+	FacesEnabled *bool      `json:"faces_enabled,omitempty"`
 	GuestUpload  *bool      `json:"guest_upload,omitempty"`
 	GuestView    *bool      `json:"guest_view,omitempty"`
 	Location     *string    `json:"location,omitempty"`
@@ -511,8 +820,29 @@ type EventUpdate struct {
 	Title        *string    `json:"title,omitempty"`
 }
 
+// Face defines model for Face.
+type Face struct {
+	AgeEst *float32 `json:"age_est,omitempty"`
+
+	// Bbox x, y, w, h in original pixels
+	Bbox    []int   `json:"bbox"`
+	CropUrl *string `json:"crop_url,omitempty"`
+
+	// Id 16 random bytes, base64url without padding
+	Id Id `json:"id"`
+
+	// MediaId 16 random bytes, base64url without padding
+	MediaId Id `json:"media_id"`
+
+	// PersonId 16 random bytes, base64url without padding
+	PersonId *Id      `json:"person_id,omitempty"`
+	Quality  *float32 `json:"quality,omitempty"`
+}
+
 // GridItem defines model for GridItem.
 type GridItem struct {
+	// Analyzed Faces
+	Analyzed    *bool                `json:"analyzed,omitempty"`
 	CapturedAt  *time.Time           `json:"captured_at,omitempty"`
 	CapturedSrc *GridItemCapturedSrc `json:"captured_src,omitempty"`
 	DurationMs  *int                 `json:"duration_ms,omitempty"`
@@ -619,6 +949,84 @@ type HostUploads struct {
 // Id 16 random bytes, base64url without padding
 type Id = string
 
+// Import defines model for Import.
+type Import struct {
+	CreatedAt  time.Time  `json:"created_at"`
+	Error      *string    `json:"error,omitempty"`
+	EventSlug  *string    `json:"event_slug,omitempty"`
+	FinishedAt *time.Time `json:"finished_at,omitempty"`
+
+	// Id 16 random bytes, base64url without padding
+	Id    Id          `json:"id"`
+	Kind  ImportKind  `json:"kind"`
+	State ImportState `json:"state"`
+	Stats struct {
+		Duplicates int `json:"duplicates"`
+		Failed     int `json:"failed"`
+		Found      int `json:"found"`
+		Imported   int `json:"imported"`
+
+		// Matched Items auto-assigned to an event by time
+		Matched int `json:"matched"`
+
+		// PeopleSeeded Takeout people names applied
+		PeopleSeeded *int `json:"people_seeded,omitempty"`
+	} `json:"stats"`
+}
+
+// ImportKind defines model for Import.Kind.
+type ImportKind string
+
+// ImportState defines model for Import.State.
+type ImportState string
+
+// ImportCreate defines model for ImportCreate.
+type ImportCreate struct {
+	// EventSlug Put everything into this event instead of matching by time
+	EventSlug *string          `json:"event_slug,omitempty"`
+	Filename  *string          `json:"filename,omitempty"`
+	Kind      ImportCreateKind `json:"kind"`
+
+	// Path Server-side directory
+	Path *string `json:"path,omitempty"`
+	Size *int    `json:"size,omitempty"`
+}
+
+// ImportCreateKind defines model for ImportCreate.Kind.
+type ImportCreateKind string
+
+// ImportInit defines model for ImportInit.
+type ImportInit struct {
+	CreatedAt  time.Time  `json:"created_at"`
+	Error      *string    `json:"error,omitempty"`
+	EventSlug  *string    `json:"event_slug,omitempty"`
+	FinishedAt *time.Time `json:"finished_at,omitempty"`
+
+	// Id 16 random bytes, base64url without padding
+	Id    Id              `json:"id"`
+	Kind  ImportInitKind  `json:"kind"`
+	State ImportInitState `json:"state"`
+	Stats struct {
+		Duplicates int `json:"duplicates"`
+		Failed     int `json:"failed"`
+		Found      int `json:"found"`
+		Imported   int `json:"imported"`
+
+		// Matched Items auto-assigned to an event by time
+		Matched int `json:"matched"`
+
+		// PeopleSeeded Takeout people names applied
+		PeopleSeeded *int `json:"people_seeded,omitempty"`
+	} `json:"stats"`
+	Upload *UploadInit `json:"upload,omitempty"`
+}
+
+// ImportInitKind defines model for ImportInit.Kind.
+type ImportInitKind string
+
+// ImportInitState defines model for ImportInit.State.
+type ImportInitState string
+
 // LikeResult defines model for LikeResult.
 type LikeResult struct {
 	LikeCount int  `json:"like_count"`
@@ -642,14 +1050,17 @@ type MagicLinkRequestLocale string
 
 // Me defines model for Me.
 type Me struct {
-	Authenticated bool                `json:"authenticated"`
-	Birthdate     *openapi_types.Date `json:"birthdate,omitempty"`
-	DisplayName   *string             `json:"display_name,omitempty"`
-	Email         *string             `json:"email,omitempty"`
+	Authenticated    bool                `json:"authenticated"`
+	Birthdate        *openapi_types.Date `json:"birthdate,omitempty"`
+	DisplayName      *string             `json:"display_name,omitempty"`
+	Email            *string             `json:"email,omitempty"`
+	HasClaimedPerson *bool               `json:"has_claimed_person,omitempty"`
+	HideFromPeople   *bool               `json:"hide_from_people,omitempty"`
 
 	// Id 16 random bytes, base64url without padding
-	Id     *Id      `json:"id,omitempty"`
-	Locale MeLocale `json:"locale"`
+	Id         *Id      `json:"id,omitempty"`
+	LinkAcross *bool    `json:"link_across,omitempty"`
+	Locale     MeLocale `json:"locale"`
 }
 
 // MeLocale defines model for Me.Locale.
@@ -660,9 +1071,15 @@ type MeUpdate struct {
 	Birthdate *openapi_types.Date `json:"birthdate,omitempty"`
 
 	// ClearBirthdate Remove the stored birthdate
-	ClearBirthdate *bool           `json:"clear_birthdate,omitempty"`
-	DisplayName    *string         `json:"display_name,omitempty"`
-	Locale         *MeUpdateLocale `json:"locale,omitempty"`
+	ClearBirthdate *bool   `json:"clear_birthdate,omitempty"`
+	DisplayName    *string `json:"display_name,omitempty"`
+
+	// HideFromPeople Hide my linked persons from People tabs
+	HideFromPeople *bool `json:"hide_from_people,omitempty"`
+
+	// LinkAcross Allow cross-event face suggestions
+	LinkAcross *bool           `json:"link_across,omitempty"`
+	Locale     *MeUpdateLocale `json:"locale,omitempty"`
 }
 
 // MeUpdateLocale defines model for MeUpdate.Locale.
@@ -670,6 +1087,8 @@ type MeUpdateLocale string
 
 // MediaDetail defines model for MediaDetail.
 type MediaDetail struct {
+	// Analyzed Faces
+	Analyzed    *bool                   `json:"analyzed,omitempty"`
 	CanDelete   bool                    `json:"can_delete"`
 	CapturedAt  *time.Time              `json:"captured_at,omitempty"`
 	CapturedSrc *MediaDetailCapturedSrc `json:"captured_src,omitempty"`
@@ -729,6 +1148,101 @@ type MediaPage struct {
 	Groups     []MediaGroup `json:"groups"`
 	Items      []GridItem   `json:"items"`
 	NextCursor *string      `json:"next_cursor,omitempty"`
+}
+
+// PeopleList defines model for PeopleList.
+type PeopleList struct {
+	// Analyzing Face analysis still running for some items
+	Analyzing    *bool    `json:"analyzing,omitempty"`
+	Persons      []Person `json:"persons"`
+	UnnamedCount *int     `json:"unnamed_count,omitempty"`
+}
+
+// Person defines model for Person.
+type Person struct {
+	CanEdit *bool `json:"can_edit,omitempty"`
+
+	// CropUrl Crop URL of the cover face, served by the API
+	CropUrl     *string `json:"crop_url,omitempty"`
+	DisplayName *string `json:"display_name,omitempty"`
+	EventSlug   string  `json:"event_slug"`
+	FaceCount   int     `json:"face_count"`
+	Hidden      bool    `json:"hidden"`
+
+	// Id 16 random bytes, base64url without padding
+	Id   Id   `json:"id"`
+	IsMe bool `json:"is_me"`
+
+	// Linked Linked to any identity
+	Linked     *bool `json:"linked,omitempty"`
+	MediaCount *int  `json:"media_count,omitempty"`
+	Named      bool  `json:"named"`
+
+	// SuggestedMe Heuristic guess that this is the viewer
+	SuggestedMe *bool `json:"suggested_me,omitempty"`
+}
+
+// PersonUpdate defines model for PersonUpdate.
+type PersonUpdate struct {
+	DisplayName *string `json:"display_name,omitempty"`
+	Hidden      *bool   `json:"hidden,omitempty"`
+}
+
+// SavedCommand defines model for SavedCommand.
+type SavedCommand struct {
+	CreatedByAgent *bool   `json:"created_by_agent,omitempty"`
+	Description    string  `json:"description"`
+	EventSlug      *string `json:"event_slug,omitempty"`
+
+	// Id 16 random bytes, base64url without padding
+	Id Id `json:"id"`
+
+	// Kind python tools run only in the sandbox
+	Kind  *SavedCommandKind `json:"kind,omitempty"`
+	Label string            `json:"label"`
+	Name  string            `json:"name"`
+
+	// Params JSON schema of parameters
+	Params   map[string]interface{} `json:"params"`
+	RunCount *int                   `json:"run_count,omitempty"`
+	Scope    SavedCommandScope      `json:"scope"`
+
+	// Shared Approved by the host for every guest of the event
+	Shared *bool `json:"shared,omitempty"`
+}
+
+// SavedCommandKind python tools run only in the sandbox
+type SavedCommandKind string
+
+// SavedCommandScope defines model for SavedCommand.Scope.
+type SavedCommandScope string
+
+// Share defines model for Share.
+type Share struct {
+	AllowDownload bool       `json:"allow_download"`
+	ExpiresAt     *time.Time `json:"expires_at,omitempty"`
+
+	// ShareId 16 random bytes, base64url without padding
+	ShareId Id     `json:"share_id"`
+	Url     string `json:"url"`
+}
+
+// Suggestion defines model for Suggestion.
+type Suggestion struct {
+	Confidence    float32    `json:"confidence"`
+	EventStartsAt *time.Time `json:"event_starts_at,omitempty"`
+	EventTitle    string     `json:"event_title"`
+	Person        Person     `json:"person"`
+}
+
+// TopPerson defines model for TopPerson.
+type TopPerson struct {
+	Count       int     `json:"count"`
+	CropUrl     *string `json:"crop_url,omitempty"`
+	DisplayName string  `json:"display_name"`
+
+	// PersonId 16 random bytes, base64url without padding
+	PersonId *Id `json:"person_id,omitempty"`
 }
 
 // UploadComplete defines model for UploadComplete.
@@ -847,6 +1361,25 @@ type Viewer struct {
 // ViewerRole defines model for Viewer.Role.
 type ViewerRole string
 
+// YearRecap defines model for YearRecap.
+type YearRecap struct {
+	BestOfYou []GridItem     `json:"best_of_you"`
+	Events    []EventSummary `json:"events"`
+	Moments   int            `json:"moments"`
+	Portrait  *GridItem      `json:"portrait,omitempty"`
+	TopPeople []TopPerson    `json:"top_people"`
+	Year      int            `json:"year"`
+}
+
+// YearSummary defines model for YearSummary.
+type YearSummary struct {
+	Events []EventSummary `json:"events"`
+
+	// Moments Photos of you this year
+	Moments int `json:"moments"`
+	Year    int `json:"year"`
+}
+
 // ZipRequest defines model for ZipRequest.
 type ZipRequest struct {
 	MediaIds  []Id  `json:"media_ids"`
@@ -860,8 +1393,20 @@ type ZipTicket struct {
 	Url       string    `json:"url"`
 }
 
+// AlbumId 16 random bytes, base64url without padding
+type AlbumId = Id
+
+// FaceId 16 random bytes, base64url without padding
+type FaceId = Id
+
+// ImportId 16 random bytes, base64url without padding
+type ImportId = Id
+
 // MediaId 16 random bytes, base64url without padding
 type MediaId = Id
+
+// PersonId 16 random bytes, base64url without padding
+type PersonId = Id
 
 // Slug defines model for Slug.
 type Slug = string
@@ -869,15 +1414,99 @@ type Slug = string
 // Error defines model for Error.
 type Error = ErrorResponse
 
-// ListEventMediaParams defines parameters for ListEventMedia.
-type ListEventMediaParams struct {
-	Filter *ListEventMediaParamsFilter `form:"filter,omitempty" json:"filter,omitempty"`
-	Cursor *string                     `form:"cursor,omitempty" json:"cursor,omitempty"`
-	Limit  *int                        `form:"limit,omitempty" json:"limit,omitempty"`
+// ListSavedCommandsParams defines parameters for ListSavedCommands.
+type ListSavedCommandsParams struct {
+	EventSlug *string `form:"event_slug,omitempty" json:"event_slug,omitempty"`
 }
 
-// ListEventMediaParamsFilter defines parameters for ListEventMedia.
-type ListEventMediaParamsFilter string
+// SaveCommandJSONBody defines parameters for SaveCommand.
+type SaveCommandJSONBody struct {
+	Label string `json:"label"`
+
+	// TurnId 16 random bytes, base64url without padding
+	TurnId Id `json:"turn_id"`
+}
+
+// RunSavedCommandJSONBody defines parameters for RunSavedCommand.
+type RunSavedCommandJSONBody struct {
+	EventSlug *string                 `json:"event_slug,omitempty"`
+	Params    *map[string]interface{} `json:"params,omitempty"`
+}
+
+// ShareAlbumJSONBody defines parameters for ShareAlbum.
+type ShareAlbumJSONBody struct {
+	AllowDownload *bool `json:"allow_download,omitempty"`
+	ExpiresDays   *int  `json:"expires_days,omitempty"`
+}
+
+// ListEventHighlightsParams defines parameters for ListEventHighlights.
+type ListEventHighlightsParams struct {
+	Limit *int `form:"limit,omitempty" json:"limit,omitempty"`
+}
+
+// ListEventMediaParams defines parameters for ListEventMedia.
+type ListEventMediaParams struct {
+	// Filter all | best | videos | mine | me | person:{id} | album:{id} | library
+	Filter *string `form:"filter,omitempty" json:"filter,omitempty"`
+	AgeMin *int    `form:"age_min,omitempty" json:"age_min,omitempty"`
+	AgeMax *int    `form:"age_max,omitempty" json:"age_max,omitempty"`
+	Cursor *string `form:"cursor,omitempty" json:"cursor,omitempty"`
+	Limit  *int    `form:"limit,omitempty" json:"limit,omitempty"`
+}
+
+// SearchEventMediaParams defines parameters for SearchEventMedia.
+type SearchEventMediaParams struct {
+	Q     string `form:"q" json:"q"`
+	Limit *int   `form:"limit,omitempty" json:"limit,omitempty"`
+}
+
+// ListMyLibraryParams defines parameters for ListMyLibrary.
+type ListMyLibraryParams struct {
+	Cursor *string `form:"cursor,omitempty" json:"cursor,omitempty"`
+	Limit  *int    `form:"limit,omitempty" json:"limit,omitempty"`
+
+	// Unassigned Only items not matched to an event
+	Unassigned *bool `form:"unassigned,omitempty" json:"unassigned,omitempty"`
+}
+
+// AssignMediaEventJSONBody defines parameters for AssignMediaEvent.
+type AssignMediaEventJSONBody struct {
+	EventSlug *string `json:"event_slug,omitempty"`
+}
+
+// MergePeopleJSONBody defines parameters for MergePeople.
+type MergePeopleJSONBody struct {
+	PersonIds []Id `json:"person_ids"`
+}
+
+// SplitPersonJSONBody defines parameters for SplitPerson.
+type SplitPersonJSONBody struct {
+	FaceIds []Id `json:"face_ids"`
+}
+
+// SearchMyMediaParams defines parameters for SearchMyMedia.
+type SearchMyMediaParams struct {
+	Q     string `form:"q" json:"q"`
+	Limit *int   `form:"limit,omitempty" json:"limit,omitempty"`
+}
+
+// SaveCommandJSONRequestBody defines body for SaveCommand for application/json ContentType.
+type SaveCommandJSONRequestBody SaveCommandJSONBody
+
+// RunSavedCommandJSONRequestBody defines body for RunSavedCommand for application/json ContentType.
+type RunSavedCommandJSONRequestBody RunSavedCommandJSONBody
+
+// SendAgentMessageJSONRequestBody defines body for SendAgentMessage for application/json ContentType.
+type SendAgentMessageJSONRequestBody = AgentRequest
+
+// CreateAlbumJSONRequestBody defines body for CreateAlbum for application/json ContentType.
+type CreateAlbumJSONRequestBody = AlbumCreate
+
+// UpdateAlbumJSONRequestBody defines body for UpdateAlbum for application/json ContentType.
+type UpdateAlbumJSONRequestBody = AlbumUpdate
+
+// ShareAlbumJSONRequestBody defines body for ShareAlbum for application/json ContentType.
+type ShareAlbumJSONRequestBody ShareAlbumJSONBody
 
 // RequestMagicLinkJSONRequestBody defines body for RequestMagicLink for application/json ContentType.
 type RequestMagicLinkJSONRequestBody = MagicLinkRequest
@@ -897,17 +1526,65 @@ type UpdateGuestJSONRequestBody = GuestUpdate
 // CreateUploadsJSONRequestBody defines body for CreateUploads for application/json ContentType.
 type CreateUploadsJSONRequestBody = UploadIntentRequest
 
+// CreateImportJSONRequestBody defines body for CreateImport for application/json ContentType.
+type CreateImportJSONRequestBody = ImportCreate
+
+// CompleteImportJSONRequestBody defines body for CompleteImport for application/json ContentType.
+type CompleteImportJSONRequestBody = UploadComplete
+
 // UpdateMeJSONRequestBody defines body for UpdateMe for application/json ContentType.
 type UpdateMeJSONRequestBody = MeUpdate
 
 // CreateZipJSONRequestBody defines body for CreateZip for application/json ContentType.
 type CreateZipJSONRequestBody = ZipRequest
 
+// AssignMediaEventJSONRequestBody defines body for AssignMediaEvent for application/json ContentType.
+type AssignMediaEventJSONRequestBody AssignMediaEventJSONBody
+
+// MergePeopleJSONRequestBody defines body for MergePeople for application/json ContentType.
+type MergePeopleJSONRequestBody MergePeopleJSONBody
+
+// UpdatePersonJSONRequestBody defines body for UpdatePerson for application/json ContentType.
+type UpdatePersonJSONRequestBody = PersonUpdate
+
+// SplitPersonJSONRequestBody defines body for SplitPerson for application/json ContentType.
+type SplitPersonJSONRequestBody SplitPersonJSONBody
+
 // CompleteUploadJSONRequestBody defines body for CompleteUpload for application/json ContentType.
 type CompleteUploadJSONRequestBody = UploadComplete
 
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
+
+	// (GET /agent/commands)
+	ListSavedCommands(w http.ResponseWriter, r *http.Request, params ListSavedCommandsParams)
+
+	// (POST /agent/commands)
+	SaveCommand(w http.ResponseWriter, r *http.Request)
+
+	// (DELETE /agent/commands/{command_id})
+	DeleteSavedCommand(w http.ResponseWriter, r *http.Request, commandId Id)
+
+	// (POST /agent/commands/{command_id}/run)
+	RunSavedCommand(w http.ResponseWriter, r *http.Request, commandId Id)
+
+	// (POST /agent/messages)
+	SendAgentMessage(w http.ResponseWriter, r *http.Request)
+
+	// (POST /albums)
+	CreateAlbum(w http.ResponseWriter, r *http.Request)
+
+	// (DELETE /albums/{album_id})
+	DeleteAlbum(w http.ResponseWriter, r *http.Request, albumId AlbumId)
+
+	// (GET /albums/{album_id})
+	GetAlbum(w http.ResponseWriter, r *http.Request, albumId AlbumId)
+
+	// (PATCH /albums/{album_id})
+	UpdateAlbum(w http.ResponseWriter, r *http.Request, albumId AlbumId)
+
+	// (POST /albums/{album_id}/share)
+	ShareAlbum(w http.ResponseWriter, r *http.Request, albumId AlbumId)
 
 	// (POST /auth/logout)
 	Logout(w http.ResponseWriter, r *http.Request)
@@ -933,6 +1610,12 @@ type ServerInterface interface {
 	// (PATCH /events/{slug})
 	UpdateEvent(w http.ResponseWriter, r *http.Request, slug Slug)
 
+	// (GET /events/{slug}/albums)
+	ListEventAlbums(w http.ResponseWriter, r *http.Request, slug Slug)
+
+	// (GET /events/{slug}/best)
+	ListEventHighlights(w http.ResponseWriter, r *http.Request, slug Slug, params ListEventHighlightsParams)
+
 	// (GET /events/{slug}/events)
 	StreamEventUpdates(w http.ResponseWriter, r *http.Request, slug Slug)
 
@@ -945,8 +1628,14 @@ type ServerInterface interface {
 	// (GET /events/{slug}/media)
 	ListEventMedia(w http.ResponseWriter, r *http.Request, slug Slug, params ListEventMediaParams)
 
+	// (GET /events/{slug}/people)
+	ListPeople(w http.ResponseWriter, r *http.Request, slug Slug)
+
 	// (GET /events/{slug}/qr.svg)
 	GetEventQr(w http.ResponseWriter, r *http.Request, slug Slug)
+
+	// (GET /events/{slug}/search)
+	SearchEventMedia(w http.ResponseWriter, r *http.Request, slug Slug, params SearchEventMediaParams)
 
 	// (GET /events/{slug}/status)
 	GetEventStatus(w http.ResponseWriter, r *http.Request, slug Slug)
@@ -957,14 +1646,53 @@ type ServerInterface interface {
 	// (POST /events/{slug}/uploads)
 	CreateUploads(w http.ResponseWriter, r *http.Request, slug Slug)
 
+	// (GET /faces/{face_id}/crop.jpg)
+	GetFaceCrop(w http.ResponseWriter, r *http.Request, faceId FaceId)
+
+	// (POST /faces/{face_id}/not-person)
+	FaceNotPerson(w http.ResponseWriter, r *http.Request, faceId FaceId)
+
 	// (GET /health)
 	GetHealth(w http.ResponseWriter, r *http.Request)
+
+	// (GET /imports)
+	ListImports(w http.ResponseWriter, r *http.Request)
+
+	// (POST /imports)
+	CreateImport(w http.ResponseWriter, r *http.Request)
+
+	// (DELETE /imports/{import_id})
+	CancelImport(w http.ResponseWriter, r *http.Request, importId ImportId)
+
+	// (GET /imports/{import_id})
+	GetImport(w http.ResponseWriter, r *http.Request, importId ImportId)
+
+	// (POST /imports/{import_id}/complete)
+	CompleteImport(w http.ResponseWriter, r *http.Request, importId ImportId)
 
 	// (GET /me)
 	GetMe(w http.ResponseWriter, r *http.Request)
 
 	// (PATCH /me)
 	UpdateMe(w http.ResponseWriter, r *http.Request)
+
+	// (DELETE /me/face-data)
+	DeleteMyFaceData(w http.ResponseWriter, r *http.Request)
+
+	// (GET /me/library)
+	ListMyLibrary(w http.ResponseWriter, r *http.Request, params ListMyLibraryParams)
+
+	// (GET /me/people)
+	ListMyPeople(w http.ResponseWriter, r *http.Request)
+
+	// (GET /me/suggestions)
+	ListMySuggestions(w http.ResponseWriter, r *http.Request)
+
+	// (GET /me/years)
+	ListMyYears(w http.ResponseWriter, r *http.Request)
+
+	// (GET /me/years/{year})
+	GetMyYear(w http.ResponseWriter, r *http.Request, year int)
 
 	// (POST /media/zip)
 	CreateZip(w http.ResponseWriter, r *http.Request)
@@ -974,6 +1702,15 @@ type ServerInterface interface {
 
 	// (GET /media/{media_id})
 	GetMedia(w http.ResponseWriter, r *http.Request, mediaId MediaId)
+
+	// (POST /media/{media_id}/describe)
+	DescribeMedia(w http.ResponseWriter, r *http.Request, mediaId MediaId)
+
+	// (PUT /media/{media_id}/event)
+	AssignMediaEvent(w http.ResponseWriter, r *http.Request, mediaId MediaId)
+
+	// (GET /media/{media_id}/faces)
+	ListMediaFaces(w http.ResponseWriter, r *http.Request, mediaId MediaId)
 
 	// (DELETE /media/{media_id}/like)
 	UnlikeMedia(w http.ResponseWriter, r *http.Request, mediaId MediaId)
@@ -986,6 +1723,30 @@ type ServerInterface interface {
 
 	// (POST /media/{media_id}/retry)
 	RetryMedia(w http.ResponseWriter, r *http.Request, mediaId MediaId)
+
+	// (POST /people/merge)
+	MergePeople(w http.ResponseWriter, r *http.Request)
+
+	// (GET /people/{person_id})
+	GetPerson(w http.ResponseWriter, r *http.Request, personId PersonId)
+
+	// (PATCH /people/{person_id})
+	UpdatePerson(w http.ResponseWriter, r *http.Request, personId PersonId)
+
+	// (DELETE /people/{person_id}/claim)
+	UnclaimPerson(w http.ResponseWriter, r *http.Request, personId PersonId)
+
+	// (POST /people/{person_id}/claim)
+	ClaimPerson(w http.ResponseWriter, r *http.Request, personId PersonId)
+
+	// (POST /people/{person_id}/split)
+	SplitPerson(w http.ResponseWriter, r *http.Request, personId PersonId)
+
+	// (GET /s/{share_id})
+	GetSharedAlbum(w http.ResponseWriter, r *http.Request, shareId Id)
+
+	// (GET /search)
+	SearchMyMedia(w http.ResponseWriter, r *http.Request, params SearchMyMediaParams)
 
 	// (DELETE /uploads/{media_id})
 	AbortUpload(w http.ResponseWriter, r *http.Request, mediaId MediaId)
@@ -1003,6 +1764,56 @@ type ServerInterface interface {
 // Unimplemented server implementation that returns http.StatusNotImplemented for each endpoint.
 
 type Unimplemented struct{}
+
+// (GET /agent/commands)
+func (_ Unimplemented) ListSavedCommands(w http.ResponseWriter, r *http.Request, params ListSavedCommandsParams) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// (POST /agent/commands)
+func (_ Unimplemented) SaveCommand(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// (DELETE /agent/commands/{command_id})
+func (_ Unimplemented) DeleteSavedCommand(w http.ResponseWriter, r *http.Request, commandId Id) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// (POST /agent/commands/{command_id}/run)
+func (_ Unimplemented) RunSavedCommand(w http.ResponseWriter, r *http.Request, commandId Id) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// (POST /agent/messages)
+func (_ Unimplemented) SendAgentMessage(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// (POST /albums)
+func (_ Unimplemented) CreateAlbum(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// (DELETE /albums/{album_id})
+func (_ Unimplemented) DeleteAlbum(w http.ResponseWriter, r *http.Request, albumId AlbumId) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// (GET /albums/{album_id})
+func (_ Unimplemented) GetAlbum(w http.ResponseWriter, r *http.Request, albumId AlbumId) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// (PATCH /albums/{album_id})
+func (_ Unimplemented) UpdateAlbum(w http.ResponseWriter, r *http.Request, albumId AlbumId) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// (POST /albums/{album_id}/share)
+func (_ Unimplemented) ShareAlbum(w http.ResponseWriter, r *http.Request, albumId AlbumId) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
 
 // (POST /auth/logout)
 func (_ Unimplemented) Logout(w http.ResponseWriter, r *http.Request) {
@@ -1044,6 +1855,16 @@ func (_ Unimplemented) UpdateEvent(w http.ResponseWriter, r *http.Request, slug 
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
+// (GET /events/{slug}/albums)
+func (_ Unimplemented) ListEventAlbums(w http.ResponseWriter, r *http.Request, slug Slug) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// (GET /events/{slug}/best)
+func (_ Unimplemented) ListEventHighlights(w http.ResponseWriter, r *http.Request, slug Slug, params ListEventHighlightsParams) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
 // (GET /events/{slug}/events)
 func (_ Unimplemented) StreamEventUpdates(w http.ResponseWriter, r *http.Request, slug Slug) {
 	w.WriteHeader(http.StatusNotImplemented)
@@ -1064,8 +1885,18 @@ func (_ Unimplemented) ListEventMedia(w http.ResponseWriter, r *http.Request, sl
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
+// (GET /events/{slug}/people)
+func (_ Unimplemented) ListPeople(w http.ResponseWriter, r *http.Request, slug Slug) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
 // (GET /events/{slug}/qr.svg)
 func (_ Unimplemented) GetEventQr(w http.ResponseWriter, r *http.Request, slug Slug) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// (GET /events/{slug}/search)
+func (_ Unimplemented) SearchEventMedia(w http.ResponseWriter, r *http.Request, slug Slug, params SearchEventMediaParams) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
@@ -1084,8 +1915,43 @@ func (_ Unimplemented) CreateUploads(w http.ResponseWriter, r *http.Request, slu
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
+// (GET /faces/{face_id}/crop.jpg)
+func (_ Unimplemented) GetFaceCrop(w http.ResponseWriter, r *http.Request, faceId FaceId) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// (POST /faces/{face_id}/not-person)
+func (_ Unimplemented) FaceNotPerson(w http.ResponseWriter, r *http.Request, faceId FaceId) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
 // (GET /health)
 func (_ Unimplemented) GetHealth(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// (GET /imports)
+func (_ Unimplemented) ListImports(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// (POST /imports)
+func (_ Unimplemented) CreateImport(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// (DELETE /imports/{import_id})
+func (_ Unimplemented) CancelImport(w http.ResponseWriter, r *http.Request, importId ImportId) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// (GET /imports/{import_id})
+func (_ Unimplemented) GetImport(w http.ResponseWriter, r *http.Request, importId ImportId) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// (POST /imports/{import_id}/complete)
+func (_ Unimplemented) CompleteImport(w http.ResponseWriter, r *http.Request, importId ImportId) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
@@ -1096,6 +1962,36 @@ func (_ Unimplemented) GetMe(w http.ResponseWriter, r *http.Request) {
 
 // (PATCH /me)
 func (_ Unimplemented) UpdateMe(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// (DELETE /me/face-data)
+func (_ Unimplemented) DeleteMyFaceData(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// (GET /me/library)
+func (_ Unimplemented) ListMyLibrary(w http.ResponseWriter, r *http.Request, params ListMyLibraryParams) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// (GET /me/people)
+func (_ Unimplemented) ListMyPeople(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// (GET /me/suggestions)
+func (_ Unimplemented) ListMySuggestions(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// (GET /me/years)
+func (_ Unimplemented) ListMyYears(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// (GET /me/years/{year})
+func (_ Unimplemented) GetMyYear(w http.ResponseWriter, r *http.Request, year int) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
@@ -1111,6 +2007,21 @@ func (_ Unimplemented) DeleteMedia(w http.ResponseWriter, r *http.Request, media
 
 // (GET /media/{media_id})
 func (_ Unimplemented) GetMedia(w http.ResponseWriter, r *http.Request, mediaId MediaId) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// (POST /media/{media_id}/describe)
+func (_ Unimplemented) DescribeMedia(w http.ResponseWriter, r *http.Request, mediaId MediaId) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// (PUT /media/{media_id}/event)
+func (_ Unimplemented) AssignMediaEvent(w http.ResponseWriter, r *http.Request, mediaId MediaId) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// (GET /media/{media_id}/faces)
+func (_ Unimplemented) ListMediaFaces(w http.ResponseWriter, r *http.Request, mediaId MediaId) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
@@ -1131,6 +2042,46 @@ func (_ Unimplemented) DownloadOriginal(w http.ResponseWriter, r *http.Request, 
 
 // (POST /media/{media_id}/retry)
 func (_ Unimplemented) RetryMedia(w http.ResponseWriter, r *http.Request, mediaId MediaId) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// (POST /people/merge)
+func (_ Unimplemented) MergePeople(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// (GET /people/{person_id})
+func (_ Unimplemented) GetPerson(w http.ResponseWriter, r *http.Request, personId PersonId) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// (PATCH /people/{person_id})
+func (_ Unimplemented) UpdatePerson(w http.ResponseWriter, r *http.Request, personId PersonId) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// (DELETE /people/{person_id}/claim)
+func (_ Unimplemented) UnclaimPerson(w http.ResponseWriter, r *http.Request, personId PersonId) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// (POST /people/{person_id}/claim)
+func (_ Unimplemented) ClaimPerson(w http.ResponseWriter, r *http.Request, personId PersonId) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// (POST /people/{person_id}/split)
+func (_ Unimplemented) SplitPerson(w http.ResponseWriter, r *http.Request, personId PersonId) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// (GET /s/{share_id})
+func (_ Unimplemented) GetSharedAlbum(w http.ResponseWriter, r *http.Request, shareId Id) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// (GET /search)
+func (_ Unimplemented) SearchMyMedia(w http.ResponseWriter, r *http.Request, params SearchMyMediaParams) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
@@ -1162,6 +2113,237 @@ type ServerInterfaceWrapper struct {
 }
 
 type MiddlewareFunc func(http.Handler) http.Handler
+
+// ListSavedCommands operation middleware
+func (siw *ServerInterfaceWrapper) ListSavedCommands(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params ListSavedCommandsParams
+
+	// ------------- Optional query parameter "event_slug" -------------
+
+	err = runtime.BindQueryParameterWithOptions("form", true, false, "event_slug", r.URL.Query(), &params.EventSlug, runtime.BindQueryParameterOptions{Type: "string", Format: ""})
+	if err != nil {
+		var requiredError *runtime.RequiredParameterError
+		if errors.As(err, &requiredError) {
+			siw.ErrorHandlerFunc(w, r, &RequiredParamError{ParamName: "event_slug"})
+		} else {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "event_slug", Err: err})
+		}
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.ListSavedCommands(w, r, params)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// SaveCommand operation middleware
+func (siw *ServerInterfaceWrapper) SaveCommand(w http.ResponseWriter, r *http.Request) {
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.SaveCommand(w, r)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// DeleteSavedCommand operation middleware
+func (siw *ServerInterfaceWrapper) DeleteSavedCommand(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "command_id" -------------
+	var commandId Id
+
+	err = runtime.BindStyledParameterWithOptions("simple", "command_id", chi.URLParam(r, "command_id"), &commandId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: r.URL.RawPath == ""})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "command_id", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.DeleteSavedCommand(w, r, commandId)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// RunSavedCommand operation middleware
+func (siw *ServerInterfaceWrapper) RunSavedCommand(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "command_id" -------------
+	var commandId Id
+
+	err = runtime.BindStyledParameterWithOptions("simple", "command_id", chi.URLParam(r, "command_id"), &commandId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: r.URL.RawPath == ""})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "command_id", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.RunSavedCommand(w, r, commandId)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// SendAgentMessage operation middleware
+func (siw *ServerInterfaceWrapper) SendAgentMessage(w http.ResponseWriter, r *http.Request) {
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.SendAgentMessage(w, r)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// CreateAlbum operation middleware
+func (siw *ServerInterfaceWrapper) CreateAlbum(w http.ResponseWriter, r *http.Request) {
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.CreateAlbum(w, r)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// DeleteAlbum operation middleware
+func (siw *ServerInterfaceWrapper) DeleteAlbum(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "album_id" -------------
+	var albumId AlbumId
+
+	err = runtime.BindStyledParameterWithOptions("simple", "album_id", chi.URLParam(r, "album_id"), &albumId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: r.URL.RawPath == ""})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "album_id", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.DeleteAlbum(w, r, albumId)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// GetAlbum operation middleware
+func (siw *ServerInterfaceWrapper) GetAlbum(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "album_id" -------------
+	var albumId AlbumId
+
+	err = runtime.BindStyledParameterWithOptions("simple", "album_id", chi.URLParam(r, "album_id"), &albumId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: r.URL.RawPath == ""})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "album_id", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.GetAlbum(w, r, albumId)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// UpdateAlbum operation middleware
+func (siw *ServerInterfaceWrapper) UpdateAlbum(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "album_id" -------------
+	var albumId AlbumId
+
+	err = runtime.BindStyledParameterWithOptions("simple", "album_id", chi.URLParam(r, "album_id"), &albumId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: r.URL.RawPath == ""})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "album_id", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.UpdateAlbum(w, r, albumId)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// ShareAlbum operation middleware
+func (siw *ServerInterfaceWrapper) ShareAlbum(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "album_id" -------------
+	var albumId AlbumId
+
+	err = runtime.BindStyledParameterWithOptions("simple", "album_id", chi.URLParam(r, "album_id"), &albumId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: r.URL.RawPath == ""})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "album_id", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.ShareAlbum(w, r, albumId)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
 
 // Logout operation middleware
 func (siw *ServerInterfaceWrapper) Logout(w http.ResponseWriter, r *http.Request) {
@@ -1311,6 +2493,74 @@ func (siw *ServerInterfaceWrapper) UpdateEvent(w http.ResponseWriter, r *http.Re
 	handler.ServeHTTP(w, r)
 }
 
+// ListEventAlbums operation middleware
+func (siw *ServerInterfaceWrapper) ListEventAlbums(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "slug" -------------
+	var slug Slug
+
+	err = runtime.BindStyledParameterWithOptions("simple", "slug", chi.URLParam(r, "slug"), &slug, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: r.URL.RawPath == ""})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "slug", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.ListEventAlbums(w, r, slug)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// ListEventHighlights operation middleware
+func (siw *ServerInterfaceWrapper) ListEventHighlights(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "slug" -------------
+	var slug Slug
+
+	err = runtime.BindStyledParameterWithOptions("simple", "slug", chi.URLParam(r, "slug"), &slug, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: r.URL.RawPath == ""})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "slug", Err: err})
+		return
+	}
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params ListEventHighlightsParams
+
+	// ------------- Optional query parameter "limit" -------------
+
+	err = runtime.BindQueryParameterWithOptions("form", true, false, "limit", r.URL.Query(), &params.Limit, runtime.BindQueryParameterOptions{Type: "integer", Format: ""})
+	if err != nil {
+		var requiredError *runtime.RequiredParameterError
+		if errors.As(err, &requiredError) {
+			siw.ErrorHandlerFunc(w, r, &RequiredParamError{ParamName: "limit"})
+		} else {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "limit", Err: err})
+		}
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.ListEventHighlights(w, r, slug, params)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
 // StreamEventUpdates operation middleware
 func (siw *ServerInterfaceWrapper) StreamEventUpdates(w http.ResponseWriter, r *http.Request) {
 
@@ -1420,6 +2670,32 @@ func (siw *ServerInterfaceWrapper) ListEventMedia(w http.ResponseWriter, r *http
 		return
 	}
 
+	// ------------- Optional query parameter "age_min" -------------
+
+	err = runtime.BindQueryParameterWithOptions("form", true, false, "age_min", r.URL.Query(), &params.AgeMin, runtime.BindQueryParameterOptions{Type: "integer", Format: ""})
+	if err != nil {
+		var requiredError *runtime.RequiredParameterError
+		if errors.As(err, &requiredError) {
+			siw.ErrorHandlerFunc(w, r, &RequiredParamError{ParamName: "age_min"})
+		} else {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "age_min", Err: err})
+		}
+		return
+	}
+
+	// ------------- Optional query parameter "age_max" -------------
+
+	err = runtime.BindQueryParameterWithOptions("form", true, false, "age_max", r.URL.Query(), &params.AgeMax, runtime.BindQueryParameterOptions{Type: "integer", Format: ""})
+	if err != nil {
+		var requiredError *runtime.RequiredParameterError
+		if errors.As(err, &requiredError) {
+			siw.ErrorHandlerFunc(w, r, &RequiredParamError{ParamName: "age_max"})
+		} else {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "age_max", Err: err})
+		}
+		return
+	}
+
 	// ------------- Optional query parameter "cursor" -------------
 
 	err = runtime.BindQueryParameterWithOptions("form", true, false, "cursor", r.URL.Query(), &params.Cursor, runtime.BindQueryParameterOptions{Type: "string", Format: ""})
@@ -1457,6 +2733,32 @@ func (siw *ServerInterfaceWrapper) ListEventMedia(w http.ResponseWriter, r *http
 	handler.ServeHTTP(w, r)
 }
 
+// ListPeople operation middleware
+func (siw *ServerInterfaceWrapper) ListPeople(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "slug" -------------
+	var slug Slug
+
+	err = runtime.BindStyledParameterWithOptions("simple", "slug", chi.URLParam(r, "slug"), &slug, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: r.URL.RawPath == ""})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "slug", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.ListPeople(w, r, slug)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
 // GetEventQr operation middleware
 func (siw *ServerInterfaceWrapper) GetEventQr(w http.ResponseWriter, r *http.Request) {
 
@@ -1474,6 +2776,61 @@ func (siw *ServerInterfaceWrapper) GetEventQr(w http.ResponseWriter, r *http.Req
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		siw.Handler.GetEventQr(w, r, slug)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// SearchEventMedia operation middleware
+func (siw *ServerInterfaceWrapper) SearchEventMedia(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "slug" -------------
+	var slug Slug
+
+	err = runtime.BindStyledParameterWithOptions("simple", "slug", chi.URLParam(r, "slug"), &slug, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: r.URL.RawPath == ""})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "slug", Err: err})
+		return
+	}
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params SearchEventMediaParams
+
+	// ------------- Required query parameter "q" -------------
+
+	err = runtime.BindQueryParameterWithOptions("form", true, true, "q", r.URL.Query(), &params.Q, runtime.BindQueryParameterOptions{Type: "string", Format: ""})
+	if err != nil {
+		var requiredError *runtime.RequiredParameterError
+		if errors.As(err, &requiredError) {
+			siw.ErrorHandlerFunc(w, r, &RequiredParamError{ParamName: "q"})
+		} else {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "q", Err: err})
+		}
+		return
+	}
+
+	// ------------- Optional query parameter "limit" -------------
+
+	err = runtime.BindQueryParameterWithOptions("form", true, false, "limit", r.URL.Query(), &params.Limit, runtime.BindQueryParameterOptions{Type: "integer", Format: ""})
+	if err != nil {
+		var requiredError *runtime.RequiredParameterError
+		if errors.As(err, &requiredError) {
+			siw.ErrorHandlerFunc(w, r, &RequiredParamError{ParamName: "limit"})
+		} else {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "limit", Err: err})
+		}
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.SearchEventMedia(w, r, slug, params)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -1561,11 +2918,169 @@ func (siw *ServerInterfaceWrapper) CreateUploads(w http.ResponseWriter, r *http.
 	handler.ServeHTTP(w, r)
 }
 
+// GetFaceCrop operation middleware
+func (siw *ServerInterfaceWrapper) GetFaceCrop(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "face_id" -------------
+	var faceId FaceId
+
+	err = runtime.BindStyledParameterWithOptions("simple", "face_id", chi.URLParam(r, "face_id"), &faceId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: r.URL.RawPath == ""})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "face_id", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.GetFaceCrop(w, r, faceId)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// FaceNotPerson operation middleware
+func (siw *ServerInterfaceWrapper) FaceNotPerson(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "face_id" -------------
+	var faceId FaceId
+
+	err = runtime.BindStyledParameterWithOptions("simple", "face_id", chi.URLParam(r, "face_id"), &faceId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: r.URL.RawPath == ""})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "face_id", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.FaceNotPerson(w, r, faceId)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
 // GetHealth operation middleware
 func (siw *ServerInterfaceWrapper) GetHealth(w http.ResponseWriter, r *http.Request) {
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		siw.Handler.GetHealth(w, r)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// ListImports operation middleware
+func (siw *ServerInterfaceWrapper) ListImports(w http.ResponseWriter, r *http.Request) {
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.ListImports(w, r)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// CreateImport operation middleware
+func (siw *ServerInterfaceWrapper) CreateImport(w http.ResponseWriter, r *http.Request) {
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.CreateImport(w, r)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// CancelImport operation middleware
+func (siw *ServerInterfaceWrapper) CancelImport(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "import_id" -------------
+	var importId ImportId
+
+	err = runtime.BindStyledParameterWithOptions("simple", "import_id", chi.URLParam(r, "import_id"), &importId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: r.URL.RawPath == ""})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "import_id", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.CancelImport(w, r, importId)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// GetImport operation middleware
+func (siw *ServerInterfaceWrapper) GetImport(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "import_id" -------------
+	var importId ImportId
+
+	err = runtime.BindStyledParameterWithOptions("simple", "import_id", chi.URLParam(r, "import_id"), &importId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: r.URL.RawPath == ""})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "import_id", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.GetImport(w, r, importId)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// CompleteImport operation middleware
+func (siw *ServerInterfaceWrapper) CompleteImport(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "import_id" -------------
+	var importId ImportId
+
+	err = runtime.BindStyledParameterWithOptions("simple", "import_id", chi.URLParam(r, "import_id"), &importId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: r.URL.RawPath == ""})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "import_id", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.CompleteImport(w, r, importId)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -1594,6 +3109,147 @@ func (siw *ServerInterfaceWrapper) UpdateMe(w http.ResponseWriter, r *http.Reque
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		siw.Handler.UpdateMe(w, r)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// DeleteMyFaceData operation middleware
+func (siw *ServerInterfaceWrapper) DeleteMyFaceData(w http.ResponseWriter, r *http.Request) {
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.DeleteMyFaceData(w, r)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// ListMyLibrary operation middleware
+func (siw *ServerInterfaceWrapper) ListMyLibrary(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params ListMyLibraryParams
+
+	// ------------- Optional query parameter "cursor" -------------
+
+	err = runtime.BindQueryParameterWithOptions("form", true, false, "cursor", r.URL.Query(), &params.Cursor, runtime.BindQueryParameterOptions{Type: "string", Format: ""})
+	if err != nil {
+		var requiredError *runtime.RequiredParameterError
+		if errors.As(err, &requiredError) {
+			siw.ErrorHandlerFunc(w, r, &RequiredParamError{ParamName: "cursor"})
+		} else {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "cursor", Err: err})
+		}
+		return
+	}
+
+	// ------------- Optional query parameter "limit" -------------
+
+	err = runtime.BindQueryParameterWithOptions("form", true, false, "limit", r.URL.Query(), &params.Limit, runtime.BindQueryParameterOptions{Type: "integer", Format: ""})
+	if err != nil {
+		var requiredError *runtime.RequiredParameterError
+		if errors.As(err, &requiredError) {
+			siw.ErrorHandlerFunc(w, r, &RequiredParamError{ParamName: "limit"})
+		} else {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "limit", Err: err})
+		}
+		return
+	}
+
+	// ------------- Optional query parameter "unassigned" -------------
+
+	err = runtime.BindQueryParameterWithOptions("form", true, false, "unassigned", r.URL.Query(), &params.Unassigned, runtime.BindQueryParameterOptions{Type: "boolean", Format: ""})
+	if err != nil {
+		var requiredError *runtime.RequiredParameterError
+		if errors.As(err, &requiredError) {
+			siw.ErrorHandlerFunc(w, r, &RequiredParamError{ParamName: "unassigned"})
+		} else {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "unassigned", Err: err})
+		}
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.ListMyLibrary(w, r, params)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// ListMyPeople operation middleware
+func (siw *ServerInterfaceWrapper) ListMyPeople(w http.ResponseWriter, r *http.Request) {
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.ListMyPeople(w, r)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// ListMySuggestions operation middleware
+func (siw *ServerInterfaceWrapper) ListMySuggestions(w http.ResponseWriter, r *http.Request) {
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.ListMySuggestions(w, r)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// ListMyYears operation middleware
+func (siw *ServerInterfaceWrapper) ListMyYears(w http.ResponseWriter, r *http.Request) {
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.ListMyYears(w, r)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// GetMyYear operation middleware
+func (siw *ServerInterfaceWrapper) GetMyYear(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "year" -------------
+	var year int
+
+	err = runtime.BindStyledParameterWithOptions("simple", "year", chi.URLParam(r, "year"), &year, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "integer", Format: "", ValueIsUnescaped: r.URL.RawPath == ""})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "year", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.GetMyYear(w, r, year)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -1660,6 +3316,84 @@ func (siw *ServerInterfaceWrapper) GetMedia(w http.ResponseWriter, r *http.Reque
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		siw.Handler.GetMedia(w, r, mediaId)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// DescribeMedia operation middleware
+func (siw *ServerInterfaceWrapper) DescribeMedia(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "media_id" -------------
+	var mediaId MediaId
+
+	err = runtime.BindStyledParameterWithOptions("simple", "media_id", chi.URLParam(r, "media_id"), &mediaId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: r.URL.RawPath == ""})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "media_id", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.DescribeMedia(w, r, mediaId)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// AssignMediaEvent operation middleware
+func (siw *ServerInterfaceWrapper) AssignMediaEvent(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "media_id" -------------
+	var mediaId MediaId
+
+	err = runtime.BindStyledParameterWithOptions("simple", "media_id", chi.URLParam(r, "media_id"), &mediaId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: r.URL.RawPath == ""})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "media_id", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.AssignMediaEvent(w, r, mediaId)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// ListMediaFaces operation middleware
+func (siw *ServerInterfaceWrapper) ListMediaFaces(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "media_id" -------------
+	var mediaId MediaId
+
+	err = runtime.BindStyledParameterWithOptions("simple", "media_id", chi.URLParam(r, "media_id"), &mediaId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: r.URL.RawPath == ""})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "media_id", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.ListMediaFaces(w, r, mediaId)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -1764,6 +3498,222 @@ func (siw *ServerInterfaceWrapper) RetryMedia(w http.ResponseWriter, r *http.Req
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		siw.Handler.RetryMedia(w, r, mediaId)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// MergePeople operation middleware
+func (siw *ServerInterfaceWrapper) MergePeople(w http.ResponseWriter, r *http.Request) {
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.MergePeople(w, r)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// GetPerson operation middleware
+func (siw *ServerInterfaceWrapper) GetPerson(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "person_id" -------------
+	var personId PersonId
+
+	err = runtime.BindStyledParameterWithOptions("simple", "person_id", chi.URLParam(r, "person_id"), &personId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: r.URL.RawPath == ""})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "person_id", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.GetPerson(w, r, personId)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// UpdatePerson operation middleware
+func (siw *ServerInterfaceWrapper) UpdatePerson(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "person_id" -------------
+	var personId PersonId
+
+	err = runtime.BindStyledParameterWithOptions("simple", "person_id", chi.URLParam(r, "person_id"), &personId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: r.URL.RawPath == ""})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "person_id", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.UpdatePerson(w, r, personId)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// UnclaimPerson operation middleware
+func (siw *ServerInterfaceWrapper) UnclaimPerson(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "person_id" -------------
+	var personId PersonId
+
+	err = runtime.BindStyledParameterWithOptions("simple", "person_id", chi.URLParam(r, "person_id"), &personId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: r.URL.RawPath == ""})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "person_id", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.UnclaimPerson(w, r, personId)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// ClaimPerson operation middleware
+func (siw *ServerInterfaceWrapper) ClaimPerson(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "person_id" -------------
+	var personId PersonId
+
+	err = runtime.BindStyledParameterWithOptions("simple", "person_id", chi.URLParam(r, "person_id"), &personId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: r.URL.RawPath == ""})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "person_id", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.ClaimPerson(w, r, personId)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// SplitPerson operation middleware
+func (siw *ServerInterfaceWrapper) SplitPerson(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "person_id" -------------
+	var personId PersonId
+
+	err = runtime.BindStyledParameterWithOptions("simple", "person_id", chi.URLParam(r, "person_id"), &personId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: r.URL.RawPath == ""})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "person_id", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.SplitPerson(w, r, personId)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// GetSharedAlbum operation middleware
+func (siw *ServerInterfaceWrapper) GetSharedAlbum(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "share_id" -------------
+	var shareId Id
+
+	err = runtime.BindStyledParameterWithOptions("simple", "share_id", chi.URLParam(r, "share_id"), &shareId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: r.URL.RawPath == ""})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "share_id", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.GetSharedAlbum(w, r, shareId)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// SearchMyMedia operation middleware
+func (siw *ServerInterfaceWrapper) SearchMyMedia(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params SearchMyMediaParams
+
+	// ------------- Required query parameter "q" -------------
+
+	err = runtime.BindQueryParameterWithOptions("form", true, true, "q", r.URL.Query(), &params.Q, runtime.BindQueryParameterOptions{Type: "string", Format: ""})
+	if err != nil {
+		var requiredError *runtime.RequiredParameterError
+		if errors.As(err, &requiredError) {
+			siw.ErrorHandlerFunc(w, r, &RequiredParamError{ParamName: "q"})
+		} else {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "q", Err: err})
+		}
+		return
+	}
+
+	// ------------- Optional query parameter "limit" -------------
+
+	err = runtime.BindQueryParameterWithOptions("form", true, false, "limit", r.URL.Query(), &params.Limit, runtime.BindQueryParameterOptions{Type: "integer", Format: ""})
+	if err != nil {
+		var requiredError *runtime.RequiredParameterError
+		if errors.As(err, &requiredError) {
+			siw.ErrorHandlerFunc(w, r, &RequiredParamError{ParamName: "limit"})
+		} else {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "limit", Err: err})
+		}
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.SearchMyMedia(w, r, params)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -2080,11 +4030,352 @@ func HandlerWithOptions(si ServerInterface, options ChiServerOptions) http.Handl
 	r.Group(func(r chi.Router) {
 		r.Get(options.BaseURL+"/zips/{token}", wrapper.DownloadZip)
 	})
+	r.Group(func(r chi.Router) {
+		r.Get(options.BaseURL+"/events/{slug}/people", wrapper.ListPeople)
+	})
+	r.Group(func(r chi.Router) {
+		r.Get(options.BaseURL+"/people/{person_id}", wrapper.GetPerson)
+	})
+	r.Group(func(r chi.Router) {
+		r.Patch(options.BaseURL+"/people/{person_id}", wrapper.UpdatePerson)
+	})
+	r.Group(func(r chi.Router) {
+		r.Delete(options.BaseURL+"/people/{person_id}/claim", wrapper.UnclaimPerson)
+	})
+	r.Group(func(r chi.Router) {
+		r.Post(options.BaseURL+"/people/{person_id}/claim", wrapper.ClaimPerson)
+	})
+	r.Group(func(r chi.Router) {
+		r.Post(options.BaseURL+"/people/merge", wrapper.MergePeople)
+	})
+	r.Group(func(r chi.Router) {
+		r.Post(options.BaseURL+"/people/{person_id}/split", wrapper.SplitPerson)
+	})
+	r.Group(func(r chi.Router) {
+		r.Post(options.BaseURL+"/faces/{face_id}/not-person", wrapper.FaceNotPerson)
+	})
+	r.Group(func(r chi.Router) {
+		r.Get(options.BaseURL+"/faces/{face_id}/crop.jpg", wrapper.GetFaceCrop)
+	})
+	r.Group(func(r chi.Router) {
+		r.Get(options.BaseURL+"/media/{media_id}/faces", wrapper.ListMediaFaces)
+	})
+	r.Group(func(r chi.Router) {
+		r.Get(options.BaseURL+"/me/people", wrapper.ListMyPeople)
+	})
+	r.Group(func(r chi.Router) {
+		r.Get(options.BaseURL+"/me/suggestions", wrapper.ListMySuggestions)
+	})
+	r.Group(func(r chi.Router) {
+		r.Delete(options.BaseURL+"/me/face-data", wrapper.DeleteMyFaceData)
+	})
+	r.Group(func(r chi.Router) {
+		r.Get(options.BaseURL+"/events/{slug}/search", wrapper.SearchEventMedia)
+	})
+	r.Group(func(r chi.Router) {
+		r.Get(options.BaseURL+"/search", wrapper.SearchMyMedia)
+	})
+	r.Group(func(r chi.Router) {
+		r.Post(options.BaseURL+"/agent/messages", wrapper.SendAgentMessage)
+	})
+	r.Group(func(r chi.Router) {
+		r.Get(options.BaseURL+"/agent/commands", wrapper.ListSavedCommands)
+	})
+	r.Group(func(r chi.Router) {
+		r.Post(options.BaseURL+"/agent/commands", wrapper.SaveCommand)
+	})
+	r.Group(func(r chi.Router) {
+		r.Delete(options.BaseURL+"/agent/commands/{command_id}", wrapper.DeleteSavedCommand)
+	})
+	r.Group(func(r chi.Router) {
+		r.Post(options.BaseURL+"/agent/commands/{command_id}/run", wrapper.RunSavedCommand)
+	})
+	r.Group(func(r chi.Router) {
+		r.Post(options.BaseURL+"/media/{media_id}/describe", wrapper.DescribeMedia)
+	})
+	r.Group(func(r chi.Router) {
+		r.Get(options.BaseURL+"/events/{slug}/best", wrapper.ListEventHighlights)
+	})
+	r.Group(func(r chi.Router) {
+		r.Get(options.BaseURL+"/events/{slug}/albums", wrapper.ListEventAlbums)
+	})
+	r.Group(func(r chi.Router) {
+		r.Post(options.BaseURL+"/albums", wrapper.CreateAlbum)
+	})
+	r.Group(func(r chi.Router) {
+		r.Delete(options.BaseURL+"/albums/{album_id}", wrapper.DeleteAlbum)
+	})
+	r.Group(func(r chi.Router) {
+		r.Get(options.BaseURL+"/albums/{album_id}", wrapper.GetAlbum)
+	})
+	r.Group(func(r chi.Router) {
+		r.Patch(options.BaseURL+"/albums/{album_id}", wrapper.UpdateAlbum)
+	})
+	r.Group(func(r chi.Router) {
+		r.Post(options.BaseURL+"/albums/{album_id}/share", wrapper.ShareAlbum)
+	})
+	r.Group(func(r chi.Router) {
+		r.Get(options.BaseURL+"/s/{share_id}", wrapper.GetSharedAlbum)
+	})
+	r.Group(func(r chi.Router) {
+		r.Get(options.BaseURL+"/me/years", wrapper.ListMyYears)
+	})
+	r.Group(func(r chi.Router) {
+		r.Get(options.BaseURL+"/me/years/{year}", wrapper.GetMyYear)
+	})
+	r.Group(func(r chi.Router) {
+		r.Get(options.BaseURL+"/imports", wrapper.ListImports)
+	})
+	r.Group(func(r chi.Router) {
+		r.Post(options.BaseURL+"/imports", wrapper.CreateImport)
+	})
+	r.Group(func(r chi.Router) {
+		r.Delete(options.BaseURL+"/imports/{import_id}", wrapper.CancelImport)
+	})
+	r.Group(func(r chi.Router) {
+		r.Get(options.BaseURL+"/imports/{import_id}", wrapper.GetImport)
+	})
+	r.Group(func(r chi.Router) {
+		r.Post(options.BaseURL+"/imports/{import_id}/complete", wrapper.CompleteImport)
+	})
+	r.Group(func(r chi.Router) {
+		r.Get(options.BaseURL+"/me/library", wrapper.ListMyLibrary)
+	})
+	r.Group(func(r chi.Router) {
+		r.Put(options.BaseURL+"/media/{media_id}/event", wrapper.AssignMediaEvent)
+	})
 
 	return r
 }
 
 type ErrorJSONResponse ErrorResponse
+
+type ListSavedCommandsRequestObject struct {
+	Params ListSavedCommandsParams
+}
+
+type ListSavedCommandsResponseObject interface {
+	VisitListSavedCommandsResponse(w http.ResponseWriter) error
+}
+
+type ListSavedCommands200JSONResponse struct {
+	Commands []SavedCommand `json:"commands"`
+}
+
+func (response ListSavedCommands200JSONResponse) VisitListSavedCommandsResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type SaveCommandRequestObject struct {
+	Body *SaveCommandJSONRequestBody
+}
+
+type SaveCommandResponseObject interface {
+	VisitSaveCommandResponse(w http.ResponseWriter) error
+}
+
+type SaveCommand201JSONResponse SavedCommand
+
+func (response SaveCommand201JSONResponse) VisitSaveCommandResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(201)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type DeleteSavedCommandRequestObject struct {
+	CommandId Id `json:"command_id"`
+}
+
+type DeleteSavedCommandResponseObject interface {
+	VisitDeleteSavedCommandResponse(w http.ResponseWriter) error
+}
+
+type DeleteSavedCommand204Response struct {
+}
+
+func (response DeleteSavedCommand204Response) VisitDeleteSavedCommandResponse(w http.ResponseWriter) error {
+	w.WriteHeader(204)
+	return nil
+}
+
+type RunSavedCommandRequestObject struct {
+	CommandId Id `json:"command_id"`
+	Body      *RunSavedCommandJSONRequestBody
+}
+
+type RunSavedCommandResponseObject interface {
+	VisitRunSavedCommandResponse(w http.ResponseWriter) error
+}
+
+type RunSavedCommand200JSONResponse AgentResponse
+
+func (response RunSavedCommand200JSONResponse) VisitRunSavedCommandResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type SendAgentMessageRequestObject struct {
+	Body *SendAgentMessageJSONRequestBody
+}
+
+type SendAgentMessageResponseObject interface {
+	VisitSendAgentMessageResponse(w http.ResponseWriter) error
+}
+
+type SendAgentMessage200JSONResponse AgentResponse
+
+func (response SendAgentMessage200JSONResponse) VisitSendAgentMessageResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type SendAgentMessage503JSONResponse struct{ ErrorJSONResponse }
+
+func (response SendAgentMessage503JSONResponse) VisitSendAgentMessageResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type CreateAlbumRequestObject struct {
+	Body *CreateAlbumJSONRequestBody
+}
+
+type CreateAlbumResponseObject interface {
+	VisitCreateAlbumResponse(w http.ResponseWriter) error
+}
+
+type CreateAlbum201JSONResponse Album
+
+func (response CreateAlbum201JSONResponse) VisitCreateAlbumResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(201)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type DeleteAlbumRequestObject struct {
+	AlbumId AlbumId `json:"album_id"`
+}
+
+type DeleteAlbumResponseObject interface {
+	VisitDeleteAlbumResponse(w http.ResponseWriter) error
+}
+
+type DeleteAlbum204Response struct {
+}
+
+func (response DeleteAlbum204Response) VisitDeleteAlbumResponse(w http.ResponseWriter) error {
+	w.WriteHeader(204)
+	return nil
+}
+
+type GetAlbumRequestObject struct {
+	AlbumId AlbumId `json:"album_id"`
+}
+
+type GetAlbumResponseObject interface {
+	VisitGetAlbumResponse(w http.ResponseWriter) error
+}
+
+type GetAlbum200JSONResponse AlbumDetail
+
+func (response GetAlbum200JSONResponse) VisitGetAlbumResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type UpdateAlbumRequestObject struct {
+	AlbumId AlbumId `json:"album_id"`
+	Body    *UpdateAlbumJSONRequestBody
+}
+
+type UpdateAlbumResponseObject interface {
+	VisitUpdateAlbumResponse(w http.ResponseWriter) error
+}
+
+type UpdateAlbum200JSONResponse AlbumDetail
+
+func (response UpdateAlbum200JSONResponse) VisitUpdateAlbumResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type ShareAlbumRequestObject struct {
+	AlbumId AlbumId `json:"album_id"`
+	Body    *ShareAlbumJSONRequestBody
+}
+
+type ShareAlbumResponseObject interface {
+	VisitShareAlbumResponse(w http.ResponseWriter) error
+}
+
+type ShareAlbum201JSONResponse Share
+
+func (response ShareAlbum201JSONResponse) VisitShareAlbumResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(201)
+	_, err := buf.WriteTo(w)
+	return err
+}
 
 type LogoutRequestObject struct {
 }
@@ -2299,6 +4590,53 @@ func (response UpdateEvent200JSONResponse) VisitUpdateEventResponse(w http.Respo
 	return err
 }
 
+type ListEventAlbumsRequestObject struct {
+	Slug Slug `json:"slug"`
+}
+
+type ListEventAlbumsResponseObject interface {
+	VisitListEventAlbumsResponse(w http.ResponseWriter) error
+}
+
+type ListEventAlbums200JSONResponse struct {
+	Albums []Album `json:"albums"`
+}
+
+func (response ListEventAlbums200JSONResponse) VisitListEventAlbumsResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type ListEventHighlightsRequestObject struct {
+	Slug   Slug `json:"slug"`
+	Params ListEventHighlightsParams
+}
+
+type ListEventHighlightsResponseObject interface {
+	VisitListEventHighlightsResponse(w http.ResponseWriter) error
+}
+
+type ListEventHighlights200JSONResponse MediaPage
+
+func (response ListEventHighlights200JSONResponse) VisitListEventHighlightsResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
 type StreamEventUpdatesRequestObject struct {
 	Slug Slug `json:"slug"`
 }
@@ -2418,6 +4756,28 @@ func (response ListEventMedia200JSONResponse) VisitListEventMediaResponse(w http
 	return err
 }
 
+type ListPeopleRequestObject struct {
+	Slug Slug `json:"slug"`
+}
+
+type ListPeopleResponseObject interface {
+	VisitListPeopleResponse(w http.ResponseWriter) error
+}
+
+type ListPeople200JSONResponse PeopleList
+
+func (response ListPeople200JSONResponse) VisitListPeopleResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
 type GetEventQrRequestObject struct {
 	Slug Slug `json:"slug"`
 }
@@ -2443,6 +4803,29 @@ func (response GetEventQr200ImagesvgXmlResponse) VisitGetEventQrResponse(w http.
 		defer closer.Close()
 	}
 	_, err := io.Copy(w, response.Body)
+	return err
+}
+
+type SearchEventMediaRequestObject struct {
+	Slug   Slug `json:"slug"`
+	Params SearchEventMediaParams
+}
+
+type SearchEventMediaResponseObject interface {
+	VisitSearchEventMediaResponse(w http.ResponseWriter) error
+}
+
+type SearchEventMedia200JSONResponse MediaPage
+
+func (response SearchEventMedia200JSONResponse) VisitSearchEventMediaResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	_, err := buf.WriteTo(w)
 	return err
 }
 
@@ -2555,6 +4938,50 @@ func (response CreateUploads415JSONResponse) VisitCreateUploadsResponse(w http.R
 	return err
 }
 
+type GetFaceCropRequestObject struct {
+	FaceId FaceId `json:"face_id"`
+}
+
+type GetFaceCropResponseObject interface {
+	VisitGetFaceCropResponse(w http.ResponseWriter) error
+}
+
+type GetFaceCrop200ImagejpegResponse struct {
+	Body          io.Reader
+	ContentLength int64
+}
+
+func (response GetFaceCrop200ImagejpegResponse) VisitGetFaceCropResponse(w http.ResponseWriter) error {
+
+	w.Header().Set("Content-Type", "image/jpeg")
+	if response.ContentLength != 0 {
+		w.Header().Set("Content-Length", fmt.Sprint(response.ContentLength))
+	}
+	w.WriteHeader(200)
+
+	if closer, ok := response.Body.(io.ReadCloser); ok {
+		defer closer.Close()
+	}
+	_, err := io.Copy(w, response.Body)
+	return err
+}
+
+type FaceNotPersonRequestObject struct {
+	FaceId FaceId `json:"face_id"`
+}
+
+type FaceNotPersonResponseObject interface {
+	VisitFaceNotPersonResponse(w http.ResponseWriter) error
+}
+
+type FaceNotPerson204Response struct {
+}
+
+func (response FaceNotPerson204Response) VisitFaceNotPersonResponse(w http.ResponseWriter) error {
+	w.WriteHeader(204)
+	return nil
+}
+
 type GetHealthRequestObject struct {
 }
 
@@ -2565,6 +4992,112 @@ type GetHealthResponseObject interface {
 type GetHealth200JSONResponse Health
 
 func (response GetHealth200JSONResponse) VisitGetHealthResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type ListImportsRequestObject struct {
+}
+
+type ListImportsResponseObject interface {
+	VisitListImportsResponse(w http.ResponseWriter) error
+}
+
+type ListImports200JSONResponse struct {
+	Imports []Import `json:"imports"`
+}
+
+func (response ListImports200JSONResponse) VisitListImportsResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type CreateImportRequestObject struct {
+	Body *CreateImportJSONRequestBody
+}
+
+type CreateImportResponseObject interface {
+	VisitCreateImportResponse(w http.ResponseWriter) error
+}
+
+type CreateImport201JSONResponse ImportInit
+
+func (response CreateImport201JSONResponse) VisitCreateImportResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(201)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type CancelImportRequestObject struct {
+	ImportId ImportId `json:"import_id"`
+}
+
+type CancelImportResponseObject interface {
+	VisitCancelImportResponse(w http.ResponseWriter) error
+}
+
+type CancelImport204Response struct {
+}
+
+func (response CancelImport204Response) VisitCancelImportResponse(w http.ResponseWriter) error {
+	w.WriteHeader(204)
+	return nil
+}
+
+type GetImportRequestObject struct {
+	ImportId ImportId `json:"import_id"`
+}
+
+type GetImportResponseObject interface {
+	VisitGetImportResponse(w http.ResponseWriter) error
+}
+
+type GetImport200JSONResponse Import
+
+func (response GetImport200JSONResponse) VisitGetImportResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type CompleteImportRequestObject struct {
+	ImportId ImportId `json:"import_id"`
+	Body     *CompleteImportJSONRequestBody
+}
+
+type CompleteImportResponseObject interface {
+	VisitCompleteImportResponse(w http.ResponseWriter) error
+}
+
+type CompleteImport200JSONResponse Import
+
+func (response CompleteImport200JSONResponse) VisitCompleteImportResponse(w http.ResponseWriter) error {
 
 	var buf bytes.Buffer
 	if err := json.NewEncoder(&buf).Encode(response); err != nil {
@@ -2608,6 +5141,132 @@ type UpdateMeResponseObject interface {
 type UpdateMe200JSONResponse Me
 
 func (response UpdateMe200JSONResponse) VisitUpdateMeResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type DeleteMyFaceDataRequestObject struct {
+}
+
+type DeleteMyFaceDataResponseObject interface {
+	VisitDeleteMyFaceDataResponse(w http.ResponseWriter) error
+}
+
+type DeleteMyFaceData204Response struct {
+}
+
+func (response DeleteMyFaceData204Response) VisitDeleteMyFaceDataResponse(w http.ResponseWriter) error {
+	w.WriteHeader(204)
+	return nil
+}
+
+type ListMyLibraryRequestObject struct {
+	Params ListMyLibraryParams
+}
+
+type ListMyLibraryResponseObject interface {
+	VisitListMyLibraryResponse(w http.ResponseWriter) error
+}
+
+type ListMyLibrary200JSONResponse MediaPage
+
+func (response ListMyLibrary200JSONResponse) VisitListMyLibraryResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type ListMyPeopleRequestObject struct {
+}
+
+type ListMyPeopleResponseObject interface {
+	VisitListMyPeopleResponse(w http.ResponseWriter) error
+}
+
+type ListMyPeople200JSONResponse PeopleList
+
+func (response ListMyPeople200JSONResponse) VisitListMyPeopleResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type ListMySuggestionsRequestObject struct {
+}
+
+type ListMySuggestionsResponseObject interface {
+	VisitListMySuggestionsResponse(w http.ResponseWriter) error
+}
+
+type ListMySuggestions200JSONResponse struct {
+	Suggestions []Suggestion `json:"suggestions"`
+}
+
+func (response ListMySuggestions200JSONResponse) VisitListMySuggestionsResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type ListMyYearsRequestObject struct {
+}
+
+type ListMyYearsResponseObject interface {
+	VisitListMyYearsResponse(w http.ResponseWriter) error
+}
+
+type ListMyYears200JSONResponse struct {
+	Years []YearSummary `json:"years"`
+}
+
+func (response ListMyYears200JSONResponse) VisitListMyYearsResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type GetMyYearRequestObject struct {
+	Year int `json:"year"`
+}
+
+type GetMyYearResponseObject interface {
+	VisitGetMyYearResponse(w http.ResponseWriter) error
+}
+
+type GetMyYear200JSONResponse YearRecap
+
+func (response GetMyYear200JSONResponse) VisitGetMyYearResponse(w http.ResponseWriter) error {
 
 	var buf bytes.Buffer
 	if err := json.NewEncoder(&buf).Encode(response); err != nil {
@@ -2707,6 +5366,91 @@ func (response GetMedia404JSONResponse) VisitGetMediaResponse(w http.ResponseWri
 	return err
 }
 
+type DescribeMediaRequestObject struct {
+	MediaId MediaId `json:"media_id"`
+}
+
+type DescribeMediaResponseObject interface {
+	VisitDescribeMediaResponse(w http.ResponseWriter) error
+}
+
+type DescribeMedia200JSONResponse struct {
+	Text string `json:"text"`
+}
+
+func (response DescribeMedia200JSONResponse) VisitDescribeMediaResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type DescribeMedia503JSONResponse struct{ ErrorJSONResponse }
+
+func (response DescribeMedia503JSONResponse) VisitDescribeMediaResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type AssignMediaEventRequestObject struct {
+	MediaId MediaId `json:"media_id"`
+	Body    *AssignMediaEventJSONRequestBody
+}
+
+type AssignMediaEventResponseObject interface {
+	VisitAssignMediaEventResponse(w http.ResponseWriter) error
+}
+
+type AssignMediaEvent200JSONResponse GridItem
+
+func (response AssignMediaEvent200JSONResponse) VisitAssignMediaEventResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type ListMediaFacesRequestObject struct {
+	MediaId MediaId `json:"media_id"`
+}
+
+type ListMediaFacesResponseObject interface {
+	VisitListMediaFacesResponse(w http.ResponseWriter) error
+}
+
+type ListMediaFaces200JSONResponse struct {
+	Faces []Face `json:"faces"`
+}
+
+func (response ListMediaFaces200JSONResponse) VisitListMediaFacesResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
 type UnlikeMediaRequestObject struct {
 	MediaId MediaId `json:"media_id"`
 }
@@ -2781,6 +5525,198 @@ type RetryMedia204Response struct {
 func (response RetryMedia204Response) VisitRetryMediaResponse(w http.ResponseWriter) error {
 	w.WriteHeader(204)
 	return nil
+}
+
+type MergePeopleRequestObject struct {
+	Body *MergePeopleJSONRequestBody
+}
+
+type MergePeopleResponseObject interface {
+	VisitMergePeopleResponse(w http.ResponseWriter) error
+}
+
+type MergePeople200JSONResponse Person
+
+func (response MergePeople200JSONResponse) VisitMergePeopleResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type GetPersonRequestObject struct {
+	PersonId PersonId `json:"person_id"`
+}
+
+type GetPersonResponseObject interface {
+	VisitGetPersonResponse(w http.ResponseWriter) error
+}
+
+type GetPerson200JSONResponse Person
+
+func (response GetPerson200JSONResponse) VisitGetPersonResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type UpdatePersonRequestObject struct {
+	PersonId PersonId `json:"person_id"`
+	Body     *UpdatePersonJSONRequestBody
+}
+
+type UpdatePersonResponseObject interface {
+	VisitUpdatePersonResponse(w http.ResponseWriter) error
+}
+
+type UpdatePerson200JSONResponse Person
+
+func (response UpdatePerson200JSONResponse) VisitUpdatePersonResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type UnclaimPersonRequestObject struct {
+	PersonId PersonId `json:"person_id"`
+}
+
+type UnclaimPersonResponseObject interface {
+	VisitUnclaimPersonResponse(w http.ResponseWriter) error
+}
+
+type UnclaimPerson200JSONResponse Person
+
+func (response UnclaimPerson200JSONResponse) VisitUnclaimPersonResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type ClaimPersonRequestObject struct {
+	PersonId PersonId `json:"person_id"`
+}
+
+type ClaimPersonResponseObject interface {
+	VisitClaimPersonResponse(w http.ResponseWriter) error
+}
+
+type ClaimPerson200JSONResponse Person
+
+func (response ClaimPerson200JSONResponse) VisitClaimPersonResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type SplitPersonRequestObject struct {
+	PersonId PersonId `json:"person_id"`
+	Body     *SplitPersonJSONRequestBody
+}
+
+type SplitPersonResponseObject interface {
+	VisitSplitPersonResponse(w http.ResponseWriter) error
+}
+
+type SplitPerson200JSONResponse Person
+
+func (response SplitPerson200JSONResponse) VisitSplitPersonResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type GetSharedAlbumRequestObject struct {
+	ShareId Id `json:"share_id"`
+}
+
+type GetSharedAlbumResponseObject interface {
+	VisitGetSharedAlbumResponse(w http.ResponseWriter) error
+}
+
+type GetSharedAlbum200JSONResponse AlbumDetail
+
+func (response GetSharedAlbum200JSONResponse) VisitGetSharedAlbumResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type GetSharedAlbum404JSONResponse struct{ ErrorJSONResponse }
+
+func (response GetSharedAlbum404JSONResponse) VisitGetSharedAlbumResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type SearchMyMediaRequestObject struct {
+	Params SearchMyMediaParams
+}
+
+type SearchMyMediaResponseObject interface {
+	VisitSearchMyMediaResponse(w http.ResponseWriter) error
+}
+
+type SearchMyMedia200JSONResponse MediaPage
+
+func (response SearchMyMedia200JSONResponse) VisitSearchMyMediaResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	_, err := buf.WriteTo(w)
+	return err
 }
 
 type AbortUploadRequestObject struct {
@@ -2889,6 +5825,36 @@ func (response DownloadZip200ApplicationzipResponse) VisitDownloadZipResponse(w 
 // StrictServerInterface represents all server handlers.
 type StrictServerInterface interface {
 
+	// (GET /agent/commands)
+	ListSavedCommands(ctx context.Context, request ListSavedCommandsRequestObject) (ListSavedCommandsResponseObject, error)
+
+	// (POST /agent/commands)
+	SaveCommand(ctx context.Context, request SaveCommandRequestObject) (SaveCommandResponseObject, error)
+
+	// (DELETE /agent/commands/{command_id})
+	DeleteSavedCommand(ctx context.Context, request DeleteSavedCommandRequestObject) (DeleteSavedCommandResponseObject, error)
+
+	// (POST /agent/commands/{command_id}/run)
+	RunSavedCommand(ctx context.Context, request RunSavedCommandRequestObject) (RunSavedCommandResponseObject, error)
+
+	// (POST /agent/messages)
+	SendAgentMessage(ctx context.Context, request SendAgentMessageRequestObject) (SendAgentMessageResponseObject, error)
+
+	// (POST /albums)
+	CreateAlbum(ctx context.Context, request CreateAlbumRequestObject) (CreateAlbumResponseObject, error)
+
+	// (DELETE /albums/{album_id})
+	DeleteAlbum(ctx context.Context, request DeleteAlbumRequestObject) (DeleteAlbumResponseObject, error)
+
+	// (GET /albums/{album_id})
+	GetAlbum(ctx context.Context, request GetAlbumRequestObject) (GetAlbumResponseObject, error)
+
+	// (PATCH /albums/{album_id})
+	UpdateAlbum(ctx context.Context, request UpdateAlbumRequestObject) (UpdateAlbumResponseObject, error)
+
+	// (POST /albums/{album_id}/share)
+	ShareAlbum(ctx context.Context, request ShareAlbumRequestObject) (ShareAlbumResponseObject, error)
+
 	// (POST /auth/logout)
 	Logout(ctx context.Context, request LogoutRequestObject) (LogoutResponseObject, error)
 
@@ -2913,6 +5879,12 @@ type StrictServerInterface interface {
 	// (PATCH /events/{slug})
 	UpdateEvent(ctx context.Context, request UpdateEventRequestObject) (UpdateEventResponseObject, error)
 
+	// (GET /events/{slug}/albums)
+	ListEventAlbums(ctx context.Context, request ListEventAlbumsRequestObject) (ListEventAlbumsResponseObject, error)
+
+	// (GET /events/{slug}/best)
+	ListEventHighlights(ctx context.Context, request ListEventHighlightsRequestObject) (ListEventHighlightsResponseObject, error)
+
 	// (GET /events/{slug}/events)
 	StreamEventUpdates(ctx context.Context, request StreamEventUpdatesRequestObject) (StreamEventUpdatesResponseObject, error)
 
@@ -2925,8 +5897,14 @@ type StrictServerInterface interface {
 	// (GET /events/{slug}/media)
 	ListEventMedia(ctx context.Context, request ListEventMediaRequestObject) (ListEventMediaResponseObject, error)
 
+	// (GET /events/{slug}/people)
+	ListPeople(ctx context.Context, request ListPeopleRequestObject) (ListPeopleResponseObject, error)
+
 	// (GET /events/{slug}/qr.svg)
 	GetEventQr(ctx context.Context, request GetEventQrRequestObject) (GetEventQrResponseObject, error)
+
+	// (GET /events/{slug}/search)
+	SearchEventMedia(ctx context.Context, request SearchEventMediaRequestObject) (SearchEventMediaResponseObject, error)
 
 	// (GET /events/{slug}/status)
 	GetEventStatus(ctx context.Context, request GetEventStatusRequestObject) (GetEventStatusResponseObject, error)
@@ -2937,14 +5915,53 @@ type StrictServerInterface interface {
 	// (POST /events/{slug}/uploads)
 	CreateUploads(ctx context.Context, request CreateUploadsRequestObject) (CreateUploadsResponseObject, error)
 
+	// (GET /faces/{face_id}/crop.jpg)
+	GetFaceCrop(ctx context.Context, request GetFaceCropRequestObject) (GetFaceCropResponseObject, error)
+
+	// (POST /faces/{face_id}/not-person)
+	FaceNotPerson(ctx context.Context, request FaceNotPersonRequestObject) (FaceNotPersonResponseObject, error)
+
 	// (GET /health)
 	GetHealth(ctx context.Context, request GetHealthRequestObject) (GetHealthResponseObject, error)
+
+	// (GET /imports)
+	ListImports(ctx context.Context, request ListImportsRequestObject) (ListImportsResponseObject, error)
+
+	// (POST /imports)
+	CreateImport(ctx context.Context, request CreateImportRequestObject) (CreateImportResponseObject, error)
+
+	// (DELETE /imports/{import_id})
+	CancelImport(ctx context.Context, request CancelImportRequestObject) (CancelImportResponseObject, error)
+
+	// (GET /imports/{import_id})
+	GetImport(ctx context.Context, request GetImportRequestObject) (GetImportResponseObject, error)
+
+	// (POST /imports/{import_id}/complete)
+	CompleteImport(ctx context.Context, request CompleteImportRequestObject) (CompleteImportResponseObject, error)
 
 	// (GET /me)
 	GetMe(ctx context.Context, request GetMeRequestObject) (GetMeResponseObject, error)
 
 	// (PATCH /me)
 	UpdateMe(ctx context.Context, request UpdateMeRequestObject) (UpdateMeResponseObject, error)
+
+	// (DELETE /me/face-data)
+	DeleteMyFaceData(ctx context.Context, request DeleteMyFaceDataRequestObject) (DeleteMyFaceDataResponseObject, error)
+
+	// (GET /me/library)
+	ListMyLibrary(ctx context.Context, request ListMyLibraryRequestObject) (ListMyLibraryResponseObject, error)
+
+	// (GET /me/people)
+	ListMyPeople(ctx context.Context, request ListMyPeopleRequestObject) (ListMyPeopleResponseObject, error)
+
+	// (GET /me/suggestions)
+	ListMySuggestions(ctx context.Context, request ListMySuggestionsRequestObject) (ListMySuggestionsResponseObject, error)
+
+	// (GET /me/years)
+	ListMyYears(ctx context.Context, request ListMyYearsRequestObject) (ListMyYearsResponseObject, error)
+
+	// (GET /me/years/{year})
+	GetMyYear(ctx context.Context, request GetMyYearRequestObject) (GetMyYearResponseObject, error)
 
 	// (POST /media/zip)
 	CreateZip(ctx context.Context, request CreateZipRequestObject) (CreateZipResponseObject, error)
@@ -2954,6 +5971,15 @@ type StrictServerInterface interface {
 
 	// (GET /media/{media_id})
 	GetMedia(ctx context.Context, request GetMediaRequestObject) (GetMediaResponseObject, error)
+
+	// (POST /media/{media_id}/describe)
+	DescribeMedia(ctx context.Context, request DescribeMediaRequestObject) (DescribeMediaResponseObject, error)
+
+	// (PUT /media/{media_id}/event)
+	AssignMediaEvent(ctx context.Context, request AssignMediaEventRequestObject) (AssignMediaEventResponseObject, error)
+
+	// (GET /media/{media_id}/faces)
+	ListMediaFaces(ctx context.Context, request ListMediaFacesRequestObject) (ListMediaFacesResponseObject, error)
 
 	// (DELETE /media/{media_id}/like)
 	UnlikeMedia(ctx context.Context, request UnlikeMediaRequestObject) (UnlikeMediaResponseObject, error)
@@ -2966,6 +5992,30 @@ type StrictServerInterface interface {
 
 	// (POST /media/{media_id}/retry)
 	RetryMedia(ctx context.Context, request RetryMediaRequestObject) (RetryMediaResponseObject, error)
+
+	// (POST /people/merge)
+	MergePeople(ctx context.Context, request MergePeopleRequestObject) (MergePeopleResponseObject, error)
+
+	// (GET /people/{person_id})
+	GetPerson(ctx context.Context, request GetPersonRequestObject) (GetPersonResponseObject, error)
+
+	// (PATCH /people/{person_id})
+	UpdatePerson(ctx context.Context, request UpdatePersonRequestObject) (UpdatePersonResponseObject, error)
+
+	// (DELETE /people/{person_id}/claim)
+	UnclaimPerson(ctx context.Context, request UnclaimPersonRequestObject) (UnclaimPersonResponseObject, error)
+
+	// (POST /people/{person_id}/claim)
+	ClaimPerson(ctx context.Context, request ClaimPersonRequestObject) (ClaimPersonResponseObject, error)
+
+	// (POST /people/{person_id}/split)
+	SplitPerson(ctx context.Context, request SplitPersonRequestObject) (SplitPersonResponseObject, error)
+
+	// (GET /s/{share_id})
+	GetSharedAlbum(ctx context.Context, request GetSharedAlbumRequestObject) (GetSharedAlbumResponseObject, error)
+
+	// (GET /search)
+	SearchMyMedia(ctx context.Context, request SearchMyMediaRequestObject) (SearchMyMediaResponseObject, error)
 
 	// (DELETE /uploads/{media_id})
 	AbortUpload(ctx context.Context, request AbortUploadRequestObject) (AbortUploadResponseObject, error)
@@ -3017,6 +6067,308 @@ type strictHandler struct {
 	ssi         StrictServerInterface
 	middlewares []StrictMiddlewareFunc
 	options     StrictHTTPServerOptions
+}
+
+// ListSavedCommands operation middleware
+func (sh *strictHandler) ListSavedCommands(w http.ResponseWriter, r *http.Request, params ListSavedCommandsParams) {
+	var request ListSavedCommandsRequestObject
+
+	request.Params = params
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.ListSavedCommands(ctx, request.(ListSavedCommandsRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "ListSavedCommands")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(ListSavedCommandsResponseObject); ok {
+		if err := validResponse.VisitListSavedCommandsResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// SaveCommand operation middleware
+func (sh *strictHandler) SaveCommand(w http.ResponseWriter, r *http.Request) {
+	var request SaveCommandRequestObject
+
+	var body SaveCommandJSONRequestBody
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+		sh.options.RequestErrorHandlerFunc(w, r, fmt.Errorf("can't decode JSON body: %w", err))
+		return
+	}
+	request.Body = &body
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.SaveCommand(ctx, request.(SaveCommandRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "SaveCommand")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(SaveCommandResponseObject); ok {
+		if err := validResponse.VisitSaveCommandResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// DeleteSavedCommand operation middleware
+func (sh *strictHandler) DeleteSavedCommand(w http.ResponseWriter, r *http.Request, commandId Id) {
+	var request DeleteSavedCommandRequestObject
+
+	request.CommandId = commandId
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.DeleteSavedCommand(ctx, request.(DeleteSavedCommandRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "DeleteSavedCommand")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(DeleteSavedCommandResponseObject); ok {
+		if err := validResponse.VisitDeleteSavedCommandResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// RunSavedCommand operation middleware
+func (sh *strictHandler) RunSavedCommand(w http.ResponseWriter, r *http.Request, commandId Id) {
+	var request RunSavedCommandRequestObject
+
+	request.CommandId = commandId
+
+	var body RunSavedCommandJSONRequestBody
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+		if !errors.Is(err, io.EOF) {
+			sh.options.RequestErrorHandlerFunc(w, r, fmt.Errorf("can't decode JSON body: %w", err))
+			return
+		}
+	} else {
+		request.Body = &body
+	}
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.RunSavedCommand(ctx, request.(RunSavedCommandRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "RunSavedCommand")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(RunSavedCommandResponseObject); ok {
+		if err := validResponse.VisitRunSavedCommandResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// SendAgentMessage operation middleware
+func (sh *strictHandler) SendAgentMessage(w http.ResponseWriter, r *http.Request) {
+	var request SendAgentMessageRequestObject
+
+	var body SendAgentMessageJSONRequestBody
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+		sh.options.RequestErrorHandlerFunc(w, r, fmt.Errorf("can't decode JSON body: %w", err))
+		return
+	}
+	request.Body = &body
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.SendAgentMessage(ctx, request.(SendAgentMessageRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "SendAgentMessage")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(SendAgentMessageResponseObject); ok {
+		if err := validResponse.VisitSendAgentMessageResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// CreateAlbum operation middleware
+func (sh *strictHandler) CreateAlbum(w http.ResponseWriter, r *http.Request) {
+	var request CreateAlbumRequestObject
+
+	var body CreateAlbumJSONRequestBody
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+		sh.options.RequestErrorHandlerFunc(w, r, fmt.Errorf("can't decode JSON body: %w", err))
+		return
+	}
+	request.Body = &body
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.CreateAlbum(ctx, request.(CreateAlbumRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "CreateAlbum")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(CreateAlbumResponseObject); ok {
+		if err := validResponse.VisitCreateAlbumResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// DeleteAlbum operation middleware
+func (sh *strictHandler) DeleteAlbum(w http.ResponseWriter, r *http.Request, albumId AlbumId) {
+	var request DeleteAlbumRequestObject
+
+	request.AlbumId = albumId
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.DeleteAlbum(ctx, request.(DeleteAlbumRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "DeleteAlbum")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(DeleteAlbumResponseObject); ok {
+		if err := validResponse.VisitDeleteAlbumResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// GetAlbum operation middleware
+func (sh *strictHandler) GetAlbum(w http.ResponseWriter, r *http.Request, albumId AlbumId) {
+	var request GetAlbumRequestObject
+
+	request.AlbumId = albumId
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.GetAlbum(ctx, request.(GetAlbumRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "GetAlbum")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(GetAlbumResponseObject); ok {
+		if err := validResponse.VisitGetAlbumResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// UpdateAlbum operation middleware
+func (sh *strictHandler) UpdateAlbum(w http.ResponseWriter, r *http.Request, albumId AlbumId) {
+	var request UpdateAlbumRequestObject
+
+	request.AlbumId = albumId
+
+	var body UpdateAlbumJSONRequestBody
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+		sh.options.RequestErrorHandlerFunc(w, r, fmt.Errorf("can't decode JSON body: %w", err))
+		return
+	}
+	request.Body = &body
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.UpdateAlbum(ctx, request.(UpdateAlbumRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "UpdateAlbum")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(UpdateAlbumResponseObject); ok {
+		if err := validResponse.VisitUpdateAlbumResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// ShareAlbum operation middleware
+func (sh *strictHandler) ShareAlbum(w http.ResponseWriter, r *http.Request, albumId AlbumId) {
+	var request ShareAlbumRequestObject
+
+	request.AlbumId = albumId
+
+	var body ShareAlbumJSONRequestBody
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+		if !errors.Is(err, io.EOF) {
+			sh.options.RequestErrorHandlerFunc(w, r, fmt.Errorf("can't decode JSON body: %w", err))
+			return
+		}
+	} else {
+		request.Body = &body
+	}
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.ShareAlbum(ctx, request.(ShareAlbumRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "ShareAlbum")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(ShareAlbumResponseObject); ok {
+		if err := validResponse.VisitShareAlbumResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
 }
 
 // Logout operation middleware
@@ -3245,6 +6597,59 @@ func (sh *strictHandler) UpdateEvent(w http.ResponseWriter, r *http.Request, slu
 	}
 }
 
+// ListEventAlbums operation middleware
+func (sh *strictHandler) ListEventAlbums(w http.ResponseWriter, r *http.Request, slug Slug) {
+	var request ListEventAlbumsRequestObject
+
+	request.Slug = slug
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.ListEventAlbums(ctx, request.(ListEventAlbumsRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "ListEventAlbums")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(ListEventAlbumsResponseObject); ok {
+		if err := validResponse.VisitListEventAlbumsResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// ListEventHighlights operation middleware
+func (sh *strictHandler) ListEventHighlights(w http.ResponseWriter, r *http.Request, slug Slug, params ListEventHighlightsParams) {
+	var request ListEventHighlightsRequestObject
+
+	request.Slug = slug
+	request.Params = params
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.ListEventHighlights(ctx, request.(ListEventHighlightsRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "ListEventHighlights")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(ListEventHighlightsResponseObject); ok {
+		if err := validResponse.VisitListEventHighlightsResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
 // StreamEventUpdates operation middleware
 func (sh *strictHandler) StreamEventUpdates(w http.ResponseWriter, r *http.Request, slug Slug) {
 	var request StreamEventUpdatesRequestObject
@@ -3357,6 +6762,32 @@ func (sh *strictHandler) ListEventMedia(w http.ResponseWriter, r *http.Request, 
 	}
 }
 
+// ListPeople operation middleware
+func (sh *strictHandler) ListPeople(w http.ResponseWriter, r *http.Request, slug Slug) {
+	var request ListPeopleRequestObject
+
+	request.Slug = slug
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.ListPeople(ctx, request.(ListPeopleRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "ListPeople")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(ListPeopleResponseObject); ok {
+		if err := validResponse.VisitListPeopleResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
 // GetEventQr operation middleware
 func (sh *strictHandler) GetEventQr(w http.ResponseWriter, r *http.Request, slug Slug) {
 	var request GetEventQrRequestObject
@@ -3376,6 +6807,33 @@ func (sh *strictHandler) GetEventQr(w http.ResponseWriter, r *http.Request, slug
 		sh.options.ResponseErrorHandlerFunc(w, r, err)
 	} else if validResponse, ok := response.(GetEventQrResponseObject); ok {
 		if err := validResponse.VisitGetEventQrResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// SearchEventMedia operation middleware
+func (sh *strictHandler) SearchEventMedia(w http.ResponseWriter, r *http.Request, slug Slug, params SearchEventMediaParams) {
+	var request SearchEventMediaRequestObject
+
+	request.Slug = slug
+	request.Params = params
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.SearchEventMedia(ctx, request.(SearchEventMediaRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "SearchEventMedia")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(SearchEventMediaResponseObject); ok {
+		if err := validResponse.VisitSearchEventMediaResponse(w); err != nil {
 			sh.options.ResponseErrorHandlerFunc(w, r, err)
 		}
 	} else if response != nil {
@@ -3468,6 +6926,58 @@ func (sh *strictHandler) CreateUploads(w http.ResponseWriter, r *http.Request, s
 	}
 }
 
+// GetFaceCrop operation middleware
+func (sh *strictHandler) GetFaceCrop(w http.ResponseWriter, r *http.Request, faceId FaceId) {
+	var request GetFaceCropRequestObject
+
+	request.FaceId = faceId
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.GetFaceCrop(ctx, request.(GetFaceCropRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "GetFaceCrop")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(GetFaceCropResponseObject); ok {
+		if err := validResponse.VisitGetFaceCropResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// FaceNotPerson operation middleware
+func (sh *strictHandler) FaceNotPerson(w http.ResponseWriter, r *http.Request, faceId FaceId) {
+	var request FaceNotPersonRequestObject
+
+	request.FaceId = faceId
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.FaceNotPerson(ctx, request.(FaceNotPersonRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "FaceNotPerson")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(FaceNotPersonResponseObject); ok {
+		if err := validResponse.VisitFaceNotPersonResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
 // GetHealth operation middleware
 func (sh *strictHandler) GetHealth(w http.ResponseWriter, r *http.Request) {
 	var request GetHealthRequestObject
@@ -3485,6 +6995,149 @@ func (sh *strictHandler) GetHealth(w http.ResponseWriter, r *http.Request) {
 		sh.options.ResponseErrorHandlerFunc(w, r, err)
 	} else if validResponse, ok := response.(GetHealthResponseObject); ok {
 		if err := validResponse.VisitGetHealthResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// ListImports operation middleware
+func (sh *strictHandler) ListImports(w http.ResponseWriter, r *http.Request) {
+	var request ListImportsRequestObject
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.ListImports(ctx, request.(ListImportsRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "ListImports")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(ListImportsResponseObject); ok {
+		if err := validResponse.VisitListImportsResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// CreateImport operation middleware
+func (sh *strictHandler) CreateImport(w http.ResponseWriter, r *http.Request) {
+	var request CreateImportRequestObject
+
+	var body CreateImportJSONRequestBody
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+		sh.options.RequestErrorHandlerFunc(w, r, fmt.Errorf("can't decode JSON body: %w", err))
+		return
+	}
+	request.Body = &body
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.CreateImport(ctx, request.(CreateImportRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "CreateImport")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(CreateImportResponseObject); ok {
+		if err := validResponse.VisitCreateImportResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// CancelImport operation middleware
+func (sh *strictHandler) CancelImport(w http.ResponseWriter, r *http.Request, importId ImportId) {
+	var request CancelImportRequestObject
+
+	request.ImportId = importId
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.CancelImport(ctx, request.(CancelImportRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "CancelImport")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(CancelImportResponseObject); ok {
+		if err := validResponse.VisitCancelImportResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// GetImport operation middleware
+func (sh *strictHandler) GetImport(w http.ResponseWriter, r *http.Request, importId ImportId) {
+	var request GetImportRequestObject
+
+	request.ImportId = importId
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.GetImport(ctx, request.(GetImportRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "GetImport")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(GetImportResponseObject); ok {
+		if err := validResponse.VisitGetImportResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// CompleteImport operation middleware
+func (sh *strictHandler) CompleteImport(w http.ResponseWriter, r *http.Request, importId ImportId) {
+	var request CompleteImportRequestObject
+
+	request.ImportId = importId
+
+	var body CompleteImportJSONRequestBody
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+		if !errors.Is(err, io.EOF) {
+			sh.options.RequestErrorHandlerFunc(w, r, fmt.Errorf("can't decode JSON body: %w", err))
+			return
+		}
+	} else {
+		request.Body = &body
+	}
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.CompleteImport(ctx, request.(CompleteImportRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "CompleteImport")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(CompleteImportResponseObject); ok {
+		if err := validResponse.VisitCompleteImportResponse(w); err != nil {
 			sh.options.ResponseErrorHandlerFunc(w, r, err)
 		}
 	} else if response != nil {
@@ -3540,6 +7193,154 @@ func (sh *strictHandler) UpdateMe(w http.ResponseWriter, r *http.Request) {
 		sh.options.ResponseErrorHandlerFunc(w, r, err)
 	} else if validResponse, ok := response.(UpdateMeResponseObject); ok {
 		if err := validResponse.VisitUpdateMeResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// DeleteMyFaceData operation middleware
+func (sh *strictHandler) DeleteMyFaceData(w http.ResponseWriter, r *http.Request) {
+	var request DeleteMyFaceDataRequestObject
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.DeleteMyFaceData(ctx, request.(DeleteMyFaceDataRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "DeleteMyFaceData")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(DeleteMyFaceDataResponseObject); ok {
+		if err := validResponse.VisitDeleteMyFaceDataResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// ListMyLibrary operation middleware
+func (sh *strictHandler) ListMyLibrary(w http.ResponseWriter, r *http.Request, params ListMyLibraryParams) {
+	var request ListMyLibraryRequestObject
+
+	request.Params = params
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.ListMyLibrary(ctx, request.(ListMyLibraryRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "ListMyLibrary")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(ListMyLibraryResponseObject); ok {
+		if err := validResponse.VisitListMyLibraryResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// ListMyPeople operation middleware
+func (sh *strictHandler) ListMyPeople(w http.ResponseWriter, r *http.Request) {
+	var request ListMyPeopleRequestObject
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.ListMyPeople(ctx, request.(ListMyPeopleRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "ListMyPeople")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(ListMyPeopleResponseObject); ok {
+		if err := validResponse.VisitListMyPeopleResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// ListMySuggestions operation middleware
+func (sh *strictHandler) ListMySuggestions(w http.ResponseWriter, r *http.Request) {
+	var request ListMySuggestionsRequestObject
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.ListMySuggestions(ctx, request.(ListMySuggestionsRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "ListMySuggestions")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(ListMySuggestionsResponseObject); ok {
+		if err := validResponse.VisitListMySuggestionsResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// ListMyYears operation middleware
+func (sh *strictHandler) ListMyYears(w http.ResponseWriter, r *http.Request) {
+	var request ListMyYearsRequestObject
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.ListMyYears(ctx, request.(ListMyYearsRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "ListMyYears")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(ListMyYearsResponseObject); ok {
+		if err := validResponse.VisitListMyYearsResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// GetMyYear operation middleware
+func (sh *strictHandler) GetMyYear(w http.ResponseWriter, r *http.Request, year int) {
+	var request GetMyYearRequestObject
+
+	request.Year = year
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.GetMyYear(ctx, request.(GetMyYearRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "GetMyYear")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(GetMyYearResponseObject); ok {
+		if err := validResponse.VisitGetMyYearResponse(w); err != nil {
 			sh.options.ResponseErrorHandlerFunc(w, r, err)
 		}
 	} else if response != nil {
@@ -3623,6 +7424,91 @@ func (sh *strictHandler) GetMedia(w http.ResponseWriter, r *http.Request, mediaI
 		sh.options.ResponseErrorHandlerFunc(w, r, err)
 	} else if validResponse, ok := response.(GetMediaResponseObject); ok {
 		if err := validResponse.VisitGetMediaResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// DescribeMedia operation middleware
+func (sh *strictHandler) DescribeMedia(w http.ResponseWriter, r *http.Request, mediaId MediaId) {
+	var request DescribeMediaRequestObject
+
+	request.MediaId = mediaId
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.DescribeMedia(ctx, request.(DescribeMediaRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "DescribeMedia")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(DescribeMediaResponseObject); ok {
+		if err := validResponse.VisitDescribeMediaResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// AssignMediaEvent operation middleware
+func (sh *strictHandler) AssignMediaEvent(w http.ResponseWriter, r *http.Request, mediaId MediaId) {
+	var request AssignMediaEventRequestObject
+
+	request.MediaId = mediaId
+
+	var body AssignMediaEventJSONRequestBody
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+		sh.options.RequestErrorHandlerFunc(w, r, fmt.Errorf("can't decode JSON body: %w", err))
+		return
+	}
+	request.Body = &body
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.AssignMediaEvent(ctx, request.(AssignMediaEventRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "AssignMediaEvent")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(AssignMediaEventResponseObject); ok {
+		if err := validResponse.VisitAssignMediaEventResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// ListMediaFaces operation middleware
+func (sh *strictHandler) ListMediaFaces(w http.ResponseWriter, r *http.Request, mediaId MediaId) {
+	var request ListMediaFacesRequestObject
+
+	request.MediaId = mediaId
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.ListMediaFaces(ctx, request.(ListMediaFacesRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "ListMediaFaces")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(ListMediaFacesResponseObject); ok {
+		if err := validResponse.VisitListMediaFacesResponse(w); err != nil {
 			sh.options.ResponseErrorHandlerFunc(w, r, err)
 		}
 	} else if response != nil {
@@ -3727,6 +7613,233 @@ func (sh *strictHandler) RetryMedia(w http.ResponseWriter, r *http.Request, medi
 		sh.options.ResponseErrorHandlerFunc(w, r, err)
 	} else if validResponse, ok := response.(RetryMediaResponseObject); ok {
 		if err := validResponse.VisitRetryMediaResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// MergePeople operation middleware
+func (sh *strictHandler) MergePeople(w http.ResponseWriter, r *http.Request) {
+	var request MergePeopleRequestObject
+
+	var body MergePeopleJSONRequestBody
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+		sh.options.RequestErrorHandlerFunc(w, r, fmt.Errorf("can't decode JSON body: %w", err))
+		return
+	}
+	request.Body = &body
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.MergePeople(ctx, request.(MergePeopleRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "MergePeople")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(MergePeopleResponseObject); ok {
+		if err := validResponse.VisitMergePeopleResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// GetPerson operation middleware
+func (sh *strictHandler) GetPerson(w http.ResponseWriter, r *http.Request, personId PersonId) {
+	var request GetPersonRequestObject
+
+	request.PersonId = personId
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.GetPerson(ctx, request.(GetPersonRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "GetPerson")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(GetPersonResponseObject); ok {
+		if err := validResponse.VisitGetPersonResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// UpdatePerson operation middleware
+func (sh *strictHandler) UpdatePerson(w http.ResponseWriter, r *http.Request, personId PersonId) {
+	var request UpdatePersonRequestObject
+
+	request.PersonId = personId
+
+	var body UpdatePersonJSONRequestBody
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+		sh.options.RequestErrorHandlerFunc(w, r, fmt.Errorf("can't decode JSON body: %w", err))
+		return
+	}
+	request.Body = &body
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.UpdatePerson(ctx, request.(UpdatePersonRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "UpdatePerson")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(UpdatePersonResponseObject); ok {
+		if err := validResponse.VisitUpdatePersonResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// UnclaimPerson operation middleware
+func (sh *strictHandler) UnclaimPerson(w http.ResponseWriter, r *http.Request, personId PersonId) {
+	var request UnclaimPersonRequestObject
+
+	request.PersonId = personId
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.UnclaimPerson(ctx, request.(UnclaimPersonRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "UnclaimPerson")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(UnclaimPersonResponseObject); ok {
+		if err := validResponse.VisitUnclaimPersonResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// ClaimPerson operation middleware
+func (sh *strictHandler) ClaimPerson(w http.ResponseWriter, r *http.Request, personId PersonId) {
+	var request ClaimPersonRequestObject
+
+	request.PersonId = personId
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.ClaimPerson(ctx, request.(ClaimPersonRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "ClaimPerson")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(ClaimPersonResponseObject); ok {
+		if err := validResponse.VisitClaimPersonResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// SplitPerson operation middleware
+func (sh *strictHandler) SplitPerson(w http.ResponseWriter, r *http.Request, personId PersonId) {
+	var request SplitPersonRequestObject
+
+	request.PersonId = personId
+
+	var body SplitPersonJSONRequestBody
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+		sh.options.RequestErrorHandlerFunc(w, r, fmt.Errorf("can't decode JSON body: %w", err))
+		return
+	}
+	request.Body = &body
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.SplitPerson(ctx, request.(SplitPersonRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "SplitPerson")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(SplitPersonResponseObject); ok {
+		if err := validResponse.VisitSplitPersonResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// GetSharedAlbum operation middleware
+func (sh *strictHandler) GetSharedAlbum(w http.ResponseWriter, r *http.Request, shareId Id) {
+	var request GetSharedAlbumRequestObject
+
+	request.ShareId = shareId
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.GetSharedAlbum(ctx, request.(GetSharedAlbumRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "GetSharedAlbum")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(GetSharedAlbumResponseObject); ok {
+		if err := validResponse.VisitGetSharedAlbumResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// SearchMyMedia operation middleware
+func (sh *strictHandler) SearchMyMedia(w http.ResponseWriter, r *http.Request, params SearchMyMediaParams) {
+	var request SearchMyMediaRequestObject
+
+	request.Params = params
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.SearchMyMedia(ctx, request.(SearchMyMediaRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "SearchMyMedia")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(SearchMyMediaResponseObject); ok {
+		if err := validResponse.VisitSearchMyMediaResponse(w); err != nil {
 			sh.options.ResponseErrorHandlerFunc(w, r, err)
 		}
 	} else if response != nil {
@@ -3853,72 +7966,134 @@ func (sh *strictHandler) DownloadZip(w http.ResponseWriter, r *http.Request, tok
 // const string: with thousands of chunks the chained `+` fold is several
 // times slower for the Go compiler than parsing a slice literal.
 var swaggerSpec = []string{
-	"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",
+	"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",
+	"P/6/AQA=",
 }
 
 // decodeSpec returns the embedded OpenAPI spec as raw JSON bytes,

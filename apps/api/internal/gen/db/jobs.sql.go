@@ -9,6 +9,24 @@ import (
 	"context"
 )
 
+const enqueueDebouncedJob = `-- name: EnqueueDebouncedJob :exec
+insert into jobs (kind, payload, run_after)
+select $1, $2, now() + interval '60 seconds'
+where not exists (select 1 from jobs where kind = $1 and payload->>'event_id' = $3::text and done_at is null)
+`
+
+type EnqueueDebouncedJobParams struct {
+	Kind    string `json:"kind"`
+	Payload []byte `json:"payload"`
+	EventID string `json:"event_id"`
+}
+
+// One open job per (kind, event_id), delayed 60 s so bursts of changes collapse (CONVENTIONS.md).
+func (q *Queries) EnqueueDebouncedJob(ctx context.Context, arg EnqueueDebouncedJobParams) error {
+	_, err := q.db.Exec(ctx, enqueueDebouncedJob, arg.Kind, arg.Payload, arg.EventID)
+	return err
+}
+
 const enqueueJob = `-- name: EnqueueJob :exec
 insert into jobs (kind, payload)
 values ($1, $2)
@@ -23,6 +41,20 @@ type EnqueueJobParams struct {
 // The partial unique index keeps one open job per (kind, media_id); a second enqueue is a no-op.
 func (q *Queries) EnqueueJob(ctx context.Context, arg EnqueueJobParams) error {
 	_, err := q.db.Exec(ctx, enqueueJob, arg.Kind, arg.Payload)
+	return err
+}
+
+const enqueueJobNow = `-- name: EnqueueJobNow :exec
+insert into jobs (kind, payload) values ($1, $2)
+`
+
+type EnqueueJobNowParams struct {
+	Kind    string `json:"kind"`
+	Payload []byte `json:"payload"`
+}
+
+func (q *Queries) EnqueueJobNow(ctx context.Context, arg EnqueueJobNowParams) error {
+	_, err := q.db.Exec(ctx, enqueueJobNow, arg.Kind, arg.Payload)
 	return err
 }
 

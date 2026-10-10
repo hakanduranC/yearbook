@@ -29,7 +29,7 @@ func (q *Queries) AddEventMember(ctx context.Context, arg AddEventMemberParams) 
 const createEvent = `-- name: CreateEvent :one
 insert into events (id, slug, title, starts_at, ends_at, timezone, location, owner_id)
 values ($1, $2, $3, $4, $5, $6, $7, $8)
-returning id, slug, title, starts_at, ends_at, timezone, location, cover_media, owner_id, guest_upload, guest_view, archived_at, created_at
+returning id, slug, title, starts_at, ends_at, timezone, location, cover_media, owner_id, guest_upload, guest_view, archived_at, created_at, faces_enabled, clustered_at
 `
 
 type CreateEventParams struct {
@@ -69,6 +69,8 @@ func (q *Queries) CreateEvent(ctx context.Context, arg CreateEventParams) (Event
 		&i.GuestView,
 		&i.ArchivedAt,
 		&i.CreatedAt,
+		&i.FacesEnabled,
+		&i.ClusteredAt,
 	)
 	return i, err
 }
@@ -83,7 +85,7 @@ func (q *Queries) DeleteEvent(ctx context.Context, id []byte) error {
 }
 
 const getEventByID = `-- name: GetEventByID :one
-select e.id, e.slug, e.title, e.starts_at, e.ends_at, e.timezone, e.location, e.cover_media, e.owner_id, e.guest_upload, e.guest_view, e.archived_at, e.created_at, u.display_name as owner_name
+select e.id, e.slug, e.title, e.starts_at, e.ends_at, e.timezone, e.location, e.cover_media, e.owner_id, e.guest_upload, e.guest_view, e.archived_at, e.created_at, e.faces_enabled, e.clustered_at, u.display_name as owner_name
 from events e
 join users u on u.id = e.owner_id
 where e.id = $1
@@ -111,13 +113,15 @@ func (q *Queries) GetEventByID(ctx context.Context, id []byte) (GetEventByIDRow,
 		&i.Event.GuestView,
 		&i.Event.ArchivedAt,
 		&i.Event.CreatedAt,
+		&i.Event.FacesEnabled,
+		&i.Event.ClusteredAt,
 		&i.OwnerName,
 	)
 	return i, err
 }
 
 const getEventBySlug = `-- name: GetEventBySlug :one
-select e.id, e.slug, e.title, e.starts_at, e.ends_at, e.timezone, e.location, e.cover_media, e.owner_id, e.guest_upload, e.guest_view, e.archived_at, e.created_at, u.display_name as owner_name
+select e.id, e.slug, e.title, e.starts_at, e.ends_at, e.timezone, e.location, e.cover_media, e.owner_id, e.guest_upload, e.guest_view, e.archived_at, e.created_at, e.faces_enabled, e.clustered_at, u.display_name as owner_name
 from events e
 join users u on u.id = e.owner_id
 where e.slug = $1 and e.archived_at is null
@@ -145,6 +149,8 @@ func (q *Queries) GetEventBySlug(ctx context.Context, slug string) (GetEventBySl
 		&i.Event.GuestView,
 		&i.Event.ArchivedAt,
 		&i.Event.CreatedAt,
+		&i.Event.FacesEnabled,
+		&i.Event.ClusteredAt,
 		&i.OwnerName,
 	)
 	return i, err
@@ -202,7 +208,7 @@ func (q *Queries) GetEventMemberRole(ctx context.Context, arg GetEventMemberRole
 }
 
 const listEventsForUser = `-- name: ListEventsForUser :many
-select e.id, e.slug, e.title, e.starts_at, e.ends_at, e.timezone, e.location, e.cover_media, e.owner_id, e.guest_upload, e.guest_view, e.archived_at, e.created_at, u.display_name as owner_name
+select e.id, e.slug, e.title, e.starts_at, e.ends_at, e.timezone, e.location, e.cover_media, e.owner_id, e.guest_upload, e.guest_view, e.archived_at, e.created_at, e.faces_enabled, e.clustered_at, u.display_name as owner_name
 from events e
 join users u on u.id = e.owner_id
 where e.archived_at is null
@@ -238,6 +244,8 @@ func (q *Queries) ListEventsForUser(ctx context.Context, ownerID []byte) ([]List
 			&i.Event.GuestView,
 			&i.Event.ArchivedAt,
 			&i.Event.CreatedAt,
+			&i.Event.FacesEnabled,
+			&i.Event.ClusteredAt,
 			&i.OwnerName,
 		); err != nil {
 			return nil, err
@@ -253,21 +261,22 @@ func (q *Queries) ListEventsForUser(ctx context.Context, ownerID []byte) ([]List
 const updateEvent = `-- name: UpdateEvent :one
 update events
 set title = $2, starts_at = $3, ends_at = $4, timezone = $5, location = $6,
-    cover_media = $7, guest_upload = $8, guest_view = $9
+    cover_media = $7, guest_upload = $8, guest_view = $9, faces_enabled = $10
 where id = $1
-returning id, slug, title, starts_at, ends_at, timezone, location, cover_media, owner_id, guest_upload, guest_view, archived_at, created_at
+returning id, slug, title, starts_at, ends_at, timezone, location, cover_media, owner_id, guest_upload, guest_view, archived_at, created_at, faces_enabled, clustered_at
 `
 
 type UpdateEventParams struct {
-	ID          []byte     `json:"id"`
-	Title       string     `json:"title"`
-	StartsAt    time.Time  `json:"starts_at"`
-	EndsAt      *time.Time `json:"ends_at"`
-	Timezone    string     `json:"timezone"`
-	Location    *string    `json:"location"`
-	CoverMedia  []byte     `json:"cover_media"`
-	GuestUpload bool       `json:"guest_upload"`
-	GuestView   bool       `json:"guest_view"`
+	ID           []byte     `json:"id"`
+	Title        string     `json:"title"`
+	StartsAt     time.Time  `json:"starts_at"`
+	EndsAt       *time.Time `json:"ends_at"`
+	Timezone     string     `json:"timezone"`
+	Location     *string    `json:"location"`
+	CoverMedia   []byte     `json:"cover_media"`
+	GuestUpload  bool       `json:"guest_upload"`
+	GuestView    bool       `json:"guest_view"`
+	FacesEnabled bool       `json:"faces_enabled"`
 }
 
 func (q *Queries) UpdateEvent(ctx context.Context, arg UpdateEventParams) (Event, error) {
@@ -281,6 +290,7 @@ func (q *Queries) UpdateEvent(ctx context.Context, arg UpdateEventParams) (Event
 		arg.CoverMedia,
 		arg.GuestUpload,
 		arg.GuestView,
+		arg.FacesEnabled,
 	)
 	var i Event
 	err := row.Scan(
@@ -297,6 +307,8 @@ func (q *Queries) UpdateEvent(ctx context.Context, arg UpdateEventParams) (Event
 		&i.GuestView,
 		&i.ArchivedAt,
 		&i.CreatedAt,
+		&i.FacesEnabled,
+		&i.ClusteredAt,
 	)
 	return i, err
 }

@@ -22,6 +22,7 @@ import (
 const deleteWindow = 7 * 24 * time.Hour
 
 // ListEventMedia returns one page of the grid, newest capture first, with time-of-day groups.
+// Filters: all | best | videos | mine | me | person:{id} | album:{id} | library, plus age_min/age_max.
 func (s *Server) ListEventMedia(ctx context.Context, req api.ListEventMediaRequestObject) (api.ListEventMediaResponseObject, error) {
 	row, err := s.eventBySlug(ctx, req.Slug)
 	if err != nil {
@@ -34,14 +35,46 @@ func (s *Server) ListEventMedia(ctx context.Context, req api.ListEventMediaReque
 	if !v.canView() {
 		return nil, apperr.Forbiddenf("the host has closed this album")
 	}
-	filter := api.All
+	filter := "all"
 	if req.Params.Filter != nil {
 		filter = *req.Params.Filter
 	}
-	switch filter {
-	case api.All, api.Best, api.Videos, api.Mine:
+	params := db.ListMediaIDsParams{
+		EventID: row.Event.ID, UserID: v.p.UserID(), GuestID: v.guestID(), IdentityID: v.identityID(),
+	}
+	name, arg, _ := strings.Cut(filter, ":")
+	switch name {
+	case "all", "best", "videos", "mine":
+	case "me":
+		if v.identity == nil {
+			// Nobody has claimed a person yet: the filter is simply empty.
+			return api.ListEventMedia200JSONResponse(api.MediaPage{Items: []api.GridItem{}, Groups: []api.MediaGroup{}}), nil
+		}
+	case "person", "album":
+		raw, err := ids.Decode(arg)
+		if err != nil {
+			return nil, apperr.BadRequestf("invalid id in filter")
+		}
+		if name == "person" {
+			params.PersonID = raw
+		} else {
+			params.AlbumID = raw
+		}
+	case "library":
+		if v.p.User == nil {
+			return nil, apperr.Unauthorizedf("")
+		}
 	default:
-		return nil, apperr.BadRequestf("filter must be all, best, videos or mine")
+		return nil, apperr.BadRequestf("filter must be all, best, videos, mine, me, person:{id}, album:{id} or library")
+	}
+	params.Filter = name
+	if req.Params.AgeMin != nil {
+		a := int32(*req.Params.AgeMin)
+		params.AgeMin = &a
+	}
+	if req.Params.AgeMax != nil {
+		a := int32(*req.Params.AgeMax)
+		params.AgeMax = &a
 	}
 	limit := 60
 	if req.Params.Limit != nil {
@@ -53,59 +86,104 @@ func (s *Server) ListEventMedia(ctx context.Context, req api.ListEventMediaReque
 			return nil, apperr.BadRequestf("invalid cursor")
 		}
 	}
+	page, err := s.listPage(ctx, row.Event, v, name == "best", params, cursor, limit)
+	if err != nil {
+		return nil, err
+	}
+	return api.ListEventMedia200JSONResponse(page), nil
+}
 
+// listPage runs the id query (plain or highlights), loads the grid rows and builds the page.
+func (s *Server) listPage(ctx context.Context, ev db.Event, v viewer, best bool, params db.ListMediaIDsParams, cursor media.Cursor, limit int) (api.MediaPage, error) {
 	// Fetch one extra row to learn whether a next page exists.
 	var idList [][]byte
 	var times []time.Time
 	var scores []float32
-	if filter == api.Best {
+	if best {
 		rows, err := s.Q.ListMediaIDsBest(ctx, db.ListMediaIDsBestParams{
-			EventID: row.Event.ID, CursorID: cursor.ID, CursorAt: cursor.At, CursorScore: cursor.Score, RowLimit: int32(limit + 1),
+			EventID: ev.ID, CursorID: cursor.ID, CursorAt: cursor.At, CursorScore: cursor.Score, RowLimit: int32(limit + 1),
 		})
 		if err != nil {
-			return nil, err
+			return api.MediaPage{}, err
 		}
 		for _, r := range rows {
 			idList, times, scores = append(idList, r.ID), append(times, r.SortAt), append(scores, r.Score)
 		}
 	} else {
-		rows, err := s.Q.ListMediaIDs(ctx, db.ListMediaIDsParams{
-			EventID: row.Event.ID, Filter: string(filter), UserID: v.p.UserID(), GuestID: v.guestID(),
-			CursorID: cursor.ID, CursorAt: cursor.At, RowLimit: int32(limit + 1),
-		})
+		params.CursorID, params.CursorAt, params.RowLimit = cursor.ID, cursor.At, int32(limit+1)
+		rows, err := s.Q.ListMediaIDs(ctx, params)
 		if err != nil {
-			return nil, err
+			return api.MediaPage{}, err
 		}
 		for _, r := range rows {
 			idList, times = append(idList, r.ID), append(times, r.SortAt)
 		}
 	}
 
-	page := api.MediaPage{Items: []api.GridItem{}, Groups: []api.MediaGroup{}}
+	var next *string
 	if len(idList) > limit {
 		last := limit - 1
 		c := media.Cursor{At: times[last], ID: idList[last]}
-		if filter == api.Best {
+		if best {
 			c.Score = scores[last]
 		}
-		next := c.Encode(filter == api.Best)
-		page.NextCursor = &next
+		enc := c.Encode(best)
+		next = &enc
 		idList, times = idList[:limit], times[:limit]
 	}
+	page, err := s.buildPage(ctx, idList, times, v, locationOf(ev.Timezone))
+	if err != nil {
+		return api.MediaPage{}, err
+	}
+	page.NextCursor = next
+	return page, nil
+}
 
+// buildPage loads the grid rows for idList (in order) and computes the time-of-day groups in loc.
+func (s *Server) buildPage(ctx context.Context, idList [][]byte, times []time.Time, v viewer, loc *time.Location) (api.MediaPage, error) {
+	page := api.MediaPage{Items: []api.GridItem{}, Groups: []api.MediaGroup{}}
 	gridRows, err := s.gridRows(ctx, idList, v)
 	if err != nil {
-		return nil, err
+		return api.MediaPage{}, err
 	}
 	for _, r := range gridRows {
 		page.Items = append(page.Items, media.GridItemFromRow(r, s.Store.PublicURL))
 	}
-	loc, err := time.LoadLocation(row.Event.Timezone)
-	if err != nil {
-		loc = time.UTC
-	}
 	page.Groups = media.Groups(times, loc)
-	return api.ListEventMedia200JSONResponse(page), nil
+	return page, nil
+}
+
+// locationOf loads an IANA zone, falling back to UTC.
+func locationOf(tz string) *time.Location {
+	loc, err := time.LoadLocation(tz)
+	if err != nil || tz == "" {
+		return time.UTC
+	}
+	return loc
+}
+
+// ListEventHighlights is the auto-picked best-of: score order, one per burst, spread over time.
+func (s *Server) ListEventHighlights(ctx context.Context, req api.ListEventHighlightsRequestObject) (api.ListEventHighlightsResponseObject, error) {
+	row, err := s.eventBySlug(ctx, req.Slug)
+	if err != nil {
+		return nil, err
+	}
+	v, err := s.viewerFor(ctx, row.Event)
+	if err != nil {
+		return nil, err
+	}
+	if !v.canView() {
+		return nil, apperr.Forbiddenf("the host has closed this album")
+	}
+	limit := 24
+	if req.Params.Limit != nil {
+		limit = min(max(*req.Params.Limit, 1), 100)
+	}
+	page, err := s.listPage(ctx, row.Event, v, true, db.ListMediaIDsParams{}, media.Cursor{}, limit)
+	if err != nil {
+		return nil, err
+	}
+	return api.ListEventHighlights200JSONResponse(page), nil
 }
 
 // GetMedia returns one item with uploader and permissions.
@@ -118,7 +196,7 @@ func (s *Server) GetMedia(ctx context.Context, req api.GetMediaRequestObject) (a
 	if err != nil {
 		return nil, err
 	}
-	if !v.canView() && !isUploader(m, v) {
+	if !v.canView() && !isUploader(m, v) && !s.sharedWith(ctx, v, m.ID, false) {
 		return nil, apperr.Forbiddenf("the host has closed this album")
 	}
 	rows, err := s.gridRows(ctx, [][]byte{m.ID}, v)
@@ -172,7 +250,7 @@ func (s *Server) DownloadOriginal(ctx context.Context, req api.DownloadOriginalR
 	if err != nil {
 		return nil, err
 	}
-	if !v.canView() && !isUploader(m, v) {
+	if !v.canView() && !isUploader(m, v) && !s.sharedWith(ctx, v, m.ID, true) {
 		return nil, apperr.Forbiddenf("the host has closed this album")
 	}
 	if m.State == db.MediaStateUploading {
@@ -248,7 +326,7 @@ func (s *Server) ListEventUploads(ctx context.Context, req api.ListEventUploadsR
 	if err != nil {
 		return nil, err
 	}
-	status, err := s.eventStatus(ctx, row.Event.ID)
+	status, err := s.eventStatus(ctx, row.Event)
 	if err != nil {
 		return nil, err
 	}

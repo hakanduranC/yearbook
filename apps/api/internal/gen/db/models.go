@@ -59,16 +59,29 @@ func (ns NullMediaState) Value() (driver.Value, error) {
 	return string(ns.MediaState), nil
 }
 
+type AgentConversation struct {
+	ID          []byte    `json:"id"`
+	Actor       []byte    `json:"actor"`
+	EventID     []byte    `json:"event_id"`
+	ProviderRef *string   `json:"provider_ref"`
+	ExpiresAt   time.Time `json:"expires_at"`
+	CreatedAt   time.Time `json:"created_at"`
+}
+
 type AgentTurn struct {
-	ID         []byte    `json:"id"`
-	UserID     []byte    `json:"user_id"`
-	GuestID    []byte    `json:"guest_id"`
-	EventID    []byte    `json:"event_id"`
-	Input      string    `json:"input"`
-	ToolsUsed  []byte    `json:"tools_used"`
-	ResultKind *string   `json:"result_kind"`
-	LatencyMs  *int32    `json:"latency_ms"`
-	CreatedAt  time.Time `json:"created_at"`
+	ID             []byte    `json:"id"`
+	UserID         []byte    `json:"user_id"`
+	GuestID        []byte    `json:"guest_id"`
+	EventID        []byte    `json:"event_id"`
+	Input          string    `json:"input"`
+	ToolsUsed      []byte    `json:"tools_used"`
+	ResultKind     *string   `json:"result_kind"`
+	LatencyMs      *int32    `json:"latency_ms"`
+	CreatedAt      time.Time `json:"created_at"`
+	ConversationID []byte    `json:"conversation_id"`
+	Understood     *string   `json:"understood"`
+	FinalCall      []byte    `json:"final_call"`
+	Attachments    []byte    `json:"attachments"`
 }
 
 type Album struct {
@@ -93,19 +106,21 @@ type DuplicateGroup struct {
 }
 
 type Event struct {
-	ID          []byte     `json:"id"`
-	Slug        string     `json:"slug"`
-	Title       string     `json:"title"`
-	StartsAt    time.Time  `json:"starts_at"`
-	EndsAt      *time.Time `json:"ends_at"`
-	Timezone    string     `json:"timezone"`
-	Location    *string    `json:"location"`
-	CoverMedia  []byte     `json:"cover_media"`
-	OwnerID     []byte     `json:"owner_id"`
-	GuestUpload bool       `json:"guest_upload"`
-	GuestView   bool       `json:"guest_view"`
-	ArchivedAt  *time.Time `json:"archived_at"`
-	CreatedAt   time.Time  `json:"created_at"`
+	ID           []byte     `json:"id"`
+	Slug         string     `json:"slug"`
+	Title        string     `json:"title"`
+	StartsAt     time.Time  `json:"starts_at"`
+	EndsAt       *time.Time `json:"ends_at"`
+	Timezone     string     `json:"timezone"`
+	Location     *string    `json:"location"`
+	CoverMedia   []byte     `json:"cover_media"`
+	OwnerID      []byte     `json:"owner_id"`
+	GuestUpload  bool       `json:"guest_upload"`
+	GuestView    bool       `json:"guest_view"`
+	ArchivedAt   *time.Time `json:"archived_at"`
+	CreatedAt    time.Time  `json:"created_at"`
+	FacesEnabled bool       `json:"faces_enabled"`
+	ClusteredAt  *time.Time `json:"clustered_at"`
 }
 
 type EventMember struct {
@@ -131,6 +146,7 @@ type Face struct {
 	Smile     *float32         `json:"smile"`
 	CropKey   *string          `json:"crop_key"`
 	CreatedAt time.Time        `json:"created_at"`
+	BodyBbox  []int32          `json:"body_bbox"`
 }
 
 type Guest struct {
@@ -148,12 +164,30 @@ type GuestCookie struct {
 }
 
 type Identity struct {
-	ID          []byte     `json:"id"`
-	UserID      []byte     `json:"user_id"`
-	DisplayName string     `json:"display_name"`
-	Birthdate   *time.Time `json:"birthdate"`
-	LinkAcross  bool       `json:"link_across"`
-	CreatedAt   time.Time  `json:"created_at"`
+	ID             []byte     `json:"id"`
+	UserID         []byte     `json:"user_id"`
+	DisplayName    string     `json:"display_name"`
+	Birthdate      *time.Time `json:"birthdate"`
+	LinkAcross     bool       `json:"link_across"`
+	CreatedAt      time.Time  `json:"created_at"`
+	HideFromPeople bool       `json:"hide_from_people"`
+	GuestCookieID  []byte     `json:"guest_cookie_id"`
+}
+
+type Import struct {
+	ID                []byte     `json:"id"`
+	OwnerID           []byte     `json:"owner_id"`
+	Kind              string     `json:"kind"`
+	State             string     `json:"state"`
+	EventID           []byte     `json:"event_id"`
+	SourceKey         *string    `json:"source_key"`
+	SourceBytes       *int64     `json:"source_bytes"`
+	MultipartUploadID *string    `json:"multipart_upload_id"`
+	Stats             []byte     `json:"stats"`
+	Error             *string    `json:"error"`
+	CreatedAt         time.Time  `json:"created_at"`
+	StartedAt         *time.Time `json:"started_at"`
+	FinishedAt        *time.Time `json:"finished_at"`
 }
 
 type Job struct {
@@ -190,6 +224,12 @@ type MediaEmbedding struct {
 	MediaID   []byte           `json:"media_id"`
 	Model     string           `json:"model"`
 	Embedding *pgvector.Vector `json:"embedding"`
+}
+
+type MediaPersonHint struct {
+	MediaID []byte `json:"media_id"`
+	Name    string `json:"name"`
+	Source  string `json:"source"`
 }
 
 type MediaQuality struct {
@@ -252,17 +292,21 @@ type Medium struct {
 	Caption           *string      `json:"caption"`
 	CaptionTsv        interface{}  `json:"caption_tsv"`
 	CreatedAt         time.Time    `json:"created_at"`
+	AnalyzedAt        *time.Time   `json:"analyzed_at"`
+	ImportID          []byte       `json:"import_id"`
 }
 
 type Person struct {
-	ID          []byte           `json:"id"`
-	EventID     []byte           `json:"event_id"`
-	DisplayName *string          `json:"display_name"`
-	CoverFace   []byte           `json:"cover_face"`
-	FaceCount   int32            `json:"face_count"`
-	Centroid    *pgvector.Vector `json:"centroid"`
-	Hidden      bool             `json:"hidden"`
-	CreatedAt   time.Time        `json:"created_at"`
+	ID               []byte           `json:"id"`
+	EventID          []byte           `json:"event_id"`
+	DisplayName      *string          `json:"display_name"`
+	CoverFace        []byte           `json:"cover_face"`
+	FaceCount        int32            `json:"face_count"`
+	Centroid         *pgvector.Vector `json:"centroid"`
+	Hidden           bool             `json:"hidden"`
+	CreatedAt        time.Time        `json:"created_at"`
+	CoverFaceQuality *float32         `json:"cover_face_quality"`
+	UpdatedAt        time.Time        `json:"updated_at"`
 }
 
 type PersonConstraint struct {
@@ -282,17 +326,39 @@ type PersonLink struct {
 	CreatedAt   time.Time `json:"created_at"`
 }
 
+type SandboxRun struct {
+	ID          []byte    `json:"id"`
+	TurnID      []byte    `json:"turn_id"`
+	CommandID   []byte    `json:"command_id"`
+	Actor       []byte    `json:"actor"`
+	CodeSha256  []byte    `json:"code_sha256"`
+	ExitCode    *int32    `json:"exit_code"`
+	DurationMs  *int32    `json:"duration_ms"`
+	StdoutBytes *int32    `json:"stdout_bytes"`
+	Error       *string   `json:"error"`
+	CreatedAt   time.Time `json:"created_at"`
+}
+
 type SavedCommand struct {
-	ID          []byte     `json:"id"`
-	Owner       []byte     `json:"owner"`
-	Scope       string     `json:"scope"`
-	Name        string     `json:"name"`
-	Label       string     `json:"label"`
-	Description string     `json:"description"`
-	Params      []byte     `json:"params"`
-	SqlTemplate string     `json:"sql_template"`
-	ApprovedAt  *time.Time `json:"approved_at"`
-	CreatedAt   time.Time  `json:"created_at"`
+	ID             []byte     `json:"id"`
+	Owner          []byte     `json:"owner"`
+	Scope          string     `json:"scope"`
+	Name           string     `json:"name"`
+	Label          string     `json:"label"`
+	Description    string     `json:"description"`
+	Params         []byte     `json:"params"`
+	SqlTemplate    string     `json:"sql_template"`
+	ApprovedAt     *time.Time `json:"approved_at"`
+	CreatedAt      time.Time  `json:"created_at"`
+	EventID        []byte     `json:"event_id"`
+	Shared         bool       `json:"shared"`
+	Kind           string     `json:"kind"`
+	SearchArgs     []byte     `json:"search_args"`
+	Code           *string    `json:"code"`
+	Runtime        string     `json:"runtime"`
+	CreatedByAgent bool       `json:"created_by_agent"`
+	RunCount       int32      `json:"run_count"`
+	LastRunAt      *time.Time `json:"last_run_at"`
 }
 
 type Session struct {
@@ -319,4 +385,72 @@ type User struct {
 	Birthdate   *time.Time `json:"birthdate"`
 	Locale      string     `json:"locale"`
 	CreatedAt   time.Time  `json:"created_at"`
+}
+
+type VEvent struct {
+	ID       []byte     `json:"id"`
+	Slug     string     `json:"slug"`
+	Title    string     `json:"title"`
+	StartsAt time.Time  `json:"starts_at"`
+	EndsAt   *time.Time `json:"ends_at"`
+	Timezone string     `json:"timezone"`
+	Location *string    `json:"location"`
+}
+
+type VFace struct {
+	ID       []byte   `json:"id"`
+	MediaID  []byte   `json:"media_id"`
+	EventID  []byte   `json:"event_id"`
+	PersonID []byte   `json:"person_id"`
+	AgeEst   *float32 `json:"age_est"`
+	EyesOpen *float32 `json:"eyes_open"`
+	Smile    *float32 `json:"smile"`
+	Quality  *float32 `json:"quality"`
+}
+
+type VLike struct {
+	MediaID   []byte    `json:"media_id"`
+	CreatedAt time.Time `json:"created_at"`
+	ByMe      bool      `json:"by_me"`
+}
+
+type VMedium struct {
+	ID           []byte     `json:"id"`
+	EventID      []byte     `json:"event_id"`
+	OwnerID      []byte     `json:"owner_id"`
+	Kind         string     `json:"kind"`
+	CapturedAt   *time.Time `json:"captured_at"`
+	CapturedSrc  *string    `json:"captured_src"`
+	PlaceName    *string    `json:"place_name"`
+	Width        *int32     `json:"width"`
+	Height       *int32     `json:"height"`
+	DurationMs   *int32     `json:"duration_ms"`
+	IsBestOfDup  bool       `json:"is_best_of_dup"`
+	CreatedAt    time.Time  `json:"created_at"`
+	UploaderName string     `json:"uploader_name"`
+	UploadedByMe *bool      `json:"uploaded_by_me"`
+	Score        *float32   `json:"score"`
+	Aesthetic    *float32   `json:"aesthetic"`
+	Sharpness    *float32   `json:"sharpness"`
+	FaceCount    *int32     `json:"face_count"`
+	EyesOpen     *float32   `json:"eyes_open"`
+	Smile        *float32   `json:"smile"`
+	LikeCount    int32      `json:"like_count"`
+	Caption      *string    `json:"caption"`
+}
+
+type VPerson struct {
+	ID          []byte  `json:"id"`
+	EventID     []byte  `json:"event_id"`
+	DisplayName *string `json:"display_name"`
+	FaceCount   int32   `json:"face_count"`
+	Hidden      bool    `json:"hidden"`
+	IdentityID  []byte  `json:"identity_id"`
+	IsMe        bool    `json:"is_me"`
+}
+
+type VTag struct {
+	MediaID []byte `json:"media_id"`
+	Tag     string `json:"tag"`
+	Source  string `json:"source"`
 }

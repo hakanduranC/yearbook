@@ -1,4 +1,4 @@
-// Command ybctl is the operator CLI: migrate | seed [--fixtures DIR] | magic <email>.
+// Command ybctl is the operator CLI: migrate | seed [--fixtures DIR] | magic <email> | import <dir> --user <email> [--event <slug>].
 package main
 
 import (
@@ -46,6 +46,22 @@ func main() {
 			usage()
 		}
 		err = magic(ctx, cfg, os.Args[2])
+	case "import":
+		fsSet := flag.NewFlagSet("import", flag.ExitOnError)
+		user := fsSet.String("user", "", "email of the library owner (required)")
+		event := fsSet.String("event", "", "event slug to import into (default: match by capture time)")
+		var dir string
+		if len(os.Args) > 2 && !strings.HasPrefix(os.Args[2], "-") {
+			dir = os.Args[2]
+			_ = fsSet.Parse(os.Args[3:])
+		} else {
+			_ = fsSet.Parse(os.Args[2:])
+			dir = fsSet.Arg(0)
+		}
+		if dir == "" || *user == "" {
+			usage()
+		}
+		err = importFolder(ctx, cfg, dir, *user, *event)
 	default:
 		usage()
 	}
@@ -55,7 +71,7 @@ func main() {
 }
 
 func usage() {
-	fmt.Fprintln(os.Stderr, "usage: ybctl migrate | seed [--fixtures DIR] | magic <email>")
+	fmt.Fprintln(os.Stderr, "usage: ybctl migrate | seed [--fixtures DIR] | magic <email> | import <dir> --user <email> [--event <slug>]")
 	os.Exit(2)
 }
 
@@ -74,6 +90,69 @@ func migrate(ctx context.Context, cfg config.Config) error {
 		return err
 	}
 	fmt.Println("migrations applied from", dir)
+	// The agent's run_query connects as agent_ro_login (member of agent_ro, created by migration 8)
+	// with AGENT_DB_PASSWORD; the role is cluster-wide, so this is idempotent across databases.
+	pool, err := db.Connect(ctx, cfg.DatabaseURL)
+	if err != nil {
+		return err
+	}
+	defer pool.Close()
+	if err := db.EnsureAgentRole(ctx, pool, cfg.AgentDBPassword); err != nil {
+		return err
+	}
+	fmt.Println("agent role", db.AgentLoginRole, "ready")
+	return nil
+}
+
+// importFolder queues a folder import for the user's library (or one of their events). The
+// directory must be readable by the light worker, which does the actual reading.
+func importFolder(ctx context.Context, cfg config.Config, dir, email, eventSlug string) error {
+	abs, err := filepath.Abs(dir)
+	if err != nil {
+		return err
+	}
+	if st, err := os.Stat(abs); err != nil || !st.IsDir() {
+		return fmt.Errorf("%s is not a directory", abs)
+	}
+	pool, err := db.Connect(ctx, cfg.DatabaseURL)
+	if err != nil {
+		return err
+	}
+	defer pool.Close()
+	q := gendb.New(pool)
+	user, err := q.GetUserByEmail(ctx, email)
+	if err != nil {
+		return fmt.Errorf("user %s: %w", email, err)
+	}
+	var eventID []byte
+	if eventSlug != "" {
+		ev, err := q.GetEventBySlug(ctx, eventSlug)
+		if err != nil {
+			return fmt.Errorf("event %s: %w", eventSlug, err)
+		}
+		if string(ev.Event.OwnerID) != string(user.ID) {
+			return fmt.Errorf("event %s is not owned by %s", eventSlug, email)
+		}
+		eventID = ev.Event.ID
+	}
+	id := ids.New()
+	tx, err := pool.Begin(ctx)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback(ctx) //nolint:errcheck
+	qtx := q.WithTx(tx)
+	if _, err := qtx.CreateImport(ctx, gendb.CreateImportParams{ID: id, OwnerID: user.ID, Kind: "folder", State: "queued", EventID: eventID, SourceKey: &abs}); err != nil {
+		return err
+	}
+	if err := jobs.EnqueueImport(ctx, qtx, id); err != nil {
+		return err
+	}
+	if err := tx.Commit(ctx); err != nil {
+		return err
+	}
+	fmt.Println("import queued:", ids.Encode(id), "from", abs)
+	fmt.Println("watch it with: curl -b c.txt :8080/api/v1/imports/" + ids.Encode(id))
 	return nil
 }
 

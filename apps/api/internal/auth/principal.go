@@ -14,6 +14,9 @@ type Principal struct {
 	User *db.User
 	// CookieID is the guest_cookies.id from a valid yb_guest cookie, or nil.
 	CookieID []byte
+	// Share is the (unexpired) share link named by ?share=<id>, the third principal kind. It only
+	// widens read access to the shared album's items; it never identifies the caller.
+	Share *db.Share
 	// IP is the client address after the RealIP middleware.
 	IP string
 }

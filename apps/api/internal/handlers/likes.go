@@ -7,6 +7,7 @@ import (
 	api "yearbook/api/internal/gen/api"
 	db "yearbook/api/internal/gen/db"
 	"yearbook/api/internal/ids"
+	"yearbook/api/internal/jobs"
 )
 
 // LikeMedia records a like for the caller (user id or guest cookie id). Idempotent.
@@ -36,11 +37,19 @@ func (s *Server) setLike(ctx context.Context, id string, liked bool) (api.LikeRe
 	if actor == nil {
 		return api.LikeResult{}, apperr.Unauthorizedf("no identity; call POST /events/{slug}/guests first")
 	}
-	if liked {
-		err = s.Q.AddLike(ctx, db.AddLikeParams{MediaID: m.ID, Actor: actor})
-	} else {
-		err = s.Q.RemoveLike(ctx, db.RemoveLikeParams{MediaID: m.ID, Actor: actor})
-	}
+	err = s.inTx(ctx, func(q *db.Queries) error {
+		var err error
+		if liked {
+			err = q.AddLike(ctx, db.AddLikeParams{MediaID: m.ID, Actor: actor})
+		} else {
+			err = q.RemoveLike(ctx, db.RemoveLikeParams{MediaID: m.ID, Actor: actor})
+		}
+		if err != nil {
+			return err
+		}
+		// Likes feed the quality score; the worker refreshes it once per minute per event.
+		return jobs.EnqueueRecomputeScores(ctx, q, m.EventID)
+	})
 	if err != nil {
 		return api.LikeResult{}, err
 	}

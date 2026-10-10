@@ -18,6 +18,7 @@ import (
 	"yearbook/api/internal/httpserver"
 	"yearbook/api/internal/mail"
 	"yearbook/api/internal/realtime"
+	"yearbook/api/internal/search"
 	"yearbook/api/internal/storage"
 )
 
@@ -48,7 +49,19 @@ func run() error {
 	}
 	hub := realtime.NewHub()
 	mailer := mail.SMTP{Host: cfg.SMTPHost, Port: cfg.SMTPPort, From: cfg.SMTPFrom}
-	srv := handlers.New(cfg, pool, store, hub, mailer, version())
+	deps := handlers.Deps{Pool: pool, Store: store, Hub: hub, Mailer: mailer, Version: version(), Embedder: search.NewHTTPEmbedder(cfg.MLURL)}
+	// run_query connects as the read-only agent role on its own small pool; without it the tool
+	// reports itself unavailable instead of failing the whole API.
+	if agentURL, err := db.AgentURL(cfg.DatabaseURL, cfg.AgentDBURL, cfg.AgentDBPassword); err == nil {
+		if agentPool, err := db.Connect(ctx, agentURL); err != nil {
+			slog.Warn("agent: read-only pool unavailable, run_query disabled (run `ybctl migrate` to create the role)", "err", err)
+		} else {
+			defer agentPool.Close()
+			deps.AgentPool = agentPool
+		}
+	}
+	slog.Info("agent service", "url", cfg.AgentURL, "ml_url", cfg.MLURL)
+	srv := handlers.New(cfg, deps)
 
 	go realtime.Listen(ctx, cfg.DatabaseURL, hub, srv.TranslateNotification)
 

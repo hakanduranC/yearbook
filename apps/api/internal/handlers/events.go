@@ -161,6 +161,9 @@ func (s *Server) UpdateEvent(ctx context.Context, req api.UpdateEventRequestObje
 	if b.GuestView != nil {
 		e.GuestView = *b.GuestView
 	}
+	if b.FacesEnabled != nil {
+		e.FacesEnabled = *b.FacesEnabled
+	}
 	if b.CoverMediaId != nil {
 		mid, err := ids.Decode(*b.CoverMediaId)
 		if err != nil {
@@ -175,6 +178,7 @@ func (s *Server) UpdateEvent(ctx context.Context, req api.UpdateEventRequestObje
 	updated, err := s.Q.UpdateEvent(ctx, db.UpdateEventParams{
 		ID: e.ID, Title: e.Title, StartsAt: e.StartsAt, EndsAt: e.EndsAt, Timezone: e.Timezone,
 		Location: e.Location, CoverMedia: e.CoverMedia, GuestUpload: e.GuestUpload, GuestView: e.GuestView,
+		FacesEnabled: e.FacesEnabled,
 	})
 	if err != nil {
 		return nil, err
@@ -216,7 +220,7 @@ func (s *Server) GetEventStatus(ctx context.Context, req api.GetEventStatusReque
 	if err != nil {
 		return nil, err
 	}
-	st, err := s.eventStatus(ctx, row.Event.ID)
+	st, err := s.eventStatus(ctx, row.Event)
 	if err != nil {
 		return nil, err
 	}
@@ -269,6 +273,12 @@ func (s *Server) eventJSON(ctx context.Context, e db.Event, ownerName string, v 
 	if err != nil {
 		return api.Event{}, err
 	}
+	pc, err := s.Q.EventPeopleCounts(ctx, db.EventPeopleCountsParams{EventID: e.ID, IdentityID: v.identityID()})
+	if err != nil {
+		return api.Event{}, err
+	}
+	people, facesDone, ofYou := int(pc.People), int(pc.FacesDone), int(pc.OfYou)
+	facesEnabled := e.FacesEnabled
 	out := api.Event{
 		Id:          ids.Encode(e.ID),
 		Slug:        e.Slug,
@@ -283,8 +293,11 @@ func (s *Server) eventJSON(ctx context.Context, e db.Event, ownerName string, v 
 		Counts: api.EventCounts{
 			Photos: int(counts.Photos), Videos: int(counts.Videos), Ready: int(counts.Ready),
 			Processing: int(counts.Processing), Failed: int(counts.Failed),
+			People: &people, FacesDone: &facesDone, OfYou: &ofYou,
 		},
-		Viewer: api.Viewer{Role: v.role},
+		FacesEnabled: &facesEnabled,
+		ClusteredAt:  e.ClusteredAt,
+		Viewer:       api.Viewer{Role: v.role},
 	}
 	out.Host.DisplayName = ownerName
 	if v.guest != nil {
@@ -319,12 +332,20 @@ func (s *Server) eventJSON(ctx context.Context, e db.Event, ownerName string, v 
 }
 
 // eventStatus maps the counters query onto EventStatus.
-func (s *Server) eventStatus(ctx context.Context, eventID []byte) (api.EventStatus, error) {
-	c, err := s.Q.GetEventCounts(ctx, eventID)
+func (s *Server) eventStatus(ctx context.Context, e db.Event) (api.EventStatus, error) {
+	c, err := s.Q.GetEventCounts(ctx, e.ID)
 	if err != nil {
 		return api.EventStatus{}, err
 	}
-	return api.EventStatus{Total: int(c.Total), Ready: int(c.Ready), Processing: int(c.Processing), Failed: int(c.Failed)}, nil
+	pc, err := s.Q.EventPeopleCounts(ctx, db.EventPeopleCountsParams{EventID: e.ID})
+	if err != nil {
+		return api.EventStatus{}, err
+	}
+	facesDone := int(pc.FacesDone)
+	return api.EventStatus{
+		Total: int(c.Total), Ready: int(c.Ready), Processing: int(c.Processing), Failed: int(c.Failed),
+		FacesDone: &facesDone, ClusteredAt: e.ClusteredAt,
+	}, nil
 }
 
 // requireHost returns 401 for anonymous callers and 403 for non-hosts.
@@ -382,7 +403,7 @@ func (s *Server) mediaByID(ctx context.Context, id string) (db.Medium, error) {
 // viewerForMedia resolves the viewer in the media item's event.
 func (s *Server) viewerForMedia(ctx context.Context, m db.Medium) (viewer, error) {
 	if m.EventID == nil {
-		return viewer{}, apperr.NotFoundf("media not found") // library items come with M1.5
+		return s.libraryViewer(ctx, m)
 	}
 	row, err := s.Q.GetEventByID(ctx, m.EventID)
 	if err != nil {

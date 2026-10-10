@@ -41,6 +41,15 @@ func Principal(q *db.Queries, cookieSecure bool) func(http.Handler) http.Handler
 				}
 			}
 
+			// Share links: ?share=<share_id> on media requests from a /s/{share_id} page.
+			if sid := r.URL.Query().Get("share"); sid != "" {
+				if id, err := ids.Decode(sid); err == nil {
+					if sh, err := q.GetShare(ctx, id); err == nil {
+						p.Share = &sh
+					}
+				}
+			}
+
 			next.ServeHTTP(w, r.WithContext(auth.WithPrincipal(ctx, p)))
 		})
 	}

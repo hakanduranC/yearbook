@@ -5,8 +5,10 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"net/url"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"github.com/jackc/pgx/v5"
@@ -74,4 +76,49 @@ func MigrationsDir() (string, error) {
 		}
 		dir = parent
 	}
+}
+
+// AgentLoginRole is the login role the agent's run_query pool connects as; it is a member of the
+// nologin role agent_ro that migration 00008 grants the v_* views to.
+const AgentLoginRole = "agent_ro_login"
+
+// EnsureAgentRole creates AgentLoginRole (or resets its password) so run_query can connect with
+// AGENT_DB_PASSWORD. Roles are cluster-wide; the view grants are per database (migration 00008).
+func EnsureAgentRole(ctx context.Context, pool *pgxpool.Pool, password string) error {
+	var exists bool
+	if err := pool.QueryRow(ctx, "select exists(select 1 from pg_roles where rolname = $1)", AgentLoginRole).Scan(&exists); err != nil {
+		return fmt.Errorf("db: agent role: %w", err)
+	}
+	quoted := quoteLiteral(password)
+	stmt := "create role " + AgentLoginRole + " login in role agent_ro password " + quoted
+	if exists {
+		stmt = "alter role " + AgentLoginRole + " login password " + quoted
+	}
+	if _, err := pool.Exec(ctx, stmt); err != nil {
+		return fmt.Errorf("db: agent role: %w", err)
+	}
+	if exists {
+		if _, err := pool.Exec(ctx, "grant agent_ro to "+AgentLoginRole); err != nil {
+			return fmt.Errorf("db: agent role grant: %w", err)
+		}
+	}
+	return nil
+}
+
+// AgentURL swaps the credentials of databaseURL for the agent login role (unless agentURL is set).
+func AgentURL(databaseURL, agentURL, password string) (string, error) {
+	if agentURL != "" {
+		return agentURL, nil
+	}
+	u, err := url.Parse(databaseURL)
+	if err != nil {
+		return "", fmt.Errorf("db: agent url: %w", err)
+	}
+	u.User = url.UserPassword(AgentLoginRole, password)
+	return u.String(), nil
+}
+
+// quoteLiteral quotes s as a Postgres string literal (role passwords cannot be bind parameters).
+func quoteLiteral(s string) string {
+	return "'" + strings.ReplaceAll(s, "'", "''") + "'"
 }

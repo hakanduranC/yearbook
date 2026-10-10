@@ -22,12 +22,17 @@ func GridItemFromRow(r db.GetGridRowsRow, publicURL URLBuilder) api.GridItem {
 		Height:     int(deref32(r.Height)),
 		LikeCount:  int(r.LikeCount),
 		Liked:      r.Liked,
-		Me:         false, // faces land in M2
+		Me:         r.Me,
 		Mine:       &r.Mine,
-		PersonIds:  []api.Id{},
+		PersonIds:  make([]api.Id, 0, len(r.PersonIds)),
 		Score:      r.Score,
 		Processing: r.State != db.MediaStateReady,
 	}
+	for _, pid := range r.PersonIds {
+		item.PersonIds = append(item.PersonIds, ids.Encode(pid))
+	}
+	analyzed := r.AnalyzedAt != nil
+	item.Analyzed = &analyzed
 	if r.CapturedSrc != nil {
 		src := api.GridItemCapturedSrc(*r.CapturedSrc)
 		item.CapturedSrc = &src
@@ -81,7 +86,7 @@ func DetailFromRow(r db.GetGridRowsRow, publicURL URLBuilder, canDelete bool) ap
 		CapturedAt: g.CapturedAt, DurationMs: g.DurationMs, Width: g.Width, Height: g.Height,
 		LikeCount: g.LikeCount, Liked: g.Liked, Me: g.Me, Mine: g.Mine, PersonIds: g.PersonIds,
 		Poster: g.Poster, Processing: g.Processing, Score: g.Score, Variants: g.Variants, VideoUrl: g.VideoUrl,
-		OriginalFilename: r.OriginalFilename, PlaceName: r.PlaceName, CanDelete: canDelete,
+		OriginalFilename: r.OriginalFilename, PlaceName: r.PlaceName, CanDelete: canDelete, Analyzed: g.Analyzed,
 	}
 	if g.CapturedSrc != nil {
 		src := api.MediaDetailCapturedSrc(*g.CapturedSrc)

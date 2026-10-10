@@ -30,7 +30,7 @@ order by e.starts_at desc;
 -- name: UpdateEvent :one
 update events
 set title = $2, starts_at = $3, ends_at = $4, timezone = $5, location = $6,
-    cover_media = $7, guest_upload = $8, guest_view = $9
+    cover_media = $7, guest_upload = $8, guest_view = $9, faces_enabled = $10
 where id = $1
 returning *;
 

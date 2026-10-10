@@ -8,3 +8,6 @@ generate:
   embedded-spec: true
 output-options:
   skip-prune: false
+  # AgentResult is a oneOf with an inline discriminator the generator cannot map; it is defined by
+  # hand in internal/gen/api/agent_result.go with the same JSON shape.
+  exclude-schemas: [AgentResult]

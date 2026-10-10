@@ -35,6 +35,22 @@ type Config struct {
 	SMTPHost string `env:"SMTP_HOST" envDefault:"localhost"`
 	SMTPPort int    `env:"SMTP_PORT" envDefault:"1025"`
 	SMTPFrom string `env:"SMTP_FROM" envDefault:"Yearbook <hello@yearbook.local>"`
+
+	// MLURL is the worker's ML server (text embeddings for search). Unreachable = text-only search.
+	MLURL string `env:"ML_URL" envDefault:"http://localhost:8090"`
+
+	// AgentURL is the Python LangGraph service (apps/agent) that runs the language-model loop.
+	// POST /agent/messages, POST /agent/commands and POST /media/{id}/describe proxy to it; when
+	// it is unreachable they answer 503 agent_not_configured.
+	AgentURL string `env:"AGENT_URL" envDefault:"http://localhost:8091"`
+	// AgentDBURL connects run_query as the read-only role. Empty = DATABASE_URL with the
+	// credentials swapped for agent_ro_login (the login role `ybctl migrate` creates inside
+	// agent_ro) and AGENT_DB_PASSWORD.
+	AgentDBURL      string `env:"AGENT_DB_URL"`
+	AgentDBPassword string `env:"AGENT_DB_PASSWORD" envDefault:"agent-ro-dev"`
+
+	// OperatorEmail may start folder imports from a server path (POST /imports kind=folder with path).
+	OperatorEmail string `env:"OPERATOR_EMAIL"`
 }
 
 // Load reads the environment and validates the few invariants that are not expressible as tags.

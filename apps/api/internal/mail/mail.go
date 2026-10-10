@@ -71,9 +71,38 @@ func (r *Recorder) Last() (Message, bool) {
 	return r.Messages[len(r.Messages)-1], true
 }
 
-// MagicLinkText is the body of the sign-in email in both languages.
-func MagicLinkText(link string) string {
-	return "Hier ist dein Link zum Anmelden bei Yearbook. Er gilt 15 Minuten.\n" +
-		"Here is your link to sign in to Yearbook. It is valid for 15 minutes.\n\n" +
-		link + "\n"
+// Locales the product speaks; anything else falls back to German.
+var Locales = map[string]bool{"de": true, "en": true, "tr": true}
+
+// NormalizeLocale returns loc when it is supported, else "de".
+func NormalizeLocale(loc string) string {
+	if Locales[loc] {
+		return loc
+	}
+	return "de"
+}
+
+// MagicLinkSubject is the subject of the sign-in email in the given locale.
+func MagicLinkSubject(locale string) string {
+	switch NormalizeLocale(locale) {
+	case "en":
+		return "Your Yearbook sign-in link"
+	case "tr":
+		return "Yearbook giriş bağlantın"
+	default:
+		return "Dein Link zu Yearbook"
+	}
+}
+
+// MagicLinkText is the body of the sign-in email in the given locale. The link is always the
+// last line so tests and mail clients find it easily.
+func MagicLinkText(locale, link string) string {
+	switch NormalizeLocale(locale) {
+	case "en":
+		return "Here is your link to sign in to Yearbook. It is valid for 15 minutes.\n\n" + link + "\n"
+	case "tr":
+		return "Yearbook'a giriş yapmak için bağlantın burada. 15 dakika geçerlidir.\n\n" + link + "\n"
+	default:
+		return "Hier ist dein Link zum Anmelden bei Yearbook. Er gilt 15 Minuten.\n\n" + link + "\n"
+	}
 }

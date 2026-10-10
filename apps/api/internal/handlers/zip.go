@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"yearbook/api/internal/apperr"
+	"yearbook/api/internal/auth"
 	api "yearbook/api/internal/gen/api"
 	db "yearbook/api/internal/gen/db"
 	"yearbook/api/internal/ids"
@@ -65,43 +66,58 @@ func (s *Server) CreateZip(ctx context.Context, req api.CreateZipRequestObject) 
 	if req.Body == nil || len(req.Body.MediaIds) == 0 {
 		return nil, apperr.BadRequestf("media_ids required")
 	}
-	if len(req.Body.MediaIds) > 500 {
-		return nil, apperr.BadRequestf("at most 500 items per zip")
-	}
 	originals := req.Body.Originals == nil || *req.Body.Originals
-	idList := make([][]byte, 0, len(req.Body.MediaIds))
-	for _, s := range req.Body.MediaIds {
+	ticket, err := s.zipTicket(ctx, req.Body.MediaIds, originals)
+	if err != nil {
+		return nil, err
+	}
+	return api.CreateZip200JSONResponse(ticket), nil
+}
+
+// zipTicket checks each item against the caller's permissions and issues a download ticket.
+// Shared with the agent's export_zip tool.
+func (s *Server) zipTicket(ctx context.Context, mediaIDs []api.Id, originals bool) (api.ZipTicket, error) {
+	if len(mediaIDs) > 500 {
+		return api.ZipTicket{}, apperr.BadRequestf("at most 500 items per zip")
+	}
+	idList := make([][]byte, 0, len(mediaIDs))
+	for _, s := range mediaIDs {
 		raw, err := ids.Decode(s)
 		if err != nil {
-			return nil, apperr.BadRequestf("invalid media id " + s)
+			return api.ZipTicket{}, apperr.BadRequestf("invalid media id " + s)
 		}
 		idList = append(idList, raw)
 	}
 	rows, err := s.Q.ListMediaForZip(ctx, idList)
 	if err != nil {
-		return nil, err
+		return api.ZipTicket{}, err
 	}
 
-	// Permission is per event; cache the decision per event id.
+	// Permission is per event; cache the decision per event id. Library items are the owner's.
+	// A share principal covers the shared album's items when the share allows downloads.
+	p := auth.FromContext(ctx)
 	allowed := map[string]bool{}
 	entries := make([]storage.ZipEntry, 0, len(rows))
 	names := map[string]int{}
 	for _, r := range rows {
 		key := string(r.EventID)
 		ok, seen := allowed[key]
+		if r.EventID == nil {
+			ok, seen = p.User != nil && r.OwnerID != nil && string(r.OwnerID) == string(p.User.ID), true
+		}
 		if !seen {
 			ev, err := s.Q.GetEventByID(ctx, r.EventID)
 			if err != nil {
-				return nil, err
+				return api.ZipTicket{}, err
 			}
 			v, err := s.viewerFor(ctx, ev.Event)
 			if err != nil {
-				return nil, err
+				return api.ZipTicket{}, err
 			}
 			ok = v.canView()
 			allowed[key] = ok
 		}
-		if !ok {
+		if !ok && !s.sharedWith(ctx, viewer{p: p}, r.ID, true) {
 			continue
 		}
 		entry, ok := zipEntryFor(r, originals, s.Store.Private, s.Store.Public)
@@ -112,10 +128,10 @@ func (s *Server) CreateZip(ctx context.Context, req api.CreateZipRequestObject) 
 		entries = append(entries, entry)
 	}
 	if len(entries) == 0 {
-		return nil, apperr.NotFoundf("none of the items are available")
+		return api.ZipTicket{}, apperr.NotFoundf("none of the items are available")
 	}
 	token, expiresAt := s.zips.create(entries)
-	return api.CreateZip200JSONResponse{Url: "/api/v1/zips/" + token, ExpiresAt: expiresAt, Count: len(entries)}, nil
+	return api.ZipTicket{Url: "/api/v1/zips/" + token, ExpiresAt: expiresAt, Count: len(entries)}, nil
 }
 
 // zipEntryFor picks the original or the large variant for one row.

@@ -23,6 +23,17 @@ func (q *Queries) AddLike(ctx context.Context, arg AddLikeParams) error {
 	return err
 }
 
+const countEventLikes = `-- name: CountEventLikes :one
+select count(*) from likes l join media m on m.id = l.media_id where m.event_id = $1
+`
+
+func (q *Queries) CountEventLikes(ctx context.Context, eventID []byte) (int64, error) {
+	row := q.db.QueryRow(ctx, countEventLikes, eventID)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
 const countLikes = `-- name: CountLikes :one
 select count(*)::int from likes where media_id = $1
 `

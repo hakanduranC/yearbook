@@ -14,7 +14,7 @@ const createMedia = `-- name: CreateMedia :one
 insert into media (id, event_id, owner_id, uploader_guest, uploader_user, kind, state,
                    original_key, original_mime, original_filename, expected_bytes, multipart_upload_id, variant_prefix)
 values ($1, $2, $3, $4, $5, $6, 'uploading', $7, $8, $9, $10, $11, $12)
-returning id, event_id, owner_id, uploader_guest, uploader_user, source, kind, state, original_key, original_mime, original_filename, original_bytes, expected_bytes, multipart_upload_id, variant_prefix, width, height, duration_ms, captured_at, captured_src, gps, place_name, phash, content_sha256, dup_group_id, is_best_of_dup, processed_stages, processed_at, removed_at, error, caption, caption_tsv, created_at
+returning id, event_id, owner_id, uploader_guest, uploader_user, source, kind, state, original_key, original_mime, original_filename, original_bytes, expected_bytes, multipart_upload_id, variant_prefix, width, height, duration_ms, captured_at, captured_src, gps, place_name, phash, content_sha256, dup_group_id, is_best_of_dup, processed_stages, processed_at, removed_at, error, caption, caption_tsv, created_at, analyzed_at, import_id
 `
 
 type CreateMediaParams struct {
@@ -82,6 +82,8 @@ func (q *Queries) CreateMedia(ctx context.Context, arg CreateMediaParams) (Mediu
 		&i.Caption,
 		&i.CaptionTsv,
 		&i.CreatedAt,
+		&i.AnalyzedAt,
+		&i.ImportID,
 	)
 	return i, err
 }
@@ -133,26 +135,30 @@ const getGridRows = `-- name: GetGridRows :many
 select
   m.id, m.event_id, m.kind, m.state, m.captured_at, m.captured_src, m.created_at,
   m.width, m.height, m.duration_ms, m.original_filename, m.place_name,
-  m.uploader_guest, m.uploader_user,
+  m.uploader_guest, m.uploader_user, m.analyzed_at,
   coalesce(g.display_name, u.display_name, '')::text as uploader_name,
   q.score,
   coalesce((select json_object_agg(v.name, v.key) from media_variants v where v.media_id = m.id), '{}'::json)::jsonb as variants,
   (select count(*) from likes l where l.media_id = m.id)::int as like_count,
   exists(select 1 from likes l where l.media_id = m.id and l.actor = $1::bytea) as liked,
   coalesce((m.uploader_user is not null and m.uploader_user = $2::bytea)
-    or (m.uploader_guest is not null and m.uploader_guest = $3::bytea), false)::boolean as mine
+    or (m.uploader_guest is not null and m.uploader_guest = $3::bytea), false)::boolean as mine,
+  exists(select 1 from faces f join person_links pl on pl.person_id = f.person_id
+         where f.media_id = m.id and pl.identity_id = $4::bytea) as me,
+  coalesce((select array_agg(distinct f.person_id) from faces f where f.media_id = m.id and f.person_id is not null), '{}')::bytea[] as person_ids
 from media m
 left join guests g on g.id = m.uploader_guest
 left join users u on u.id = m.uploader_user
 left join media_quality q on q.media_id = m.id
-where m.id = any($4::bytea[])
+where m.id = any($5::bytea[])
 `
 
 type GetGridRowsParams struct {
-	Actor   []byte   `json:"actor"`
-	UserID  []byte   `json:"user_id"`
-	GuestID []byte   `json:"guest_id"`
-	Ids     [][]byte `json:"ids"`
+	Actor      []byte   `json:"actor"`
+	UserID     []byte   `json:"user_id"`
+	GuestID    []byte   `json:"guest_id"`
+	IdentityID []byte   `json:"identity_id"`
+	Ids        [][]byte `json:"ids"`
 }
 
 type GetGridRowsRow struct {
@@ -170,21 +176,26 @@ type GetGridRowsRow struct {
 	PlaceName        *string    `json:"place_name"`
 	UploaderGuest    []byte     `json:"uploader_guest"`
 	UploaderUser     []byte     `json:"uploader_user"`
+	AnalyzedAt       *time.Time `json:"analyzed_at"`
 	UploaderName     string     `json:"uploader_name"`
 	Score            *float32   `json:"score"`
 	Variants         []byte     `json:"variants"`
 	LikeCount        int32      `json:"like_count"`
 	Liked            bool       `json:"liked"`
 	Mine             bool       `json:"mine"`
+	Me               bool       `json:"me"`
+	PersonIds        [][]byte   `json:"person_ids"`
 }
 
 // One row per media id with everything a GridItem or MediaDetail needs.
-// actor is the liker identity (user id or guest cookie id); user_id and guest_id identify the viewer as uploader.
+// actor is the liker identity (user id or guest cookie id); user_id and guest_id identify the viewer
+// as uploader; identity_id marks items the viewer appears in (me).
 func (q *Queries) GetGridRows(ctx context.Context, arg GetGridRowsParams) ([]GetGridRowsRow, error) {
 	rows, err := q.db.Query(ctx, getGridRows,
 		arg.Actor,
 		arg.UserID,
 		arg.GuestID,
+		arg.IdentityID,
 		arg.Ids,
 	)
 	if err != nil {
@@ -209,12 +220,15 @@ func (q *Queries) GetGridRows(ctx context.Context, arg GetGridRowsParams) ([]Get
 			&i.PlaceName,
 			&i.UploaderGuest,
 			&i.UploaderUser,
+			&i.AnalyzedAt,
 			&i.UploaderName,
 			&i.Score,
 			&i.Variants,
 			&i.LikeCount,
 			&i.Liked,
 			&i.Mine,
+			&i.Me,
+			&i.PersonIds,
 		); err != nil {
 			return nil, err
 		}
@@ -227,7 +241,7 @@ func (q *Queries) GetGridRows(ctx context.Context, arg GetGridRowsParams) ([]Get
 }
 
 const getMedia = `-- name: GetMedia :one
-select id, event_id, owner_id, uploader_guest, uploader_user, source, kind, state, original_key, original_mime, original_filename, original_bytes, expected_bytes, multipart_upload_id, variant_prefix, width, height, duration_ms, captured_at, captured_src, gps, place_name, phash, content_sha256, dup_group_id, is_best_of_dup, processed_stages, processed_at, removed_at, error, caption, caption_tsv, created_at from media where id = $1
+select id, event_id, owner_id, uploader_guest, uploader_user, source, kind, state, original_key, original_mime, original_filename, original_bytes, expected_bytes, multipart_upload_id, variant_prefix, width, height, duration_ms, captured_at, captured_src, gps, place_name, phash, content_sha256, dup_group_id, is_best_of_dup, processed_stages, processed_at, removed_at, error, caption, caption_tsv, created_at, analyzed_at, import_id from media where id = $1
 `
 
 func (q *Queries) GetMedia(ctx context.Context, id []byte) (Medium, error) {
@@ -267,6 +281,8 @@ func (q *Queries) GetMedia(ctx context.Context, id []byte) (Medium, error) {
 		&i.Caption,
 		&i.CaptionTsv,
 		&i.CreatedAt,
+		&i.AnalyzedAt,
+		&i.ImportID,
 	)
 	return i, err
 }
@@ -360,8 +376,119 @@ func (q *Queries) ListHostUploads(ctx context.Context, eventID []byte) ([]ListHo
 	return items, nil
 }
 
+const listLibraryIDs = `-- name: ListLibraryIDs :many
+select m.id, coalesce(m.captured_at, m.created_at)::timestamptz as sort_at
+from media m
+where m.owner_id = $1
+  and m.state in ('queued','processing','ready')
+  and (not $2::boolean or m.event_id is null)
+  and ($3::bytea is null or (coalesce(m.captured_at, m.created_at), m.id) < ($4::timestamptz, $3::bytea))
+order by coalesce(m.captured_at, m.created_at) desc, m.id desc
+limit $5
+`
+
+type ListLibraryIDsParams struct {
+	OwnerID    []byte    `json:"owner_id"`
+	Unassigned bool      `json:"unassigned"`
+	CursorID   []byte    `json:"cursor_id"`
+	CursorAt   time.Time `json:"cursor_at"`
+	RowLimit   int32     `json:"row_limit"`
+}
+
+type ListLibraryIDsRow struct {
+	ID     []byte    `json:"id"`
+	SortAt time.Time `json:"sort_at"`
+}
+
+// The signed-in user's own media: imports and uploads, optionally only those without an event.
+func (q *Queries) ListLibraryIDs(ctx context.Context, arg ListLibraryIDsParams) ([]ListLibraryIDsRow, error) {
+	rows, err := q.db.Query(ctx, listLibraryIDs,
+		arg.OwnerID,
+		arg.Unassigned,
+		arg.CursorID,
+		arg.CursorAt,
+		arg.RowLimit,
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []ListLibraryIDsRow{}
+	for rows.Next() {
+		var i ListLibraryIDsRow
+		if err := rows.Scan(&i.ID, &i.SortAt); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const listMediaByIDs = `-- name: ListMediaByIDs :many
+select id, event_id, owner_id, uploader_guest, uploader_user, source, kind, state, original_key, original_mime, original_filename, original_bytes, expected_bytes, multipart_upload_id, variant_prefix, width, height, duration_ms, captured_at, captured_src, gps, place_name, phash, content_sha256, dup_group_id, is_best_of_dup, processed_stages, processed_at, removed_at, error, caption, caption_tsv, created_at, analyzed_at, import_id from media where id = any($1::bytea[]) and state <> 'removed'
+`
+
+func (q *Queries) ListMediaByIDs(ctx context.Context, ids [][]byte) ([]Medium, error) {
+	rows, err := q.db.Query(ctx, listMediaByIDs, ids)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []Medium{}
+	for rows.Next() {
+		var i Medium
+		if err := rows.Scan(
+			&i.ID,
+			&i.EventID,
+			&i.OwnerID,
+			&i.UploaderGuest,
+			&i.UploaderUser,
+			&i.Source,
+			&i.Kind,
+			&i.State,
+			&i.OriginalKey,
+			&i.OriginalMime,
+			&i.OriginalFilename,
+			&i.OriginalBytes,
+			&i.ExpectedBytes,
+			&i.MultipartUploadID,
+			&i.VariantPrefix,
+			&i.Width,
+			&i.Height,
+			&i.DurationMs,
+			&i.CapturedAt,
+			&i.CapturedSrc,
+			&i.Gps,
+			&i.PlaceName,
+			&i.Phash,
+			&i.ContentSha256,
+			&i.DupGroupID,
+			&i.IsBestOfDup,
+			&i.ProcessedStages,
+			&i.ProcessedAt,
+			&i.RemovedAt,
+			&i.Error,
+			&i.Caption,
+			&i.CaptionTsv,
+			&i.CreatedAt,
+			&i.AnalyzedAt,
+			&i.ImportID,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const listMediaForZip = `-- name: ListMediaForZip :many
-select m.id, m.event_id, m.kind, m.state, m.original_key, m.original_mime, m.original_filename,
+select m.id, m.event_id, m.owner_id, m.kind, m.state, m.original_key, m.original_mime, m.original_filename,
        coalesce((select v.key from media_variants v where v.media_id = m.id and v.name = 'large'), '')::text as large_key
 from media m
 where m.id = any($1::bytea[]) and m.state = 'ready'
@@ -370,6 +497,7 @@ where m.id = any($1::bytea[]) and m.state = 'ready'
 type ListMediaForZipRow struct {
 	ID               []byte     `json:"id"`
 	EventID          []byte     `json:"event_id"`
+	OwnerID          []byte     `json:"owner_id"`
 	Kind             string     `json:"kind"`
 	State            MediaState `json:"state"`
 	OriginalKey      string     `json:"original_key"`
@@ -390,6 +518,7 @@ func (q *Queries) ListMediaForZip(ctx context.Context, ids [][]byte) ([]ListMedi
 		if err := rows.Scan(
 			&i.ID,
 			&i.EventID,
+			&i.OwnerID,
 			&i.Kind,
 			&i.State,
 			&i.OriginalKey,
@@ -410,24 +539,46 @@ func (q *Queries) ListMediaForZip(ctx context.Context, ids [][]byte) ([]ListMedi
 const listMediaIDs = `-- name: ListMediaIDs :many
 select m.id, coalesce(m.captured_at, m.created_at)::timestamptz as sort_at
 from media m
-where m.event_id = $1
+where (($1::text <> 'library' and m.event_id = $2)
+    or ($1::text = 'library' and m.event_id is null and m.owner_id = $3::bytea))
   and m.state in ('queued','processing','ready')
-  and ($2::text <> 'videos' or m.kind = 'video')
-  and ($2::text <> 'mine' or (m.uploader_user = $3 or m.uploader_guest = $4))
-  and ($2::text = 'mine' or m.is_best_of_dup)
-  and ($5::bytea is null or (coalesce(m.captured_at, m.created_at), m.id) < ($6::timestamptz, $5::bytea))
+  and ($1::text <> 'videos' or m.kind = 'video')
+  and ($1::text <> 'mine' or (m.uploader_user = $3::bytea or m.uploader_guest = $4::bytea))
+  and ($1::text <> 'me' or exists (
+        select 1 from faces f join person_links pl on pl.person_id = f.person_id
+        where f.media_id = m.id and pl.identity_id = $5::bytea))
+  and ($1::text <> 'person' or exists (
+        select 1 from faces f where f.media_id = m.id and f.person_id = $6::bytea))
+  and ($1::text <> 'album' or exists (
+        select 1 from album_items ai where ai.media_id = m.id and ai.album_id = $7::bytea))
+  and ($1::text in ('mine','person','album') or m.is_best_of_dup)
+  and (($8::int is null and $9::int is null) or exists (
+        select 1 from faces f
+        left join person_links pl on pl.person_id = f.person_id
+        left join identities i on i.id = pl.identity_id
+        where f.media_id = m.id
+          and coalesce(
+                case when i.birthdate is not null and m.captured_at is not null
+                     then extract(year from age(m.captured_at, i.birthdate))::real end,
+                f.age_est) between coalesce($8::int, 0) and coalesce($9::int, 200)))
+  and ($10::bytea is null or (coalesce(m.captured_at, m.created_at), m.id) < ($11::timestamptz, $10::bytea))
 order by coalesce(m.captured_at, m.created_at) desc, m.id desc
-limit $7
+limit $12
 `
 
 type ListMediaIDsParams struct {
-	EventID  []byte    `json:"event_id"`
-	Filter   string    `json:"filter"`
-	UserID   []byte    `json:"user_id"`
-	GuestID  []byte    `json:"guest_id"`
-	CursorID []byte    `json:"cursor_id"`
-	CursorAt time.Time `json:"cursor_at"`
-	RowLimit int32     `json:"row_limit"`
+	Filter     string    `json:"filter"`
+	EventID    []byte    `json:"event_id"`
+	UserID     []byte    `json:"user_id"`
+	GuestID    []byte    `json:"guest_id"`
+	IdentityID []byte    `json:"identity_id"`
+	PersonID   []byte    `json:"person_id"`
+	AlbumID    []byte    `json:"album_id"`
+	AgeMin     *int32    `json:"age_min"`
+	AgeMax     *int32    `json:"age_max"`
+	CursorID   []byte    `json:"cursor_id"`
+	CursorAt   time.Time `json:"cursor_at"`
+	RowLimit   int32     `json:"row_limit"`
 }
 
 type ListMediaIDsRow struct {
@@ -435,12 +586,24 @@ type ListMediaIDsRow struct {
 	SortAt time.Time `json:"sort_at"`
 }
 
+// One listing query for every filter of GET /events/{slug}/media. Unused filter parameters are null.
+//
+//	filter: all | videos | mine | me | person | album | library
+//	person_id / album_id: the id after "person:" / "album:"
+//	identity_id: the viewer's identity (for me)
+//	age_min / age_max: at least one face whose age (exact via a linked identity's birthdate,
+//	else faces.age_est) lies in the range
 func (q *Queries) ListMediaIDs(ctx context.Context, arg ListMediaIDsParams) ([]ListMediaIDsRow, error) {
 	rows, err := q.db.Query(ctx, listMediaIDs,
-		arg.EventID,
 		arg.Filter,
+		arg.EventID,
 		arg.UserID,
 		arg.GuestID,
+		arg.IdentityID,
+		arg.PersonID,
+		arg.AlbumID,
+		arg.AgeMin,
+		arg.AgeMax,
 		arg.CursorID,
 		arg.CursorAt,
 		arg.RowLimit,
@@ -464,23 +627,31 @@ func (q *Queries) ListMediaIDs(ctx context.Context, arg ListMediaIDsParams) ([]L
 }
 
 const listMediaIDsBest = `-- name: ListMediaIDsBest :many
-select m.id, coalesce(m.captured_at, m.created_at)::timestamptz as sort_at, coalesce(q.score, -1)::real as score
-from media m
-left join media_quality q on q.media_id = m.id
-where m.event_id = $1
-  and m.state in ('queued','processing','ready')
-  and m.is_best_of_dup
-  and ($2::bytea is null or (coalesce(q.score, -1), coalesce(m.captured_at, m.created_at), m.id) < ($3::real, $4::timestamptz, $2::bytea))
-order by coalesce(q.score, -1) desc, coalesce(m.captured_at, m.created_at) desc, m.id desc
-limit $5
+with ranked as (
+  select m.id, coalesce(m.captured_at, m.created_at)::timestamptz as sort_at, coalesce(q.score, -1)::real as score,
+         row_number() over (
+           partition by date_bin('30 minutes', coalesce(m.captured_at, m.created_at), timestamptz '2000-01-01')
+           order by coalesce(q.score, -1) desc, m.id) as slot
+  from media m
+  left join media_quality q on q.media_id = m.id
+  where m.event_id = $5
+    and m.state = 'ready'
+    and m.is_best_of_dup
+)
+select r.id, r.sort_at, r.score
+from ranked r
+where r.slot <= 3
+  and ($1::bytea is null or (r.score, r.sort_at, r.id) < ($2::real, $3::timestamptz, $1::bytea))
+order by r.score desc, r.sort_at desc, r.id desc
+limit $4
 `
 
 type ListMediaIDsBestParams struct {
-	EventID     []byte    `json:"event_id"`
 	CursorID    []byte    `json:"cursor_id"`
 	CursorScore float32   `json:"cursor_score"`
 	CursorAt    time.Time `json:"cursor_at"`
 	RowLimit    int32     `json:"row_limit"`
+	EventID     []byte    `json:"event_id"`
 }
 
 type ListMediaIDsBestRow struct {
@@ -489,13 +660,15 @@ type ListMediaIDsBestRow struct {
 	Score  float32   `json:"score"`
 }
 
+// Highlights: score order, one per duplicate group (is_best_of_dup), at most three per 30-minute
+// window. The window rank is computed over the whole event so pages stay consistent.
 func (q *Queries) ListMediaIDsBest(ctx context.Context, arg ListMediaIDsBestParams) ([]ListMediaIDsBestRow, error) {
 	rows, err := q.db.Query(ctx, listMediaIDsBest,
-		arg.EventID,
 		arg.CursorID,
 		arg.CursorScore,
 		arg.CursorAt,
 		arg.RowLimit,
+		arg.EventID,
 	)
 	if err != nil {
 		return nil, err
@@ -515,12 +688,70 @@ func (q *Queries) ListMediaIDsBest(ctx context.Context, arg ListMediaIDsBestPara
 	return items, nil
 }
 
+const listMediaTags = `-- name: ListMediaTags :many
+select tag, source from media_tags where media_id = $1 order by source, tag limit 50
+`
+
+type ListMediaTagsRow struct {
+	Tag    string `json:"tag"`
+	Source string `json:"source"`
+}
+
+func (q *Queries) ListMediaTags(ctx context.Context, mediaID []byte) ([]ListMediaTagsRow, error) {
+	rows, err := q.db.Query(ctx, listMediaTags, mediaID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []ListMediaTagsRow{}
+	for rows.Next() {
+		var i ListMediaTagsRow
+		if err := rows.Scan(&i.Tag, &i.Source); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const removeMedia = `-- name: RemoveMedia :exec
 update media set state = 'removed', removed_at = now() where id = $1
 `
 
 func (q *Queries) RemoveMedia(ctx context.Context, id []byte) error {
 	_, err := q.db.Exec(ctx, removeMedia, id)
+	return err
+}
+
+const setFacesEvent = `-- name: SetFacesEvent :exec
+update faces set event_id = $2, person_id = null where media_id = $1
+`
+
+type SetFacesEventParams struct {
+	MediaID []byte `json:"media_id"`
+	EventID []byte `json:"event_id"`
+}
+
+func (q *Queries) SetFacesEvent(ctx context.Context, arg SetFacesEventParams) error {
+	_, err := q.db.Exec(ctx, setFacesEvent, arg.MediaID, arg.EventID)
+	return err
+}
+
+const setMediaEvent = `-- name: SetMediaEvent :exec
+update media set event_id = $2 where id = $1
+`
+
+type SetMediaEventParams struct {
+	ID      []byte `json:"id"`
+	EventID []byte `json:"event_id"`
+}
+
+// Moves an item between the library and an event; faces follow so clustering sees them.
+func (q *Queries) SetMediaEvent(ctx context.Context, arg SetMediaEventParams) error {
+	_, err := q.db.Exec(ctx, setMediaEvent, arg.ID, arg.EventID)
 	return err
 }
 
