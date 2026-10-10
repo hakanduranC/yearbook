@@ -1,0 +1,36 @@
+# env and secrets
+.env
+*.local
+
+# node
+node_modules/
+.output/
+dist/
+.vite/
+*.tsbuildinfo
+apps/web/src/routeTree.gen.ts
+playwright-report/
+test-results/
+
+# go
+apps/api/tmp/
+apps/api/bin/
+
+# python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+
+# worker data
+apps/worker/fixtures/private/
+apps/worker/.cache/
+
+# docker volumes (bind mounts)
+infra/.data/
+
+# editor / os
+.idea/
+.vscode/
+.DS_Store

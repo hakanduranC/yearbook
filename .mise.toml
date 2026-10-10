@@ -1,0 +1,72 @@
+# Per-project toolchains and tasks. Install mise once, then `mise install` here.
+[tools]
+go = "1.27"
+node = "26"
+pnpm = "10"
+python = "3.12"
+uv = "latest"
+"go:github.com/air-verse/air" = "latest"
+"go:github.com/pressly/goose/v3/cmd/goose" = "latest"
+"ubi:sqlc-dev/sqlc" = "latest"
+
+[env]
+_.file = ".env"
+COMPOSE_FILE = "infra/compose.yaml"
+
+[tasks.up]
+description = "Start Postgres, SeaweedFS, Mailpit"
+run = "docker compose up -d --wait"
+
+[tasks.down]
+description = "Stop dev services"
+run = "docker compose down"
+
+[tasks.migrate]
+description = "Apply SQL migrations"
+run = "goose -dir infra/migrations postgres \"$DATABASE_URL\" up"
+
+[tasks.gen]
+description = "Regenerate code from openapi.yaml and sqlc queries"
+run = [
+  "cd apps/api && sqlc generate && go generate ./...",
+  "pnpm --filter @yearbook/openapi generate",
+]
+
+[tasks.api]
+description = "Run the Go API with hot reload"
+dir = "apps/api"
+run = "air"
+
+[tasks.worker]
+description = "Run the Python worker with reload"
+dir = "apps/worker"
+run = "uv run watchfiles --filter python 'python -m yearbook_worker run' src"
+
+[tasks.web]
+description = "Run the web app"
+dir = "apps/web"
+run = "pnpm dev"
+
+[tasks.seed]
+description = "Create the demo user, event and fixture uploads"
+dir = "apps/api"
+run = "go run ./cmd/ybctl seed --fixtures ../worker/fixtures"
+
+[tasks.test]
+description = "All tests"
+run = [
+  "cd apps/api && go test ./... -count=1",
+  "cd apps/worker && uv run pytest -q",
+  "cd apps/web && pnpm test",
+]
+
+[tasks.lint]
+run = [
+  "cd apps/api && go vet ./...",
+  "cd apps/worker && uv run ruff check .",
+  "cd apps/web && pnpm check",
+]
+
+[tasks.ci]
+depends = ["gen", "lint", "test"]
+run = "git diff --exit-code -- apps/api/internal/gen packages/openapi/ts"

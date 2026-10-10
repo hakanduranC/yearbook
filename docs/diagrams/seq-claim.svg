@@ -1,0 +1,571 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1008pt" height="1115.28pt" viewBox="0 0 1008 1115.28" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-10-09T23:34:13.865394</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.11.2, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 1115.28 
+L 1008 1115.28 
+L 1008 0 
+L 0 0 
+z
+" style="fill: #f8f7f4"/>
+  </g>
+  <g id="axes_1">
+   <g id="line2d_1">
+    <path d="M 115.2 129.6 
+L 115.2 1086.48 
+" clip-path="url(#p92c13c7261)" style="fill: none; stroke-dasharray: 2.4,2.4; stroke-dashoffset: 0; stroke: #6a675f; stroke-width: 0.8"/>
+   </g>
+   <g id="line2d_2">
+    <path d="M 309.6 129.6 
+L 309.6 1086.48 
+" clip-path="url(#p92c13c7261)" style="fill: none; stroke-dasharray: 2.4,2.4; stroke-dashoffset: 0; stroke: #6a675f; stroke-width: 0.8"/>
+   </g>
+   <g id="line2d_3">
+    <path d="M 504 129.6 
+L 504 1086.48 
+" clip-path="url(#p92c13c7261)" style="fill: none; stroke-dasharray: 2.4,2.4; stroke-dashoffset: 0; stroke: #6a675f; stroke-width: 0.8"/>
+   </g>
+   <g id="line2d_4">
+    <path d="M 698.4 129.6 
+L 698.4 1086.48 
+" clip-path="url(#p92c13c7261)" style="fill: none; stroke-dasharray: 2.4,2.4; stroke-dashoffset: 0; stroke: #6a675f; stroke-width: 0.8"/>
+   </g>
+   <g id="line2d_5">
+    <path d="M 892.8 129.6 
+L 892.8 1086.48 
+" clip-path="url(#p92c13c7261)" style="fill: none; stroke-dasharray: 2.4,2.4; stroke-dashoffset: 0; stroke: #6a675f; stroke-width: 0.8"/>
+   </g>
+   <g id="line2d_6">
+    <path d="M 28.8 158.4 
+L 979.2 158.4 
+" clip-path="url(#p92c13c7261)" style="fill: none; stroke: #e3e0d9; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_7">
+    <path d="M 28.8 325.584 
+L 979.2 325.584 
+" clip-path="url(#p92c13c7261)" style="fill: none; stroke: #e3e0d9; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_8">
+    <path d="M 28.8 714.384 
+L 979.2 714.384 
+" clip-path="url(#p92c13c7261)" style="fill: none; stroke: #e3e0d9; stroke-linecap: square"/>
+   </g>
+   <g id="patch_2">
+    <path d="M 46.8 93.6 
+L 183.6 93.6 
+L 183.6 129.6 
+L 46.8 129.6 
+z
+" clip-path="url(#p92c13c7261)" style="fill: #141414; stroke: #141414; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 241.2 93.6 
+L 378 93.6 
+L 378 129.6 
+L 241.2 129.6 
+z
+" clip-path="url(#p92c13c7261)" style="fill: #ffffff; stroke: #141414; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 435.6 93.6 
+L 572.4 93.6 
+L 572.4 129.6 
+L 435.6 129.6 
+z
+" clip-path="url(#p92c13c7261)" style="fill: #ffffff; stroke: #141414; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 630 93.6 
+L 766.8 93.6 
+L 766.8 129.6 
+L 630 129.6 
+z
+" clip-path="url(#p92c13c7261)" style="fill: #efede8; stroke: #141414; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 824.4 93.6 
+L 961.2 93.6 
+L 961.2 129.6 
+L 824.4 129.6 
+z
+" clip-path="url(#p92c13c7261)" style="fill: #ffffff; stroke: #141414; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 435.6 977.904 
+L 766.8 977.904 
+L 766.8 1017.144 
+L 435.6 1017.144 
+z
+" clip-path="url(#p92c13c7261)" style="fill: #f1ece2; stroke: #e3e0d9; stroke-linejoin: miter"/>
+   </g>
+   <g id="text_1">
+    <text style="font-weight: 700; font-size: 15px; font-family: 'Noto Sans', 'DejaVu Sans'; text-anchor: start; fill: #141414" x="28.8" y="41.235" transform="rotate(-0 28.8 41.235)">Sequence · finding yourself, in one event and across events</text>
+   </g>
+   <g id="text_2">
+    <text style="font-size: 9.5px; font-family: 'Noto Sans', 'DejaVu Sans'; text-anchor: start; fill: #6a675f" x="28.8" y="64.8755" transform="rotate(-0 28.8 64.8755)">Clustering is per event and automatic. Linking a cluster to a human is always a confirmed action.</text>
+   </g>
+   <g id="text_3">
+    <text style="font-weight: 700; font-size: 9.5px; font-family: 'Noto Sans', 'DejaVu Sans'; text-anchor: middle; fill: #ffffff" x="115.2" y="113.1155" transform="rotate(-0 115.2 113.1155)">Guest / member</text>
+   </g>
+   <g id="text_4">
+    <text style="font-weight: 700; font-size: 9.5px; font-family: 'Noto Sans', 'DejaVu Sans'; text-anchor: middle; fill: #141414" x="309.6" y="113.1155" transform="rotate(-0 309.6 113.1155)">Web app</text>
+   </g>
+   <g id="text_5">
+    <text style="font-weight: 700; font-size: 9.5px; font-family: 'Noto Sans', 'DejaVu Sans'; text-anchor: middle; fill: #141414" x="504" y="113.1155" transform="rotate(-0 504 113.1155)">API (Go)</text>
+   </g>
+   <g id="text_6">
+    <text style="font-weight: 700; font-size: 9.5px; font-family: 'Noto Sans', 'DejaVu Sans'; text-anchor: middle; fill: #141414" x="698.4" y="113.1155" transform="rotate(-0 698.4 113.1155)">Postgres</text>
+   </g>
+   <g id="text_7">
+    <text style="font-weight: 700; font-size: 9.5px; font-family: 'Noto Sans', 'DejaVu Sans'; text-anchor: middle; fill: #141414" x="892.8" y="113.1155" transform="rotate(-0 892.8 113.1155)">Worker</text>
+   </g>
+   <g id="text_8">
+    <g id="patch_8">
+     <path d="M 437.085625 155.6 
+L 570.914375 155.6 
+L 570.914375 141.664 
+L 437.085625 141.664 
+z
+" style="fill: #f8f7f4"/>
+    </g>
+    <text style="font-style: italic; font-size: 8px; font-family: 'Noto Sans', 'DejaVu Sans'; text-anchor: middle; fill: #6a675f" x="504" y="151.736" transform="rotate(-0 504 151.736)">after uploads settle (debounced 60 s)</text>
+   </g>
+   <g id="line2d_9">
+    <path d="M 892.8 236.16 
+L 856.8 236.16 
+L 856.8 254.88 
+" clip-path="url(#p92c13c7261)" style="fill: none; stroke: #141414; stroke-linecap: square"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 858.797314 254.88 
+Q 872.998471 254.88 886.081594 254.88 
+" clip-path="url(#p92c13c7261)" style="fill: none; stroke: #141414; stroke-linecap: round"/>
+    <path d="M 882.081594 252.88 
+L 886.081594 254.88 
+L 882.081594 256.88 
+z
+" clip-path="url(#p92c13c7261)" style="fill: #141414; stroke: #141414; stroke-linecap: round"/>
+   </g>
+   <g id="text_9">
+    <g id="patch_10">
+     <path d="M 435.14875 322.784 
+L 572.85125 322.784 
+L 572.85125 308.848 
+L 435.14875 308.848 
+z
+" style="fill: #f8f7f4"/>
+    </g>
+    <text style="font-style: italic; font-size: 8px; font-family: 'Noto Sans', 'DejaVu Sans'; text-anchor: middle; fill: #6a675f" x="504" y="318.92" transform="rotate(-0 504 318.92)">guest entered a name after uploading</text>
+   </g>
+   <g id="text_10">
+    <g id="patch_11">
+     <path d="M 452.841875 711.584 
+L 555.158125 711.584 
+L 555.158125 697.648 
+L 452.841875 697.648 
+z
+" style="fill: #f8f7f4"/>
+    </g>
+    <text style="font-style: italic; font-size: 8px; font-family: 'Noto Sans', 'DejaVu Sans'; text-anchor: middle; fill: #6a675f" x="504" y="707.72" transform="rotate(-0 504 707.72)">later, signed in, other events</text>
+   </g>
+   <g id="text_11">
+    <text style="font-size: 7.5px; font-family: 'Noto Sans', 'DejaVu Sans'; text-anchor: start; fill: #141414" x="447.12" y="996.7215" transform="rotate(-0 447.12 996.7215)">Each confirmation grows the reference set. Nothing links without a tap;</text>
+   </g>
+   <g id="text_12">
+    <text style="font-size: 7.5px; font-family: 'Noto Sans', 'DejaVu Sans'; text-anchor: start; fill: #141414" x="447.12" y="1006.9815" transform="rotate(-0 447.12 1006.9815)">"Group my face across events" off stops suggestions entirely.</text>
+   </g>
+   <g id="patch_12">
+    <path d="M 891.302014 197.28 
+Q 795.600115 197.28 701.128054 197.28 
+" clip-path="url(#p92c13c7261)" style="fill: none; stroke: #141414; stroke-width: 1.1; stroke-linecap: round"/>
+    <path d="M 705.528054 199.48 
+L 701.128054 197.28 
+L 705.528054 195.08 
+z
+" clip-path="url(#p92c13c7261)" style="fill: #141414; stroke: #141414; stroke-width: 1.1; stroke-linecap: round"/>
+   </g>
+   <g id="patch_13">
+    <path d="M 891.302014 286.704 
+Q 795.600115 286.704 701.128054 286.704 
+" clip-path="url(#p92c13c7261)" style="fill: none; stroke: #141414; stroke-width: 1.1; stroke-linecap: round"/>
+    <path d="M 705.528054 288.904 
+L 701.128054 286.704 
+L 705.528054 284.504 
+z
+" clip-path="url(#p92c13c7261)" style="fill: #141414; stroke: #141414; stroke-width: 1.1; stroke-linecap: round"/>
+   </g>
+   <g id="patch_14">
+    <path d="M 311.097986 364.464 
+Q 406.799885 364.464 501.271946 364.464 
+" clip-path="url(#p92c13c7261)" style="fill: none; stroke: #141414; stroke-width: 1.1; stroke-linecap: round"/>
+    <path d="M 496.871946 362.264 
+L 501.271946 364.464 
+L 496.871946 366.664 
+z
+" clip-path="url(#p92c13c7261)" style="fill: #141414; stroke: #141414; stroke-width: 1.1; stroke-linecap: round"/>
+   </g>
+   <g id="patch_15">
+    <path d="M 505.497986 403.344 
+Q 601.199885 403.344 695.671946 403.344 
+" clip-path="url(#p92c13c7261)" style="fill: none; stroke: #141414; stroke-width: 1.1; stroke-linecap: round"/>
+    <path d="M 691.271946 401.144 
+L 695.671946 403.344 
+L 691.271946 405.544 
+z
+" clip-path="url(#p92c13c7261)" style="fill: #141414; stroke: #141414; stroke-width: 1.1; stroke-linecap: round"/>
+   </g>
+   <g id="patch_16">
+    <path d="M 502.502014 442.224 
+Q 406.800115 442.224 312.328054 442.224 
+" clip-path="url(#p92c13c7261)" style="fill: none; stroke-dasharray: 4.4,3.3; stroke-dashoffset: 0; stroke: #141414; stroke-width: 1.1; stroke-linecap: round"/>
+    <path d="M 316.728054 444.424 
+L 312.328054 442.224 
+L 316.728054 440.024 
+z
+" clip-path="url(#p92c13c7261)" style="fill: #141414; stroke-dasharray: 4.4,3.3; stroke-dashoffset: 0; stroke: #141414; stroke-width: 1.1; stroke-linecap: round"/>
+   </g>
+   <g id="patch_17">
+    <path d="M 308.102014 481.104 
+Q 212.400115 481.104 117.928054 481.104 
+" clip-path="url(#p92c13c7261)" style="fill: none; stroke: #141414; stroke-width: 1.1; stroke-linecap: round"/>
+    <path d="M 122.328054 483.304 
+L 117.928054 481.104 
+L 122.328054 478.904 
+z
+" clip-path="url(#p92c13c7261)" style="fill: #141414; stroke: #141414; stroke-width: 1.1; stroke-linecap: round"/>
+   </g>
+   <g id="patch_18">
+    <path d="M 116.697986 519.984 
+Q 212.399885 519.984 306.871946 519.984 
+" clip-path="url(#p92c13c7261)" style="fill: none; stroke: #9a7645; stroke-width: 1.1; stroke-linecap: round"/>
+    <path d="M 302.471946 517.784 
+L 306.871946 519.984 
+L 302.471946 522.184 
+z
+" clip-path="url(#p92c13c7261)" style="fill: #9a7645; stroke: #9a7645; stroke-width: 1.1; stroke-linecap: round"/>
+   </g>
+   <g id="patch_19">
+    <path d="M 311.097986 558.864 
+Q 406.799885 558.864 501.271946 558.864 
+" clip-path="url(#p92c13c7261)" style="fill: none; stroke: #141414; stroke-width: 1.1; stroke-linecap: round"/>
+    <path d="M 496.871946 556.664 
+L 501.271946 558.864 
+L 496.871946 561.064 
+z
+" clip-path="url(#p92c13c7261)" style="fill: #141414; stroke: #141414; stroke-width: 1.1; stroke-linecap: round"/>
+   </g>
+   <g id="patch_20">
+    <path d="M 505.497986 597.744 
+Q 601.199885 597.744 695.671946 597.744 
+" clip-path="url(#p92c13c7261)" style="fill: none; stroke: #141414; stroke-width: 1.1; stroke-linecap: round"/>
+    <path d="M 691.271946 595.544 
+L 695.671946 597.744 
+L 691.271946 599.944 
+z
+" clip-path="url(#p92c13c7261)" style="fill: #141414; stroke: #141414; stroke-width: 1.1; stroke-linecap: round"/>
+   </g>
+   <g id="patch_21">
+    <path d="M 502.502014 636.624 
+Q 406.800115 636.624 312.328054 636.624 
+" clip-path="url(#p92c13c7261)" style="fill: none; stroke-dasharray: 4.4,3.3; stroke-dashoffset: 0; stroke: #141414; stroke-width: 1.1; stroke-linecap: round"/>
+    <path d="M 316.728054 638.824 
+L 312.328054 636.624 
+L 316.728054 634.424 
+z
+" clip-path="url(#p92c13c7261)" style="fill: #141414; stroke-dasharray: 4.4,3.3; stroke-dashoffset: 0; stroke: #141414; stroke-width: 1.1; stroke-linecap: round"/>
+   </g>
+   <g id="patch_22">
+    <path d="M 308.102014 675.504 
+Q 212.400115 675.504 117.928054 675.504 
+" clip-path="url(#p92c13c7261)" style="fill: none; stroke: #141414; stroke-width: 1.1; stroke-linecap: round"/>
+    <path d="M 122.328054 677.704 
+L 117.928054 675.504 
+L 122.328054 673.304 
+z
+" clip-path="url(#p92c13c7261)" style="fill: #141414; stroke: #141414; stroke-width: 1.1; stroke-linecap: round"/>
+   </g>
+   <g id="patch_23">
+    <path d="M 311.097986 753.264 
+Q 406.799885 753.264 501.271946 753.264 
+" clip-path="url(#p92c13c7261)" style="fill: none; stroke: #141414; stroke-width: 1.1; stroke-linecap: round"/>
+    <path d="M 496.871946 751.064 
+L 501.271946 753.264 
+L 496.871946 755.464 
+z
+" clip-path="url(#p92c13c7261)" style="fill: #141414; stroke: #141414; stroke-width: 1.1; stroke-linecap: round"/>
+   </g>
+   <g id="patch_24">
+    <path d="M 505.497986 792.144 
+Q 601.199885 792.144 695.671946 792.144 
+" clip-path="url(#p92c13c7261)" style="fill: none; stroke: #141414; stroke-width: 1.1; stroke-linecap: round"/>
+    <path d="M 691.271946 789.944 
+L 695.671946 792.144 
+L 691.271946 794.344 
+z
+" clip-path="url(#p92c13c7261)" style="fill: #141414; stroke: #141414; stroke-width: 1.1; stroke-linecap: round"/>
+   </g>
+   <g id="patch_25">
+    <path d="M 505.497986 831.024 
+Q 601.199885 831.024 695.671946 831.024 
+" clip-path="url(#p92c13c7261)" style="fill: none; stroke: #141414; stroke-width: 1.1; stroke-linecap: round"/>
+    <path d="M 691.271946 828.824 
+L 695.671946 831.024 
+L 691.271946 833.224 
+z
+" clip-path="url(#p92c13c7261)" style="fill: #141414; stroke: #141414; stroke-width: 1.1; stroke-linecap: round"/>
+   </g>
+   <g id="patch_26">
+    <path d="M 502.502014 869.904 
+Q 406.800115 869.904 312.328054 869.904 
+" clip-path="url(#p92c13c7261)" style="fill: none; stroke-dasharray: 4.4,3.3; stroke-dashoffset: 0; stroke: #141414; stroke-width: 1.1; stroke-linecap: round"/>
+    <path d="M 316.728054 872.104 
+L 312.328054 869.904 
+L 316.728054 867.704 
+z
+" clip-path="url(#p92c13c7261)" style="fill: #141414; stroke-dasharray: 4.4,3.3; stroke-dashoffset: 0; stroke: #141414; stroke-width: 1.1; stroke-linecap: round"/>
+   </g>
+   <g id="patch_27">
+    <path d="M 308.102014 908.784 
+Q 212.400115 908.784 117.928054 908.784 
+" clip-path="url(#p92c13c7261)" style="fill: none; stroke: #9a7645; stroke-width: 1.1; stroke-linecap: round"/>
+    <path d="M 122.328054 910.984 
+L 117.928054 908.784 
+L 122.328054 906.584 
+z
+" clip-path="url(#p92c13c7261)" style="fill: #9a7645; stroke: #9a7645; stroke-width: 1.1; stroke-linecap: round"/>
+   </g>
+   <g id="patch_28">
+    <path d="M 311.097986 947.664 
+Q 406.799885 947.664 501.271946 947.664 
+" clip-path="url(#p92c13c7261)" style="fill: none; stroke: #141414; stroke-width: 1.1; stroke-linecap: round"/>
+    <path d="M 496.871946 945.464 
+L 501.271946 947.664 
+L 496.871946 949.864 
+z
+" clip-path="url(#p92c13c7261)" style="fill: #141414; stroke: #141414; stroke-width: 1.1; stroke-linecap: round"/>
+   </g>
+   <g id="text_13">
+    <g id="patch_29">
+     <path d="M 704.091875 193.2 
+L 887.108125 193.2 
+L 887.108125 180.384 
+L 704.091875 180.384 
+z
+" style="fill: #f8f7f4"/>
+    </g>
+    <text style="font-size: 8px; font-family: 'Noto Sans', 'DejaVu Sans'; text-anchor: middle; fill: #141414" x="795.6" y="189.896" transform="rotate(-0 795.6 189.896)">cluster_event: load faces + persons + constraints</text>
+   </g>
+   <g id="text_14">
+    <g id="patch_30">
+     <path d="M 619.43875 251.448 
+L 850.8 251.448 
+L 850.8 238.152 
+L 619.43875 238.152 
+z
+" style="fill: #f8f7f4"/>
+    </g>
+    <text style="font-size: 8px; font-family: 'Noto Sans', 'DejaVu Sans'; text-anchor: end; fill: #141414" x="849.6" y="247.904" transform="rotate(-0 849.6 247.904)">assign new faces to centroids (cos ≥ 0.52), HDBSCAN the rest</text>
+   </g>
+   <g id="text_15">
+    <g id="patch_31">
+     <path d="M 645.82 282.624 
+L 945.38 282.624 
+L 945.38 269.808 
+L 645.82 269.808 
+z
+" style="fill: #f8f7f4"/>
+    </g>
+    <text style="font-size: 8px; font-family: 'Noto Sans', 'DejaVu Sans'; text-anchor: middle; fill: #141414" x="795.6" y="279.32" transform="rotate(-0 795.6 279.32)">UPDATE faces.person_id, persons.centroid, cover_face · NOTIFY people.updated</text>
+   </g>
+   <g id="text_16">
+    <g id="patch_32">
+     <path d="M 356.875625 360.384 
+L 456.724375 360.384 
+L 456.724375 347.568 
+L 356.875625 347.568 
+z
+" style="fill: #f8f7f4"/>
+    </g>
+    <text style="font-size: 8px; font-family: 'Noto Sans', 'DejaVu Sans'; text-anchor: middle; fill: #141414" x="406.8" y="357.08" transform="rotate(-0 406.8 357.08)">GET /events/{slug}/people</text>
+   </g>
+   <g id="text_17">
+    <g id="patch_33">
+     <path d="M 466.195 399.264 
+L 736.205 399.264 
+L 736.205 386.448 
+L 466.195 386.448 
+z
+" style="fill: #f8f7f4"/>
+    </g>
+    <text style="font-size: 8px; font-family: 'Noto Sans', 'DejaVu Sans'; text-anchor: middle; fill: #141414" x="601.2" y="395.96" transform="rotate(-0 601.2 395.96)">persons + suggested_me (uploader's own photos ∩ most frequent face)</text>
+   </g>
+   <g id="text_18">
+    <g id="patch_34">
+     <path d="M 319.106875 438.144 
+L 494.493125 438.144 
+L 494.493125 425.328 
+L 319.106875 425.328 
+z
+" style="fill: #f8f7f4"/>
+    </g>
+    <text style="font-size: 8px; font-family: 'Noto Sans', 'DejaVu Sans'; text-anchor: middle; fill: #141414" x="406.8" y="434.84" transform="rotate(-0 406.8 434.84)">[{person 7, suggested_me:true, 23 photos}, …]</text>
+   </g>
+   <g id="text_19">
+    <g id="patch_35">
+     <path d="M 143.465 477.024 
+L 281.335 477.024 
+L 281.335 464.208 
+L 143.465 464.208 
+z
+" style="fill: #f8f7f4"/>
+    </g>
+    <text style="font-size: 8px; font-family: 'Noto Sans', 'DejaVu Sans'; text-anchor: middle; fill: #141414" x="212.4" y="473.72" transform="rotate(-0 212.4 473.72)">"Is this you?" card with the face crop</text>
+   </g>
+   <g id="text_20">
+    <g id="patch_36">
+     <path d="M 192.771875 515.904 
+L 232.028125 515.904 
+L 232.028125 503.088 
+L 192.771875 503.088 
+z
+" style="fill: #f8f7f4"/>
+    </g>
+    <text style="font-size: 8px; font-family: 'Noto Sans', 'DejaVu Sans'; text-anchor: middle; fill: #9a7645" x="212.4" y="512.6" transform="rotate(-0 212.4 512.6)">This is me</text>
+   </g>
+   <g id="text_21">
+    <g id="patch_37">
+     <path d="M 365.231875 554.784 
+L 448.368125 554.784 
+L 448.368125 541.968 
+L 365.231875 541.968 
+z
+" style="fill: #f8f7f4"/>
+    </g>
+    <text style="font-size: 8px; font-family: 'Noto Sans', 'DejaVu Sans'; text-anchor: middle; fill: #141414" x="406.8" y="551.48" transform="rotate(-0 406.8 551.48)">POST /people/7/claim</text>
+   </g>
+   <g id="text_22">
+    <g id="patch_38">
+     <path d="M 492.64 593.664 
+L 709.76 593.664 
+L 709.76 580.848 
+L 492.64 580.848 
+z
+" style="fill: #f8f7f4"/>
+    </g>
+    <text style="font-size: 8px; font-family: 'Noto Sans', 'DejaVu Sans'; text-anchor: middle; fill: #141414" x="601.2" y="590.36" transform="rotate(-0 601.2 590.36)">identity for guest/user · INSERT person_links(7 → identity)</text>
+   </g>
+   <g id="text_23">
+    <g id="patch_39">
+     <path d="M 377.575 632.544 
+L 436.025 632.544 
+L 436.025 619.728 
+L 377.575 619.728 
+z
+" style="fill: #f8f7f4"/>
+    </g>
+    <text style="font-size: 8px; font-family: 'Noto Sans', 'DejaVu Sans'; text-anchor: middle; fill: #141414" x="406.8" y="629.24" transform="rotate(-0 406.8 629.24)">person 7 is_me</text>
+   </g>
+   <g id="text_24">
+    <g id="patch_40">
+     <path d="M 141.375 671.424 
+L 283.425 671.424 
+L 283.425 658.608 
+L 141.375 658.608 
+z
+" style="fill: #f8f7f4"/>
+    </g>
+    <text style="font-size: 8px; font-family: 'Noto Sans', 'DejaVu Sans'; text-anchor: middle; fill: #141414" x="212.4" y="668.12" transform="rotate(-0 212.4 668.12)">Photos of me (23) · Me badge on cells</text>
+   </g>
+   <g id="text_25">
+    <g id="patch_41">
+     <path d="M 365.70375 749.184 
+L 447.89625 749.184 
+L 447.89625 736.368 
+L 365.70375 736.368 
+z
+" style="fill: #f8f7f4"/>
+    </g>
+    <text style="font-size: 8px; font-family: 'Noto Sans', 'DejaVu Sans'; text-anchor: middle; fill: #141414" x="406.8" y="745.88" transform="rotate(-0 406.8 745.88)">GET /me/suggestions</text>
+   </g>
+   <g id="text_26">
+    <g id="patch_42">
+     <path d="M 476.214375 788.064 
+L 726.185625 788.064 
+L 726.185625 775.248 
+L 476.214375 775.248 
+z
+" style="fill: #f8f7f4"/>
+    </g>
+    <text style="font-size: 8px; font-family: 'Noto Sans', 'DejaVu Sans'; text-anchor: middle; fill: #141414" x="601.2" y="784.76" transform="rotate(-0 601.2 784.76)">reference set = top 30 faces of claimed persons (+ age if birthdate)</text>
+   </g>
+   <g id="text_27">
+    <g id="patch_43">
+     <path d="M 473.491875 826.944 
+L 728.908125 826.944 
+L 728.908125 814.128 
+L 473.491875 814.128 
+z
+" style="fill: #f8f7f4"/>
+    </g>
+    <text style="font-size: 8px; font-family: 'Noto Sans', 'DejaVu Sans'; text-anchor: middle; fill: #141414" x="601.2" y="823.64" transform="rotate(-0 601.2 823.64)">unclaimed persons in my events: max cosine ≥ 0.45, age-consistent</text>
+   </g>
+   <g id="text_28">
+    <g id="patch_44">
+     <path d="M 344.326875 865.824 
+L 469.273125 865.824 
+L 469.273125 853.008 
+L 344.326875 853.008 
+z
+" style="fill: #f8f7f4"/>
+    </g>
+    <text style="font-size: 8px; font-family: 'Noto Sans', 'DejaVu Sans'; text-anchor: middle; fill: #141414" x="406.8" y="862.52" transform="rotate(-0 406.8 862.52)">[{event: Lisbon, person 41, 0.61}]</text>
+   </g>
+   <g id="text_29">
+    <g id="patch_45">
+     <path d="M 151.728125 904.704 
+L 273.071875 904.704 
+L 273.071875 891.888 
+L 151.728125 891.888 
+z
+" style="fill: #f8f7f4"/>
+    </g>
+    <text style="font-size: 8px; font-family: 'Noto Sans', 'DejaVu Sans'; text-anchor: middle; fill: #9a7645" x="212.4" y="901.4" transform="rotate(-0 212.4 901.4)">"Also you, in Lisbon?" → confirm</text>
+   </g>
+   <g id="text_30">
+    <g id="patch_46">
+     <path d="M 362.94375 943.584 
+L 450.65625 943.584 
+L 450.65625 930.768 
+L 362.94375 930.768 
+z
+" style="fill: #f8f7f4"/>
+    </g>
+    <text style="font-size: 8px; font-family: 'Noto Sans', 'DejaVu Sans'; text-anchor: middle; fill: #141414" x="406.8" y="940.28" transform="rotate(-0 406.8 940.28)">POST /people/41/claim</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p92c13c7261">
+   <rect x="0" y="0" width="1008" height="1115.28"/>
+  </clipPath>
+ </defs>
+</svg>

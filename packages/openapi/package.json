@@ -1,0 +1,17 @@
+{
+  "name": "@yearbook/openapi",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "types": "./ts/schema.d.ts",
+  "exports": {
+    ".": { "types": "./ts/schema.d.ts" },
+    "./openapi.yaml": "./openapi.yaml"
+  },
+  "scripts": {
+    "generate": "openapi-typescript openapi.yaml -o ts/schema.d.ts --export-type"
+  },
+  "devDependencies": {
+    "openapi-typescript": "^7.13.0"
+  }
+}

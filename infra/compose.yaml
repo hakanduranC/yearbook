@@ -1,0 +1,75 @@
+# Dev services only. The API, worker and web app run on the host via mise.
+name: yearbook
+
+services:
+  postgres:
+    image: pgvector/pgvector:0.8.7-pg16
+    shm_size: 1g
+    environment:
+      POSTGRES_USER: yearbook
+      POSTGRES_PASSWORD: yearbook
+      POSTGRES_DB: yearbook
+    ports: ["5432:5432"]
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/10-init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U yearbook -d yearbook"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  s3:
+    # SeaweedFS single node with the S3 gateway. MinIO is discontinued.
+    image: chrislusf/seaweedfs:latest
+    command: >
+      server -dir=/data -ip=s3 -ip.bind=0.0.0.0
+      -master.volumeSizeLimitMB=1024 -volume.max=50
+      -s3 -s3.port=8333 -s3.config=/etc/seaweedfs/s3.json
+      -s3.allowedOrigins=http://localhost:3000,http://localhost:8000
+    ports: ["8333:8333"]
+    volumes:
+      - s3data:/data
+      - ./s3/s3.json:/etc/seaweedfs/s3.json:ro
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8333/ >/dev/null 2>&1 || wget -qO- http://localhost:8333/status >/dev/null 2>&1 || exit 0"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  s3-init:
+    image: amazon/aws-cli:2.33.0
+    depends_on:
+      s3:
+        condition: service_started
+    environment:
+      AWS_ACCESS_KEY_ID: yearbook
+      AWS_SECRET_ACCESS_KEY: yearbooksecret
+      AWS_DEFAULT_REGION: us-east-1
+      AWS_REQUEST_CHECKSUM_CALCULATION: when_required
+      AWS_RESPONSE_CHECKSUM_VALIDATION: when_required
+    volumes:
+      - ./s3/init.sh:/init.sh:ro
+      - ./s3/cors.json:/cors.json:ro
+    entrypoint: ["/bin/sh", "/init.sh"]
+
+  mailpit:
+    image: axllent/mailpit:v1.31.4
+    ports: ["1025:1025", "8025:8025"]
+    environment:
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
+
+  caddy:
+    # Optional reverse proxy for testing SSE and cookies through one origin: http://localhost:8000
+    profiles: ["proxy"]
+    image: caddy:2.11.4
+    ports: ["8000:8000"]
+    volumes:
+      - ./caddy/Caddyfile.dev:/etc/caddy/Caddyfile:ro
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+volumes:
+  pgdata:
+  s3data:

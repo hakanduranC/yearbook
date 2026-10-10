@@ -1,0 +1,13 @@
+{
+  "identities": [
+    {
+      "name": "yearbook",
+      "credentials": [{ "accessKey": "yearbook", "secretKey": "yearbooksecret" }],
+      "actions": ["Admin", "Read", "Write", "List", "Tagging"]
+    },
+    {
+      "name": "anonymous",
+      "actions": ["Read:yearbook-public"]
+    }
+  ]
+}
