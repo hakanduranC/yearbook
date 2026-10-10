@@ -1,0 +1,69 @@
+name: ci
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: pgvector/pgvector:0.8.7-pg16
+        env:
+          POSTGRES_USER: yearbook
+          POSTGRES_PASSWORD: yearbook
+          POSTGRES_DB: yearbook
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U yearbook" --health-interval 5s --health-timeout 3s --health-retries 20
+    env:
+      DATABASE_URL: postgres://yearbook:yearbook@localhost:5432/yearbook?sslmode=disable
+      TEST_DATABASE_URL: postgres://yearbook:yearbook@localhost:5432/yearbook_test?sslmode=disable
+      S3_ENDPOINT: http://localhost:8333
+      S3_REGION: us-east-1
+      S3_ACCESS_KEY: yearbook
+      S3_SECRET_KEY: yearbooksecret
+      S3_FORCE_PATH_STYLE: "true"
+      S3_BUCKET_PRIVATE: yearbook-private
+      S3_BUCKET_PUBLIC: yearbook-public
+      PUBLIC_BASE_URL: http://localhost:8333/yearbook-public
+      API_ADDR: ":8080"
+      WEB_ORIGIN: http://localhost:3000
+      ALLOWED_ORIGINS: http://localhost:3000
+      COOKIE_SECURE: "false"
+      SESSION_SECRET: ci-only-secret-at-least-32-bytes-long!!
+      SMTP_HOST: localhost
+      SMTP_PORT: "1025"
+      SMTP_FROM: "Yearbook <ci@yearbook.local>"
+      API_INTERNAL_URL: http://localhost:8080/api/v1
+      PUBLIC_WEB_ORIGIN: http://localhost:3000
+    steps:
+      - uses: actions/checkout@v5
+      - uses: jdx/mise-action@v3
+        with:
+          install: true
+          cache: true
+      - name: Start SeaweedFS
+        run: |
+          docker run -d --name s3 -p 8333:8333 \
+            -v "$PWD/infra/s3/s3.json:/etc/seaweedfs/s3.json:ro" \
+            chrislusf/seaweedfs:latest server -dir=/data -ip.bind=0.0.0.0 \
+            -s3 -s3.port=8333 -s3.config=/etc/seaweedfs/s3.json \
+            -s3.allowedOrigins=http://localhost:3000
+          docker run --rm --network host \
+            -e AWS_ACCESS_KEY_ID=yearbook -e AWS_SECRET_ACCESS_KEY=yearbooksecret -e AWS_DEFAULT_REGION=us-east-1 \
+            -e AWS_REQUEST_CHECKSUM_CALCULATION=when_required -e AWS_RESPONSE_CHECKSUM_VALIDATION=when_required \
+            -v "$PWD/infra/s3/init.sh:/init.sh:ro" -v "$PWD/infra/s3/cors.json:/cors.json:ro" \
+            --entrypoint /bin/sh amazon/aws-cli:2.33.0 -c "sed -i 's#http://s3:8333#http://localhost:8333#' /init.sh 2>/dev/null || true; EP=http://localhost:8333 sh /init.sh"
+      - name: Create test database and migrate
+        run: |
+          docker run --rm --network host postgres:16 psql "$DATABASE_URL" -c 'create database yearbook_test'
+          mise run migrate
+          goose -dir infra/migrations postgres "$TEST_DATABASE_URL" up
+      - run: pnpm install --frozen-lockfile
+      - run: mise run gen
+      - name: Generated code is committed
+        run: git diff --exit-code -- apps/api/internal/gen packages/openapi/ts
+      - run: mise run lint
+      - run: mise run test
