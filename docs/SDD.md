@@ -201,7 +201,7 @@ Cross-event: reference set = up to 30 best faces per claimed person; candidate t
 
 ## 9. Agent
 
-Layered so safety is structural rather than prompt-based.
+Layered so safety is structural rather than prompt-based. The orchestration runs in a Python LangGraph service (`apps/agent`): the Go API authenticates, exposes the tools over MCP, and proxies the chat endpoints to it; the service holds the graph, the Postgres checkpointer for conversations, prompts and evals. See the agent-service split in `docs/CONVENTIONS.md`.
 
 **Layer 1, fixed tools**, exposed both to the internal loop and through the MCP server: `resolve_people`, `search_media` (people all/any/exclude, free text, time and day part, kind, uploader, face counts, liked, score, age range and mode, tags, order, limit), `rank_best`, `list_people`, `describe_media`, `create_album`, `like_media`, `share_album`, `export_zip`, `event_stats`, `run_query`, `present`. Free text in `search_media` is hybrid retrieval in one SQL statement: SigLIP text embedding against the HNSW index fused with full-text and trigram matches by reciprocal rank.
 

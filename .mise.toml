@@ -47,6 +47,11 @@ description = "Run the ML worker (faces, embeddings, quality, tags, age, cluster
 dir = "apps/worker"
 run = "uv run yearbook-worker run --kinds analyze,cluster_event --concurrency 1"
 
+[tasks.agent]
+description = "Run the LangGraph agent service on :8091"
+dir = "apps/agent"
+run = "uv run yearbook-agent serve --port 8091"
+
 [tasks.ml]
 description = "Run the ML server for text embeddings on :8090"
 dir = "apps/worker"

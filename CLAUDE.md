@@ -17,13 +17,13 @@ Shared photo album that assembles itself: QR at the event, guests upload from th
 | Workers | Python 3.12 with uv; ONNX Runtime; InsightFace antelopev2, SigLIP 2 so400m, aesthetic-predictor-v2.5, Florence-2, MiVOLO v2, ffmpeg |
 | Data | PostgreSQL 16 + pgvector (HNSW, cosine), full-text + pg_trgm; Postgres table as job queue (`SKIP LOCKED`) |
 | Storage | Cloudflare R2 or Hetzner Object Storage behind a CDN; SeaweedFS in dev (MinIO is discontinued). Originals and crops private, variants public under random keys. Yearbook is the destination: Google Takeout / folder import, Picker and share-target doors; no live aggregation of Google or iCloud libraries (no APIs for it) |
-| LLM | OpenAI Responses API with function calling. Not the Claude API. Text and metadata only; pixels and embeddings never leave the server |
+| LLM | OpenAI Responses API through a LangGraph service (`apps/agent`, Python, langchain-openai, langchain-mcp-adapters, Postgres checkpointer). Not the Claude API. The Go API owns the tools and exposes them over MCP; the agent service only orchestrates. Text and metadata only; pixels and embeddings never leave the server |
 | Deploy | Pilot: Docker Compose on one Hetzner VPS, Caddy for TLS. Target: Kubernetes with Ingress. EU only |
 
 ## Planned layout
 
 ```
-apps/web  apps/api  apps/worker  packages/openapi  infra/{compose.yaml,caddy,migrations}  docs/
+apps/web  apps/api  apps/worker  apps/agent  packages/openapi  infra/{compose.yaml,caddy,migrations}  docs/
 ```
 
 ## Conventions

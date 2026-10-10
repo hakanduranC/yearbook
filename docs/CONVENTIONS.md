@@ -80,6 +80,9 @@ Private bucket `f/{face_id}.jpg`, 20 % padded, max 512 px. Served only by `GET /
 ## Age filters
 `age_min`/`age_max` on media lists and `search_media`: exact when the person is linked to an identity with a birthdate (`captured_at::date − birthdate`), else `faces.age_est`. Results carry no age numbers per face in public payloads.
 
+## Agent service split
+The language-model loop lives in `apps/agent` (Python, LangGraph). The Go API authenticates the user and proxies `POST /agent/messages`, `POST /agent/commands` and `POST /media/{id}/describe` to `AGENT_URL` (default `http://localhost:8091`) with headers `X-Actor` (base64url id), `X-Actor-Kind` (user|guest), `X-Event-Slug`, `X-Locale`, `X-Session-Token` (raw cookie value). The agent service calls the API's MCP endpoint `/mcp` with `Authorization: Bearer <that token>` and `X-Event-Slug`, so every tool runs as the same principal under the same visibility rules. Go keeps the tool implementations, the `run_query` guardrails, saved-command storage and execution (`GET/DELETE /agent/commands`, `POST /agent/commands/{id}/run`). Connection failures to the agent service surface as 503 `agent_not_configured`.
+
 ## Agent
 Env: `OPENAI_API_KEY`, `OPENAI_MODEL` (a current GPT-5-family model id; the API checks `GET /v1/models` at startup and logs which one it uses), `OPENAI_BASE_URL` optional. Without a key `POST /agent/messages` returns `503 {code: internal, message: "agent_not_configured"}` and the web app shows a calm message. Only text and metadata are sent; `POST /media/{id}/describe` is the single user-initiated image exception. `run_query` executes as role `agent_ro` over the `v_*` views with `SET LOCAL app.actor = '<base64 of actor id>'`, `SET LOCAL app.event = '<base64 of event id or empty>'`, `statement_timeout = 2000`, row cap 500.
 

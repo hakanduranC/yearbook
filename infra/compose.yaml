@@ -98,6 +98,8 @@ services:
       SMTP_PORT: "1025"
       SMTP_FROM: "Yearbook <hello@yearbook.local>"
       ML_URL: http://ml:8090
+      AGENT_URL: http://agent:8091
+      MCP_URL: http://api:8080/mcp
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
       OPENAI_MODEL: ${OPENAI_MODEL:-}
       OPERATOR_EMAIL: ${OPERATOR_EMAIL:-demo@yearbook.local}
@@ -163,6 +165,15 @@ services:
       PUBLIC_WEB_ORIGIN: http://localhost:8000
     depends_on:
       api: { condition: service_started }
+
+  agent:
+    # LangGraph chat agent; talks to the API's MCP tools and OpenAI
+    profiles: ["app"]
+    build: { context: ../apps/agent }
+    environment: *app_env
+    expose: ["8091"]
+    depends_on:
+      migrate: { condition: service_completed_successfully }
 
   gateway:
     profiles: ["app"]
