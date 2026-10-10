@@ -1,0 +1,115 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  min-height: var(--tap);
+  padding: 0 var(--s-5);
+  font-size: var(--t-16);
+  font-weight: 500;
+  line-height: 1;
+  border: 1px solid var(--border-strong);
+  background: var(--primary);
+  color: var(--on-primary);
+  transition:
+    background-color var(--m-fast) var(--ease),
+    color var(--m-fast) var(--ease),
+    opacity var(--m-fast) var(--ease);
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  text-align: center;
+}
+
+.button:active {
+  opacity: 0.85;
+}
+
+.button:disabled,
+.button[aria-disabled="true"] {
+  opacity: 0.45;
+  cursor: default;
+  pointer-events: none;
+}
+
+.secondary {
+  background: transparent;
+  color: var(--ink);
+  border-color: var(--border-strong);
+}
+
+.ghost {
+  background: transparent;
+  color: var(--ink);
+  border-color: transparent;
+  padding: 0 var(--s-3);
+}
+
+.quiet {
+  background: transparent;
+  color: var(--muted);
+  border-color: transparent;
+  padding: 0 var(--s-2);
+  font-weight: 400;
+  min-height: var(--tap);
+}
+
+.danger {
+  background: transparent;
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
+.like {
+  background: transparent;
+  color: var(--ink);
+  border-color: transparent;
+}
+
+.like[aria-pressed="true"] {
+  color: var(--like);
+}
+
+.block {
+  width: 100%;
+}
+
+.small {
+  min-height: 36px;
+  font-size: var(--t-14);
+  padding: 0 var(--s-3);
+}
+
+.busy {
+  position: relative;
+  color: transparent;
+}
+
+.busy::after {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border: 2px solid currentColor;
+  border-color: var(--on-primary) transparent var(--on-primary) transparent;
+  border-radius: 50%;
+  animation: spin 800ms linear infinite;
+}
+
+.secondary.busy::after,
+.ghost.busy::after,
+.quiet.busy::after {
+  border-color: var(--ink) transparent var(--ink) transparent;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .busy::after {
+    animation: none;
+    border-color: currentColor;
+  }
+}

@@ -1,0 +1,76 @@
+.main {
+  padding-bottom: calc(var(--bar-h) + var(--safe-bottom) + var(--s-6));
+}
+
+.summary {
+  padding: var(--s-4) 0;
+  font-size: var(--t-13);
+  color: var(--muted);
+  text-align: center;
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--s-2);
+  padding: var(--s-12) var(--s-4);
+}
+
+.emptyLead {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: var(--t-20);
+}
+
+.emptySub {
+  color: var(--muted);
+  font-size: var(--t-14);
+  max-width: 34ch;
+}
+
+.resume {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  padding: var(--s-4);
+  border: 1px solid var(--border);
+  background: var(--surface-raised);
+  margin: var(--s-4) 0;
+}
+
+.resumeHint {
+  font-size: var(--t-14);
+  color: var(--muted);
+}
+
+.resumeActions {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--s-2);
+}
+
+.input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.sheetForm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+}
+
+.skip {
+  align-self: center;
+  color: var(--like);
+  font-size: var(--t-14);
+  min-height: var(--tap);
+  display: inline-flex;
+  align-items: center;
+}

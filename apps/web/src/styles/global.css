@@ -1,0 +1,87 @@
+@import "./tokens.css";
+@import "./reset.css";
+@import "./fonts.css";
+
+html {
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  color-scheme: light;
+}
+
+body {
+  background: var(--surface);
+  overscroll-behavior-y: none;
+}
+
+#root,
+body {
+  min-height: 100dvh;
+}
+
+.display {
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+}
+
+.personal {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 450;
+}
+
+.eyebrow {
+  font-size: var(--t-12);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.you {
+  color: var(--you);
+}
+
+.page {
+  width: 100%;
+  max-width: var(--page-max);
+  margin: 0 auto;
+  padding: 0 var(--page-x);
+}
+
+.page--narrow {
+  max-width: 560px;
+}
+
+.stack > * + * {
+  margin-top: var(--s-4);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.has-bar {
+  padding-bottom: calc(var(--bar-h) + var(--safe-bottom) + var(--s-4));
+}
+
+@media print {
+  .no-print {
+    /* biome-ignore lint/complexity/noImportantStyles: must win over module styles when printing */
+    display: none !important;
+  }
+}

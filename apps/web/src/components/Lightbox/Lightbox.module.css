@@ -1,0 +1,131 @@
+.dialog {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--lightbox);
+  color: #fff;
+  z-index: var(--z-dialog);
+  grid-template-rows: auto 1fr auto;
+  overscroll-behavior: contain;
+}
+
+.dialog[open] {
+  display: grid;
+}
+
+.dialog::backdrop {
+  background: var(--lightbox);
+}
+
+.top {
+  display: grid;
+  grid-template-columns: var(--tap) 1fr var(--tap);
+  align-items: center;
+  padding: var(--safe-top) var(--s-2) 0;
+  min-height: 56px;
+  font-size: var(--t-13);
+  text-align: center;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.icon {
+  width: var(--tap);
+  height: var(--tap);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+
+.stage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.media {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  transition: transform var(--m-fast) var(--ease);
+}
+
+.nav {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 56px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  opacity: 0.6;
+}
+
+.nav:hover {
+  opacity: 1;
+}
+
+.prev {
+  left: 0;
+}
+
+.next {
+  right: 0;
+}
+
+@media (hover: hover) and (min-width: 720px) {
+  .nav {
+    display: inline-flex;
+  }
+}
+
+.footer {
+  padding: var(--s-3) var(--s-4) calc(var(--s-3) + var(--safe-bottom));
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+
+.meta {
+  font-size: var(--t-13);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.metaYou {
+  color: var(--you);
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--s-2);
+}
+
+.action {
+  min-height: var(--tap);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  color: #fff;
+  font-size: var(--t-14);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: transparent;
+}
+
+.action svg {
+  width: 16px;
+  height: 16px;
+}
+
+.liked {
+  color: var(--like);
+  border-color: var(--like);
+}

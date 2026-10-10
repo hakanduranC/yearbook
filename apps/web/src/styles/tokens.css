@@ -1,0 +1,78 @@
+/* Final direction tokens. Values here win over the design system's tokens.json. */
+:root {
+  --surface: #f8f7f4;
+  --surface-raised: #ffffff;
+  --surface-dim: #efede8;
+  --ink: #141414;
+  --muted: #6a675f;
+  --primary: #141414;
+  --on-primary: #ffffff;
+  --you: #9a7645;
+  --you-soft: #f3ece0;
+  --like: #b9524c;
+  --danger: #b9524c;
+  --border: #e3e0d9;
+  --border-strong: #141414;
+  --placeholder-1: #e9e5dc;
+  --placeholder-2: #dfd9cd;
+  --placeholder-3: #d3ccbe;
+  --scrim: rgba(20, 20, 20, 0.55);
+  --lightbox: #141414;
+  --focus: #141414;
+
+  --font-display: "Bodoni Moda Variable", "Bodoni 72", "Didot", Georgia, serif;
+  --font-body: "Instrument Sans Variable", "Helvetica Neue", Arial, sans-serif;
+
+  --t-12: 0.75rem;
+  --t-13: 0.8125rem;
+  --t-14: 0.875rem;
+  --t-16: 1rem;
+  --t-18: 1.125rem;
+  --t-20: 1.25rem;
+  --t-24: 1.5rem;
+  --t-28: 1.75rem;
+  --t-32: 2rem;
+  --t-40: 2.5rem;
+
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 20px;
+  --s-6: 24px;
+  --s-7: 28px;
+  --s-8: 32px;
+  --s-9: 36px;
+  --s-10: 40px;
+  --s-11: 44px;
+  --s-12: 48px;
+
+  --tap: 44px;
+  --bar-h: 64px;
+  --grid-gap: 2px;
+  --page-x: var(--s-4);
+  --page-max: 1440px;
+  --radius-pill: 999px;
+
+  --z-sticky: 10;
+  --z-bar: 20;
+  --z-sheet: 30;
+  --z-dialog: 40;
+  --z-toast: 50;
+
+  --m-fast: 120ms;
+  --m-base: 200ms;
+  --m-slow: 320ms;
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-top: env(safe-area-inset-top, 0px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --m-fast: 0ms;
+    --m-base: 0ms;
+    --m-slow: 0ms;
+  }
+}

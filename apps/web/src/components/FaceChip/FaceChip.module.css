@@ -1,0 +1,44 @@
+.chip {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-2);
+  width: 88px;
+  text-align: center;
+}
+
+.face {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--placeholder-2);
+  border: 1px solid var(--border);
+}
+
+.you .face {
+  border: 2px solid var(--you);
+}
+
+.unnamed .face {
+  border-style: dashed;
+  background: var(--surface);
+}
+
+.name {
+  font-size: var(--t-13);
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.you .name {
+  color: var(--you);
+}
+
+.count {
+  font-size: var(--t-12);
+  color: var(--muted);
+}

@@ -1,0 +1,28 @@
+.bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: var(--z-bar);
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: var(--s-2);
+  min-height: var(--bar-h);
+  padding: var(--s-2) var(--s-4) calc(var(--s-2) + var(--safe-bottom));
+  background: color-mix(in srgb, var(--surface) 94%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-top: 1px solid var(--border);
+}
+
+.bar > * {
+  min-height: var(--tap);
+}
+
+@media (min-width: 720px) {
+  .bar {
+    justify-content: center;
+    grid-auto-columns: minmax(160px, 280px);
+  }
+}

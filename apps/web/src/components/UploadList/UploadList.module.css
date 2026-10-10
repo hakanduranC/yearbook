@@ -1,0 +1,80 @@
+.list {
+  display: flex;
+  flex-direction: column;
+}
+
+.item {
+  display: grid;
+  grid-template-columns: 56px 1fr auto;
+  gap: var(--s-3);
+  align-items: center;
+  min-height: 72px;
+  padding: var(--s-2) 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.thumb {
+  width: 56px;
+  height: 56px;
+  background: var(--placeholder-2);
+  object-fit: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  font-size: var(--t-12);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.main {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-1);
+}
+
+.name {
+  font-size: var(--t-14);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.state {
+  font-size: var(--t-13);
+  color: var(--muted);
+}
+
+.failed {
+  color: var(--danger);
+}
+
+.track {
+  height: 3px;
+  background: var(--border);
+  position: relative;
+  overflow: hidden;
+}
+
+.fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: var(--ink);
+  transition: width var(--m-base) var(--ease);
+}
+
+.paused .fill {
+  background: var(--muted);
+}
+
+.actions {
+  display: flex;
+  gap: var(--s-1);
+}
+
+.summary {
+  font-size: var(--t-13);
+  color: var(--muted);
+  padding: var(--s-3) 0;
+}
