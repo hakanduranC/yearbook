@@ -45,7 +45,7 @@ def test_takeout_import_lands_in_library_and_matches_event(host):
     assert final["stats"]["found"] == 2 and final["stats"]["imported"] == 2
     lib = host.get("/me/library").json()
     assert len(lib["items"]) >= 2
-    sidecar_item = next(i for i in lib["items"] if i["captured_src"] == "sidecar")
+    sidecar_item = next(i for i in lib["items"] if i.get("captured_src") == "sidecar")
     assert sidecar_item["captured_at"].startswith("2024-06-14")
 
 

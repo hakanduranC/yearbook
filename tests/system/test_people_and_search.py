@@ -20,7 +20,7 @@ def analyzed_event(event, guest):
     slug = event["slug"]
     items = [upload(guest, slug, p.name, p.read_bytes()) for p in PORTRAITS]
     wait_for(lambda: guest.get(f"/events/{slug}").json()["counts"]["faces_done"] >= len(items), timeout=600, every=3, what="analysis")
-    wait_for(lambda: guest.get(f"/events/{slug}").json()["clustered_at"], timeout=240, every=3, what="clustering")
+    wait_for(lambda: guest.get(f"/events/{slug}").json().get("clustered_at"), timeout=240, every=3, what="clustering")
     return event, items
 
 

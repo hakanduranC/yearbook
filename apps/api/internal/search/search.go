@@ -24,8 +24,9 @@ type Embedder interface {
 	Embed(ctx context.Context, text string) ([]float32, error)
 }
 
-// EmbedTimeout bounds one call to the ML server; a slow embedder must not stall search.
-const EmbedTimeout = 2 * time.Second
+// EmbedTimeout bounds one call to the ML server. On CPU hosts the text tower shares cores with the
+// ML worker and a request can take several seconds under load; search still falls back to text-only on expiry.
+const EmbedTimeout = 10 * time.Second
 
 // HTTPEmbedder calls `POST {ML_URL}/embed/text` (docs/CONVENTIONS.md "ML server").
 type HTTPEmbedder struct {

@@ -8,7 +8,6 @@ node_modules/
 dist/
 .vite/
 *.tsbuildinfo
-apps/web/src/routeTree.gen.ts
 playwright-report/
 test-results/
 
