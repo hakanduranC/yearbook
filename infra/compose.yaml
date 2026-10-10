@@ -114,7 +114,10 @@ services:
       AGENT_DB_PASSWORD: ${AGENT_DB_PASSWORD:-agent-ro-dev}
       HF_HOME: /models/hf
       INSIGHTFACE_HOME: /models/insightface
-      WORKER_TAGS_ENABLED: ${WORKER_TAGS_ENABLED:-true}
+      # Pilot defaults for CPU hosts: the 224 px SigLIP checkpoint (same 1152-d family, ~3x faster) and
+      # captions off (Florence-2 costs ~20 s per photo on CPU). Both are env switches.
+      WORKER_SIGLIP_MODEL: ${WORKER_SIGLIP_MODEL:-google/siglip2-so400m-patch14-224}
+      WORKER_TAGS_ENABLED: ${WORKER_TAGS_ENABLED:-false}
     depends_on:
       postgres: { condition: service_healthy }
 
@@ -146,7 +149,10 @@ services:
     build: { context: ../apps/worker }
     command: ["run", "--kinds", "analyze,cluster_event", "--concurrency", "1"]
     environment: *app_env
-    volumes: [models:/models]
+    volumes:
+      # Host model cache (shared with `mise run ml-worker`), so models download once
+      - ../apps/worker/.cache/hf:/models/hf
+      - ../apps/worker/.cache/insightface:/models/insightface
     deploy:
       resources:
         limits: { memory: 8g }
@@ -160,7 +166,8 @@ services:
     build: { context: ../apps/worker }
     command: ["serve", "--port", "8090"]
     environment: *app_env
-    volumes: [models:/models]
+    volumes:
+      - ../apps/worker/.cache/hf:/models/hf
     expose: ["8090"]
     depends_on:
       migrate: { condition: service_completed_successfully }
@@ -215,4 +222,3 @@ services:
 volumes:
   pgdata:
   s3data:
-  models:
