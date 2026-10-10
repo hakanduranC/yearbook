@@ -1,0 +1,33 @@
+name: system
+# Full-stack system tests on the Compose app profile. Manual or nightly; the ML tests are excluded
+# because the models are several GB.
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 3 * * *"
+
+jobs:
+  system:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v5
+      - uses: jdx/mise-action@v3
+        with:
+          install: true
+          cache: true
+      - name: Build the sandbox runtime image
+        run: sh apps/sandbox/image/build.sh
+      - name: Start the stack
+        run: |
+          mkdir -p "$HOME/.cache/yearbook-sandbox" apps/worker/.cache/hf apps/worker/.cache/insightface
+          docker compose -f infra/compose.yaml --profile app up -d --build --wait --wait-timeout 600 postgres s3 s3-init mailpit migrate api worker web agent sandbox gateway
+          docker compose -f infra/compose.yaml --profile app ps
+      - name: System tests (no ML)
+        env:
+          BASE_URL: http://localhost:8000
+        run: |
+          cd tests/system && uv run pytest -q -m "not ml" -k "not takeout or takeout"
+      - name: Logs on failure
+        if: failure()
+        run: docker compose -f infra/compose.yaml --profile app logs --no-color --tail 200

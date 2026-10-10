@@ -134,9 +134,9 @@ def band(ax, x, y, w, h, label):
 
 # ------------------------------------------------------------ 1. C4 container
 def c4():
-    fig, ax = canvas(176, 112, "Yearbook · container diagram (C4 level 2)",
+    fig, ax = canvas(176, 146, "Yearbook · container diagram (C4 level 2)",
                      "Who talks to what. Photos, face crops and embeddings stay inside the boundary; only text and metadata cross to OpenAI.")
-    bx, by, bw, bh = 34, 12, 98, 94
+    bx, by, bw, bh = 34, 12, 98, 126
     ax.add_patch(Rectangle((bx, by), bw, bh, fc="none", ec=P["strong"], lw=1.2, ls=(0, (6, 4)), zorder=1))
     ax.text(bx + 1.5, by + 1.2, "Yearbook  [software system]  ·  one Hetzner VPS + Cloudflare", fontsize=8.5, color=P["muted"], va="top")
 
@@ -148,9 +148,11 @@ def c4():
     cdn = box(ax, 42, 52, 30, 13, "CDN", "Cloudflare", ["caches thumbnails and posters"], fs=9)
     db = box(ax, 92, 52, 30, 14, "PostgreSQL 16", "+ pgvector", ["system of record, face and image", "vectors, job queue, full-text search"], kind="store", fs=9)
     r2 = box(ax, 42, 82, 30, 15, "Object storage", "Cloudflare R2 (MinIO in dev)", ["originals + crops: private", "variants: public by random key"], kind="store", fs=9)
-    wk = box(ax, 92, 82, 30, 15, "Worker", "Python · ONNX Runtime", ["variants, faces, SigLIP, quality,", "tags, age, clustering, transcode"], fs=9)
+    wk = box(ax, 92, 82, 30, 15, "Workers + ML server", "Python · ONNX, torch (CPU)", ["variants, faces, SigLIP, quality,", "tags, age, clustering, import;", "text embeddings for search"], fs=9)
+    ag = box(ax, 42, 112, 30, 16, "Agent service", "Python · LangGraph", ["plans with the model, calls the", "API's tools over MCP, keeps", "conversations, runs sandbox code"], fs=9)
+    sb = box(ax, 92, 112, 30, 16, "Sandbox", "throwaway containers", ["agent-written code: no network,", "read-only root, memory/CPU/time", "limits; gVisor in production"], fs=9)
 
-    oai = box(ax, 146, 20, 26, 14, "OpenAI", "Responses API", ["function calling for", "the chat agent"], kind="external", fs=9)
+    oai = box(ax, 146, 112, 26, 14, "OpenAI", "Responses API", ["GPT-6 family, text and", "metadata only"], kind="external", fs=9)
     mail = box(ax, 146, 52, 26, 11, "Email provider", "Resend / Postmark", ["magic links"], kind="external", fs=9)
     mcp = box(ax, 146, 84, 26, 11, "Other agents", "MCP clients", ["optional"], kind="external", fs=9)
 
@@ -165,11 +167,15 @@ def c4():
     arrow(ax, mid(cdn, "b"), mid(r2, "t"), "origin pull")
     arrow(ax, mid(wk, "l"), mid(r2, "r"), "read originals, write variants")
     poly(ax, [(96, 37), (96, 44), (78, 44), (78, 89.5), (72, 89.5)], "presign, delete objects", seg=2)
-    arrow(ax, mid(api, "r"), mid(oai, "l"), "text + metadata only", color=P["gold"], lw=1.4)
+    arrow(ax, mid(ag, "r"), mid(oai, "l"), "text + metadata only", color=P["gold"], lw=1.4)
     arrow(ax, (122, 33), (146, 57), "send magic link", pos=0.55)
     arrow(ax, mid(mcp, "l"), (122, 34), "/mcp, bearer token", pos=0.45)
+    poly(ax, [(96, 37), (96, 44), (88, 44), (88, 118), (72, 118)], "proxies /agent/*", seg=3)
+    poly(ax, [(57, 112), (57, 106), (80, 106), (80, 40), (92, 40)], "tools over /mcp, user's session", seg=3)
+    arrow(ax, mid(ag, "r"), mid(sb, "l"), "run code")
+    poly(ax, [(107, 112), (107, 108), (84, 108), (84, 97), (72, 97)], "output files", seg=2)
 
-    box(ax, 36, 100.5, 94, 3.4, "Boundary rule: pixels and biometric vectors never leave this box. The agent sees ids, names people typed, timestamps, captions and counts.",
+    box(ax, 36, 133, 94, 3.4, "Boundary rule: pixels and biometric vectors never leave this box. The agent sees ids, names people typed, timestamps, captions and counts.",
         kind="note", fs=7.5)
     save(fig, "c4-container")
 

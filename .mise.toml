@@ -73,17 +73,31 @@ dir = "apps/api"
 run = "go run ./cmd/ybctl seed --fixtures ../worker/fixtures"
 
 [tasks.test]
-description = "All tests"
+description = "Unit and integration tests of every app (ML model tests excluded; run them with `mise run test:ml`)"
 run = [
-  "cd apps/api && go test ./... -count=1",
-  "cd apps/worker && uv run pytest -q",
+  "cd apps/api && go test ./... -count=1 -short",
+  "cd apps/worker && uv run pytest -q -m 'not ml'",
+  "cd apps/agent && uv run pytest -q",
+  "cd apps/sandbox && uv run pytest -q",
   "cd apps/web && pnpm test",
 ]
 
+[tasks."test:ml"]
+description = "Worker tests that load the real models (slow, needs the model cache)"
+dir = "apps/worker"
+run = "uv run pytest -q -m ml"
+
+[tasks."test:e2e"]
+description = "Browser tests against the mock API"
+dir = "apps/web"
+run = "pnpm exec playwright test --project=pixel-7 --project=iphone-14-chromium"
+
 [tasks.lint]
 run = [
-  "cd apps/api && go vet ./...",
+  "cd apps/api && go vet ./... && test -z \"$(gofmt -l .)\"",
   "cd apps/worker && uv run ruff check .",
+  "cd apps/agent && uv run ruff check .",
+  "cd apps/sandbox && uv run ruff check .",
   "cd apps/web && pnpm check",
 ]
 
