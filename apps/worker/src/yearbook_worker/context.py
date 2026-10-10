@@ -38,6 +38,7 @@ class MediaRow:
     processed_stages: dict[str, Any]
     created_at: datetime
     timezone: str
+    captured_src: str | None = None
 
     @property
     def id_str(self) -> str:
@@ -63,6 +64,7 @@ class MediaRow:
             processed_stages=dict(row["processed_stages"] or {}),
             created_at=row["created_at"],
             timezone=row.get("timezone") or default_timezone,
+            captured_src=row.get("captured_src"),
         )
 
 

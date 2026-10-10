@@ -1,4 +1,9 @@
-"""The claim → run → complete/fail loop of one worker process."""
+"""The claim → run → complete/fail loop of one worker process.
+
+Light kinds (`ingest`, `import`, `recompute_scores`) and ML kinds (`analyze`, `cluster_event`)
+share this loop; which kinds a process claims is decided by `--kinds`. ML models load lazily on
+the first `analyze` job and stay resident in that process (see `models.ModelHub`).
+"""
 
 from __future__ import annotations
 
@@ -33,6 +38,23 @@ def dispatch(job: Job, pool: ConnectionPool, storage: Storage, settings: Setting
     if job.kind == "ingest":
         media_id = ids.decode(str(job.payload["media_id"]))
         run_ingest(pool, storage, settings, media_id, final_attempt=job.last_attempt)
+    elif job.kind == "analyze":
+        from yearbook_worker.analysis import run_analyze
+
+        run_analyze(pool, storage, settings, ids.decode(str(job.payload["media_id"])))
+    elif job.kind == "cluster_event":
+        from yearbook_worker.clustering import run_cluster_event
+
+        run_cluster_event(pool, settings, ids.decode(str(job.payload["event_id"])))
+    elif job.kind == "import":
+        from yearbook_worker.importer import run_import
+
+        run_import(pool, storage, settings, ids.decode(str(job.payload["import_id"])))
+    elif job.kind == "recompute_scores":
+        from yearbook_worker import scoring
+
+        with pool.connection() as conn, conn.transaction():
+            scoring.recompute_event(conn, ids.decode(str(job.payload["event_id"])))
     elif job.kind == "noop":
         return
     else:

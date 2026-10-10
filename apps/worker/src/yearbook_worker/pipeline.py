@@ -10,7 +10,7 @@ from pathlib import Path
 import psycopg
 from psycopg_pool import ConnectionPool
 
-from yearbook_worker import ids
+from yearbook_worker import ids, queue
 from yearbook_worker.config import Settings
 from yearbook_worker.context import MediaRow, StageContext
 from yearbook_worker.log import get_logger
@@ -23,7 +23,7 @@ log = get_logger(__name__)
 LOAD_SQL = """
 select m.id, m.event_id, m.owner_id, m.kind, m.state, m.original_key, m.original_mime,
        m.original_filename, m.original_bytes, m.variant_prefix, m.width, m.height,
-       m.duration_ms, m.captured_at, m.processed_stages, m.created_at, e.timezone
+       m.duration_ms, m.captured_at, m.captured_src, m.processed_stages, m.created_at, e.timezone
 from media m left join events e on e.id = m.event_id
 where m.id = %(id)s
 """
@@ -80,6 +80,8 @@ def run_ingest(
                     (media_id,),
                 )
                 notify_media(conn, "media.ready", media.event_id, media_id)
+                # Hand over to the ML worker (`yearbook-worker run --kinds analyze`).
+                queue.enqueue_media_job(conn, "analyze", media_id)
         except Exception as exc:
             _mark_failure(conn, media, exc, final_attempt)
             raise

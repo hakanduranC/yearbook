@@ -33,6 +33,22 @@ class Settings(BaseSettings):
     worker_log_level: str = "INFO"
     default_timezone: str = "Europe/Berlin"
 
+    # ML (round 2). Models are downloaded on first use into `worker_models_dir`
+    # (HF_HOME = <dir>/hf, InsightFace root = <dir>/insightface); `/models` in the container.
+    worker_models_dir: Path = Path(__file__).resolve().parents[2] / ".cache"
+    worker_tags_enabled: bool = True
+    worker_siglip_model: str = "google/siglip2-so400m-patch14-384"
+    worker_florence_model: str = "florence-community/Florence-2-base"
+    worker_age_model: str = "iitolstykh/mivolo_v2"
+    worker_face_pack: str = "antelopev2"
+    worker_face_det_size: int = Field(default=640, ge=320)
+    worker_face_det_thresh: float = Field(default=0.6, ge=0.1, le=1.0)
+    worker_face_min_side: int = Field(default=32, ge=8)
+    worker_cluster_debounce_seconds: float = Field(default=60.0, ge=0)
+    worker_caption_max_tokens: int = Field(default=96, ge=16)
+    worker_torch_threads: int | None = Field(default=None, ge=1)
+    ml_port: int = Field(default=8090, ge=1, le=65535)
+
     @property
     def kinds(self) -> list[str]:
         """Job kinds this worker claims, from the comma separated `WORKER_KINDS`."""

@@ -22,3 +22,27 @@ One evening in Berlin, 2024-06-14, so capture-time grouping and dedupe have some
 
 `private/` is gitignored. Drop real iPhone HEICs (10-bit, HDR) and a `.mov` there; the
 integration tests pick up anything in it when present.
+
+## Takeout archive (`takeout.zip`)
+
+Also written by `generate.py`, from the fixtures above, for the importer tests:
+
+| Entry | What it exercises |
+|---|---|
+| `Sommerfest 2024/IMG_7421.jpg` + `IMG_7421.jpg.json` | sidecar with `photoTakenTime`, `geoData` and two `people` names |
+| `Sommerfest 2024/IMG_7422.jpg` + `….supplemental-metadata.json` | the newer sidecar suffix, one name, `geoData` 0/0 (ignored) |
+| `Sommerfest 2024/IMG_7424_sehr_langer_dateiname_vom_telefon.jpg` + `….j.json` | Google's truncated sidecar name (matched by prefix) |
+| `Sommerfest 2024/IMG_7425.jpg` | no sidecar; byte-identical to fixture 05, so a duplicate when that is already imported |
+| `Sommerfest 2024/VID_20240614_223000.mp4` + sidecar | a video with a sidecar time |
+| `Winter 2023/IMG_20231224_180000.jpg` + sidecar | outside the fixture event's window: stays in the library |
+| `*/metadata.json` | album metadata, must be ignored |
+
+## Portraits (`faces/`)
+
+Ten public-domain NASA portraits from Wikimedia Commons (US federal government works), fetched
+and re-encoded at 800 px by `uv run python fixtures/fetch_faces.py`; `SOURCES.json` lists title,
+page, author and license per file, `labels.json` holds the hand labels for
+`yearbook-worker eval-cluster`. Four identities with two single portraits each (Whitson,
+Williams, Jemison, Kelly) plus two group photos (Williams with Wilmore; the STS-47 crew with
+Jemison). The `ml` tests expect faces on every file, four persons with two or more faces, and
+purity ≥ 0.99 on the eight singles.

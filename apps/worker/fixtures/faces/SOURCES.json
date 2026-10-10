@@ -1,0 +1,72 @@
+{
+  "whitson_1.jpg": {
+    "title": "File:PeggyWhitson-NASA.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:PeggyWhitson-NASA.jpg",
+    "author": "NASA",
+    "license": "Public domain",
+    "width": 800
+  },
+  "whitson_2.jpg": {
+    "title": "File:Peggy Whitson.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Peggy_Whitson.jpg",
+    "author": "NASA",
+    "license": "Public domain",
+    "width": 800
+  },
+  "williams_1.jpg": {
+    "title": "File:Sunita Williams.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Sunita_Williams.jpg",
+    "author": "NASA",
+    "license": "Public domain",
+    "width": 800
+  },
+  "williams_2.jpg": {
+    "title": "File:Sunita Williams in 2018 (cropped).jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Sunita_Williams_in_2018_(cropped).jpg",
+    "author": "Robert Markowitz",
+    "license": "Public domain",
+    "width": 800
+  },
+  "jemison_1.jpg": {
+    "title": "File:Mae Carol Jemison (cropped 2).jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Mae_Carol_Jemison_(cropped_2).jpg",
+    "author": "NASA",
+    "license": "Public domain",
+    "width": 800
+  },
+  "jemison_2.jpg": {
+    "title": "File:Mae Jemison - Official portrait of 1987 astronaut candidate.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Mae_Jemison_-_Official_portrait_of_1987_astronaut_candidate.jpg",
+    "author": "NASA",
+    "license": "Public domain",
+    "width": 800
+  },
+  "kelly_1.jpg": {
+    "title": "File:Scott J. Kelly (cropped).jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Scott_J._Kelly_(cropped).jpg",
+    "author": "Robert Markowitz",
+    "license": "Public domain",
+    "width": 800
+  },
+  "kelly_2.jpg": {
+    "title": "File:Scott J Kelly.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Scott_J_Kelly.jpg",
+    "author": "NASA",
+    "license": "Public domain",
+    "width": 800
+  },
+  "group_williams_wilmore.jpg": {
+    "title": "File:Boeing CFT Crew Portrait-Sunita Williams and Barry Wilmore (KSC-20240404-PH-NAS01 0001).jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Boeing_CFT_Crew_Portrait-Sunita_Williams_and_Barry_Wilmore_(KSC-20240404-PH-NAS01_0001).jpg",
+    "author": "NASA Kennedy Space Center / NASA/JSC",
+    "license": "Public domain",
+    "width": 800
+  },
+  "group_sts47_jemison.jpg": {
+    "title": "File:STS-47 in-flight crew portrait.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:STS-47_in-flight_crew_portrait.jpg",
+    "author": "NASA",
+    "license": "Public domain",
+    "width": 800
+  }
+}

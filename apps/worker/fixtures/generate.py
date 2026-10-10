@@ -8,9 +8,11 @@ but with a dated filename, and a 3 s MP4 from ffmpeg's testsrc.
 
 from __future__ import annotations
 
+import json
 import random
 import shutil
 import subprocess
+import zipfile
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -65,6 +67,73 @@ PNG_ALPHA = Photo("14_logo_alpha.png", (800, 600), 14, None)
 HEIC = Photo("15_IMG_0199.heic", (1440, 1080), 15, "2024:06:14 19:25:47")
 EXACT_DUP_OF = ("02_IMG_7422.jpg", "16_IMG_7422_copy.jpg")
 VIDEO = "17_clip.mp4"
+TAKEOUT = "takeout.zip"
+
+# Takeout-shaped archive for the importer: two albums, sidecars with people names, one sidecar
+# with Google's truncated name, one file without a sidecar that duplicates fixture 05, and a
+# winter photo that falls outside the fixture event (stays in the library).
+# (archive path, source fixture, sidecar name or None, sidecar payload)
+TAKEOUT_ITEMS: tuple[tuple[str, str, str | None, dict | None], ...] = (
+    (
+        "Takeout/Google Photos/Sommerfest 2024/IMG_7421.jpg",
+        "01_IMG_7421.jpg",
+        "IMG_7421.jpg.json",
+        {
+            "title": "IMG_7421.jpg",
+            "photoTakenTime": {"timestamp": "1718381111", "formatted": "Jun 14, 2024, 4:05:11 PM"},
+            "geoData": {"latitude": 52.52, "longitude": 13.405, "altitude": 34.0},
+            "people": [{"name": "Anna Beispiel"}, {"name": "Ben Muster"}],
+        },
+    ),
+    (
+        "Takeout/Google Photos/Sommerfest 2024/IMG_7422.jpg",
+        "02_IMG_7422.jpg",
+        "IMG_7422.jpg.supplemental-metadata.json",
+        {
+            "title": "IMG_7422.jpg",
+            "photoTakenTime": {"timestamp": "1718382700"},
+            "geoData": {"latitude": 0.0, "longitude": 0.0},
+            "people": [{"name": "Anna Beispiel"}],
+        },
+    ),
+    (
+        # Google truncates long sidecar names; here the stem is cut inside the extension
+        "Takeout/Google Photos/Sommerfest 2024/IMG_7424_sehr_langer_dateiname_vom_telefon.jpg",
+        "04_IMG_7424.jpg",
+        "IMG_7424_sehr_langer_dateiname_vom_telefon.jpg"[:44] + ".json",
+        {
+            "title": "IMG_7424_sehr_langer_dateiname_vom_telefon.jpg",
+            "photoTakenTime": {"timestamp": "1718386859"},
+            "people": [{"name": "Ben Muster"}],
+        },
+    ),
+    (
+        "Takeout/Google Photos/Sommerfest 2024/IMG_7425.jpg",
+        "05_IMG_7425.jpg",
+        None,
+        None,
+    ),
+    (
+        "Takeout/Google Photos/Sommerfest 2024/VID_20240614_223000.mp4",
+        "17_clip.mp4",
+        "VID_20240614_223000.mp4.supplemental-metadata.json",
+        {"title": "VID_20240614_223000.mp4", "photoTakenTime": {"timestamp": "1718397000"}},
+    ),
+    (
+        "Takeout/Google Photos/Winter 2023/IMG_20231224_180000.jpg",
+        "07_IMG_7427.jpg",
+        "IMG_20231224_180000.jpg.json",
+        {
+            "title": "IMG_20231224_180000.jpg",
+            "photoTakenTime": {"timestamp": "1703437200"},
+            "people": [{"name": "Anna Beispiel"}],
+        },
+    ),
+)
+TAKEOUT_ALBUM_META = {
+    "Takeout/Google Photos/Sommerfest 2024/metadata.json": {"title": "Sommerfest 2024"},
+    "Takeout/Google Photos/Winter 2023/metadata.json": {"title": "Winter 2023"},
+}
 
 
 def paint(size: tuple[int, int], seed: int, alpha: bool = False) -> Image.Image:
@@ -162,6 +231,28 @@ def write_video(name: str) -> Path:
     return out
 
 
+def write_takeout(name: str = TAKEOUT) -> Path:
+    """Deterministic zip (fixed timestamps, stored order) built from the fixtures above."""
+    out = HERE / name
+    stamp = (2024, 6, 15, 12, 0, 0)
+
+    def add(zf: zipfile.ZipFile, arcname: str, data: bytes) -> None:
+        info = zipfile.ZipInfo(arcname, date_time=stamp)
+        info.compress_type = zipfile.ZIP_DEFLATED
+        info.external_attr = 0o644 << 16
+        zf.writestr(info, data)
+
+    with zipfile.ZipFile(out, "w") as zf:
+        for arcname, source, sidecar, payload in TAKEOUT_ITEMS:
+            add(zf, arcname, (HERE / source).read_bytes())
+            if sidecar and payload is not None:
+                folder = arcname.rsplit("/", 1)[0]
+                add(zf, f"{folder}/{sidecar}", json.dumps(payload, indent=2).encode())
+        for arcname, payload in TAKEOUT_ALBUM_META.items():
+            add(zf, arcname, json.dumps(payload).encode())
+    return out
+
+
 def main() -> None:
     written: list[Path] = []
     for photo in PHOTOS:
@@ -173,9 +264,10 @@ def main() -> None:
     shutil.copyfile(HERE / src, HERE / dup)
     written.append(HERE / dup)
     written.append(write_video(VIDEO))
+    written.append(write_takeout())
     for path in written:
         size = path.stat().st_size
-        limit = 2_000_000 if path.suffix == ".mp4" else 300_000
+        limit = 2_000_000 if path.suffix in {".mp4", ".zip"} else 300_000
         assert size <= limit, f"{path.name} is {size} bytes"
         print(f"{path.name:32} {size:>8} bytes")
 

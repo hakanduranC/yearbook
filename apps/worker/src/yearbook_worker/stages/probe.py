@@ -26,11 +26,12 @@ TAG_DATETIME_ORIGINAL = 0x9003
 TAG_OFFSET_TIME_ORIGINAL = 0x9011
 TAG_OFFSET_TIME = 0x9010
 
+# `gps` is only replaced when the file carries coordinates: imports seed it from sidecars.
 UPDATE_SQL = """
 update media
 set width = %(width)s, height = %(height)s, duration_ms = %(duration_ms)s,
     captured_at = %(captured_at)s, captured_src = %(captured_src)s,
-    gps = case when %(lon)s::float8 is null then null else point(%(lon)s, %(lat)s) end
+    gps = case when %(lon)s::float8 is null then gps else point(%(lon)s, %(lat)s) end
 where id = %(id)s
 """
 
@@ -39,6 +40,10 @@ def run(ctx: StageContext, conn: psycopg.Connection) -> None:
     tz = capture_time.zone(ctx.media.timezone, ctx.settings.default_timezone)
     ctx.require_original()
     result = probe_video(ctx, tz) if ctx.media.kind == "video" else probe_photo(ctx, tz)
+    if ctx.media.captured_src == "sidecar" and ctx.media.captured_at is not None:
+        # Takeout sidecars are authoritative (set by the importer); EXIF may be missing or wrong.
+        result.captured_at = ctx.media.captured_at
+        result.captured_src = "sidecar"
     ctx.probe = result
     conn.execute(
         UPDATE_SQL,

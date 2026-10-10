@@ -19,9 +19,12 @@ from yearbook_worker.storage import Storage
 
 FIXTURES = Path(__file__).resolve().parent.parent / "fixtures"
 TRUNCATE = (
-    "truncate jobs, media_variants, duplicate_groups, media, guests, guest_cookies, "
-    "event_members, events, sessions, magic_links, users restart identity cascade"
+    "truncate jobs, media_variants, duplicate_groups, faces, persons, person_constraints, "
+    "person_links, identities, media_embeddings, media_quality, media_tags, media_person_hints, "
+    "imports, likes, media, guests, guest_cookies, event_members, events, sessions, magic_links, "
+    "users restart identity cascade"
 )
+FACES = FIXTURES / "faces"
 
 mimetypes.add_type("image/heic", ".heic")
 
@@ -32,7 +35,11 @@ def _settings_or_skip() -> Settings:
     url = os.environ.get("WORKER_TEST_DATABASE_URL") or os.environ.get("TEST_DATABASE_URL")
     if not url:
         pytest.skip("WORKER_TEST_DATABASE_URL / TEST_DATABASE_URL not set")
-    settings = load_settings(worker_heartbeat_seconds=1.0, worker_poll_seconds=0.2)
+    settings = load_settings(
+        worker_heartbeat_seconds=1.0,
+        worker_poll_seconds=0.2,
+        worker_cluster_debounce_seconds=0.0,
+    )
     return settings.model_copy(update={"database_url": url})
 
 
@@ -62,6 +69,14 @@ def storage(settings: Settings) -> Storage:
     except Exception as exc:
         pytest.skip(f"S3 unreachable: {exc}")
     return s
+
+
+@pytest.fixture(scope="session")
+def hub(settings: Settings):
+    """The process-wide model hub; models load on first use and stay for the session."""
+    from yearbook_worker.models import get_hub
+
+    return get_hub(settings)
 
 
 @pytest.fixture
@@ -164,6 +179,27 @@ def seeder(clean_db: ConnectionPool, storage: Storage, seeded: Seeded) -> Iterat
         storage.delete(storage.private_bucket, row["original_key"])
     for row in variants:
         storage.delete(storage.public_bucket, row["key"])
+
+
+def drain(
+    pool: ConnectionPool,
+    storage: Storage,
+    settings: Settings,
+    kinds: tuple[str, ...] = ("ingest",),
+    *,
+    limit: int = 200,
+) -> list[queue.Job]:
+    """Run jobs through the real claim → run → complete path until the queue is idle."""
+    from yearbook_worker.worker import process_one
+
+    locked_by = queue.locked_by_token()
+    done: list[queue.Job] = []
+    while len(done) < limit:
+        job = process_one(pool, storage, settings, list(kinds), locked_by)
+        if job is None:
+            break
+        done.append(job)
+    return done
 
 
 def fetch_media(pool: ConnectionPool, media_id: bytes) -> dict:

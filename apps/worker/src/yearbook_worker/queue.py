@@ -49,6 +49,27 @@ values (%(kind)s, %(payload)s, %(priority)s, %(max_attempts)s)
 returning id
 """
 
+# One open job per (kind, media_id): `jobs_one_per_media_idx` is a partial unique index, so the
+# conflict target must repeat its predicate.
+ENQUEUE_MEDIA_SQL = """
+insert into jobs (kind, payload, priority, max_attempts)
+values (%(kind)s, %(payload)s, %(priority)s, %(max_attempts)s)
+on conflict (kind, (payload->>'media_id')) where done_at is null and payload ? 'media_id'
+do nothing
+returning id
+"""
+
+# Debounced per-event jobs (cluster_event, recompute_scores), byte for byte from CONVENTIONS.
+ENQUEUE_DEBOUNCED_SQL = """
+insert into jobs (kind, payload, run_after)
+select %(kind)s, %(payload)s, now() + make_interval(secs => %(delay)s)
+where not exists (
+  select 1 from jobs
+  where kind = %(kind)s and payload->>'event_id' = %(event_id)s and done_at is null
+)
+returning id
+"""
+
 
 @dataclass(frozen=True, slots=True)
 class Job:
@@ -130,6 +151,46 @@ def enqueue(
         ).fetchone()
     assert row is not None
     return int(row["id"])
+
+
+def enqueue_media_job(
+    conn: psycopg.Connection, kind: str, media_id: bytes, *, priority: int = 0
+) -> int | None:
+    """Insert `{kind, {"media_id"}}` unless an open job for that media and kind exists.
+
+    Runs inside the caller's transaction. Returns the new job id or None when debounced.
+    """
+    from yearbook_worker import ids
+
+    row = conn.execute(
+        ENQUEUE_MEDIA_SQL,
+        {
+            "kind": kind,
+            "payload": Jsonb({"media_id": ids.encode(media_id)}),
+            "priority": priority,
+            "max_attempts": 5,
+        },
+    ).fetchone()
+    return int(row["id"]) if row else None
+
+
+def enqueue_event_job(
+    conn: psycopg.Connection, kind: str, event_id: bytes, *, delay_seconds: float = 60.0
+) -> int | None:
+    """Debounced `{kind, {"event_id"}}`: no insert while an open job for the event exists."""
+    from yearbook_worker import ids
+
+    encoded = ids.encode(event_id)
+    row = conn.execute(
+        ENQUEUE_DEBOUNCED_SQL,
+        {
+            "kind": kind,
+            "payload": Jsonb({"event_id": encoded}),
+            "event_id": encoded,
+            "delay": delay_seconds,
+        },
+    ).fetchone()
+    return int(row["id"]) if row else None
 
 
 def wait_for_notification(listen_conn: psycopg.Connection, timeout: float) -> bool:
