@@ -10,7 +10,7 @@ Visual design: the "Yearbook core screens" canvas in Claude Design, rows **Final
 
 Yearbook is a shared photo album that assembles itself. A host creates an event, a QR code goes on the table, guests tap it and upload photos and videos from their phone browser with no app and no account. Afterwards everyone can find the photos they are in, see the best shots, like them, and ask for anything in plain language. Events accumulate into a personal yearbook: people, years and moments across every event you were part of.
 
-Operating assumption for v1: self-hosted by the operator for family and friends, on one VPS in the EU. Decisions that would change for a public launch are marked **(public)**.
+Target: a multi-tenant product for many families. The first builds run on one EU VPS and are piloted with a few families the operator knows; decisions that must change before opening sign-ups are marked **(public)** and collected in milestone M7.
 
 ## 2. Requirements
 
@@ -81,7 +81,7 @@ Comments, photo editing, public discovery of events, multi-tenant billing, nativ
 
 Repository layout (monorepo): `apps/web`, `apps/api`, `apps/worker`, `packages/openapi` (the contract; the web client is generated from it with `openapi-typescript` + `openapi-fetch`), `infra` (Compose, Caddy, migrations), `docs`.
 
-Deployment: Docker Compose on one Hetzner VPS, Caddy for TLS. All services are containers, so moving the worker to a GPU box later is a Compose change.
+Deployment: Docker Compose on one Hetzner VPS with Caddy for TLS during the pilot. All services are stateless containers configured by environment, so the move to Kubernetes with an Ingress (M7) is packaging, not a rewrite.
 
 ### 4.1 Key decisions
 
@@ -263,7 +263,8 @@ Operations: EU hosting (Hetzner Falkenstein, R2 EU jurisdiction), TLS, HttpOnly 
 | M3 Search and quality | 7 | "the cake" and "Gruppenfoto" return sensible results; Best filter and Highlights live |
 | M4 Agent | 8–9 | Every sentence in §2 produces a visual result; saved chips; MCP endpoint; eval ≥ 90% |
 | M5 Yearbook and age | 10 | Home with "N of you", Your year, cross-event confirmations, birthdate and age filters, privacy controls complete |
-| M6 Harden and launch | 11 | Production Compose on Hetzner, backups and restore drill, Playwright on iOS and Android, German copy at 320 px |
+| M6 Harden and pilot | 11 | Production on Hetzner, backups and restore drill, Playwright on iOS and Android, German copy at 320 px; pilot with a handful of families |
+| M7 Public launch | after pilot | Signed CDN access for variants; licensed face model (AdaFace or commercial) replacing the InsightFace pack; explicit consent step, per-event face-grouping toggle, DPIA, DPA with OpenAI, Terms and Privacy; storage quotas, rate limits, report and block, malware scanning of originals; Kubernetes with Ingress and cert-manager, NOTIFY-backed SSE for multiple API replicas; monitoring and backups with restore tests; billing and a legal entity as controller |
 
 ## 13. Open questions
 

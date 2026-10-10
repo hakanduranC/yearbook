@@ -1,6 +1,6 @@
 # Yearbook
 
-Shared photo album that assembles itself: QR at the event, guests upload from the phone browser, faces are grouped so people find themselves, a chat agent answers "photos of me and Anna". Self-hosted for the operator's circle first.
+Shared photo album that assembles itself: QR at the event, guests upload from the phone browser, faces are grouped so people find themselves, a chat agent answers "photos of me and Anna". A multi-tenant product for many families; piloted on one VPS first, public launch items are SDD milestone M7.
 
 ## Read first
 
@@ -18,7 +18,7 @@ Shared photo album that assembles itself: QR at the event, guests upload from th
 | Data | PostgreSQL 16 + pgvector (HNSW, cosine), full-text + pg_trgm; Postgres table as job queue (`SKIP LOCKED`) |
 | Storage | Cloudflare R2 or Hetzner Object Storage behind a CDN; SeaweedFS in dev (MinIO is discontinued). Originals and crops private, variants public under random keys. Yearbook is the destination: Google Takeout / folder import, Picker and share-target doors; no live aggregation of Google or iCloud libraries (no APIs for it) |
 | LLM | OpenAI Responses API with function calling. Not the Claude API. Text and metadata only; pixels and embeddings never leave the server |
-| Deploy | Docker Compose on one Hetzner VPS, Caddy for TLS, EU only |
+| Deploy | Pilot: Docker Compose on one Hetzner VPS, Caddy for TLS. Target: Kubernetes with Ingress. EU only |
 
 ## Planned layout
 
