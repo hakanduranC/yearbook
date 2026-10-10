@@ -12,8 +12,10 @@ A shared photo album that assembles itself. The host puts a QR code on the table
 | Path | What | Runs as |
 |---|---|---|
 | `apps/api` | Go API: auth, events, uploads, media, likes, zip, live updates | `:8080` |
-| `apps/worker` | Python worker: variants, HEIC, EXIF, video, hashes, dedupe (faces and search come next) | background |
-| `apps/web` | TanStack Start web app: landing, upload, gallery, lightbox, host pages | `:3000` |
+| `apps/worker` | Python workers: light pipeline (variants, HEIC, EXIF, video, hashes, dedupe, imports) and ML pipeline (faces, embeddings, quality, captions, age, clustering); ML server for text search | background, `:8090` |
+| `apps/web` | TanStack Start web app: landing, upload, gallery, lightbox, people, search and assistant, home, your year, manage, import | `:3000` |
+| `apps/agent` | LangGraph chat assistant: talks to the API's tools over MCP and to OpenAI; keeps conversations in Postgres | `:8091` |
+| `apps/sandbox` | Runs assistant-written code in throwaway, network-less containers | `:8092` |
 | `packages/openapi` | The contract; Go stubs and TypeScript types are generated from it | |
 | `infra` | Compose, migrations, S3 init, Caddy configs | |
 
@@ -57,13 +59,19 @@ mise run gen            # Go + TypeScript code from openapi.yaml and the sqlc qu
 cd apps/worker && uv sync && cd ../..
 ```
 
-3. Three terminals (or a tmux session):
+3. One terminal per process (a tmux session works well):
 
 ```sh
-mise run api            # http://localhost:8080, hot reload
-mise run worker         # 4 processes, reload on change
+mise run api            # http://localhost:8080, hot reload; Swagger UI at http://localhost:8080/api/docs
+mise run worker         # light pipeline: variants, dedupe, imports
+mise run ml-worker      # faces, embeddings, quality, captions, age, clustering (downloads models on first run)
+mise run ml             # text-embedding server for search, :8090
+mise run agent          # chat assistant, :8091 (needs OPENAI_API_KEY in .env to answer)
+mise run sandbox        # assistant code execution, :8092 (needs Docker)
 mise run web            # http://localhost:3000, proxies /api to the API
 ```
+
+Only `api`, `worker` and `web` are needed for uploading and browsing. The others switch on people, search, the assistant and its tools.
 
 4. Seed a demo event with the fixture photos and open the printed link:
 
@@ -77,7 +85,8 @@ Sign in via the printed link (or any email: the magic link is in Mailpit at http
 
 | Command | Does |
 |---|---|
-| `mise run test` | Go, Python and web unit tests |
+| `mise run test` | Go, Python and web unit and integration tests |
+| `mise run test:system` | System tests over HTTP and SSE against the running stack (`BASE_URL`, default :8000) |
 | `mise run lint` | go vet, ruff, tsc + biome |
 | `mise run gen` | regenerate after editing `openapi.yaml` or a `.sql` query |
 | `mise run ci` | what GitHub Actions runs |
@@ -97,10 +106,18 @@ Sign in via the printed link (or any email: the magic link is in Mailpit at http
 | 8025 / 1025 | Mailpit UI / SMTP |
 | 5432 | Postgres (`yearbook` / `yearbook`, DBs `yearbook`, `yearbook_test`, `yearbook_test_worker`) |
 
+## Tests, three levels
+
+| Level | Where | Command |
+|---|---|---|
+| Unit | each app | `go test ./...`, `uv run pytest -m "not ml"`, `pnpm test` |
+| Integration | API (real Postgres + S3), worker (real models with `-m ml`), agent (real Postgres checkpointer, fake model and MCP), sandbox (real Docker) | `mise run test` |
+| System | `tests/system`: real HTTP, SSE, mail, storage and workers through the gateway; browser flows with `cd apps/web && E2E_LIVE=1 pnpm test:e2e` | `mise run test:system` |
+
 ## How a photo flows
 
 Browser asks the API for an upload intent, PUTs the bytes straight to S3 with a presigned URL (multipart above 64 MiB, resumable), then tells the API it is done. The API queues an `ingest` job in Postgres and pushes `media.queued` over Server-Sent Events, so the grid shows a processing cell at once. A worker claims the job, probes EXIF, decodes HEIC, makes WebP variants, hashes, groups duplicates, and notifies `media.ready`; the API relays it and the cell turns into a thumbnail served from the public bucket. Details and diagrams: `docs/SDD.md` §7–8.
 
 ## Project status
 
-M0 and M1 of the roadmap are implemented: guest upload, gallery, lightbox, likes, select + zip, live updates, magic-link login, create event, QR and share, host review. Next: import from Google Takeout and folders (M1.5), then faces and "photos of me" (M2). See `docs/SDD.md` §12.
+Implemented: guest upload, gallery, lightbox, likes, select + zip, delete, live updates, magic-link login (de/en/tr), create event, QR and share, host review; faces and People with claim, merge and split; "photos of me" and cross-event suggestions; hybrid text search; highlights, albums and public shares; home with swipeable stacks and Your year; owner dashboard; Takeout and folder import with a personal library; privacy controls; the chat assistant with MCP tools, a guarded SQL tool, saved chips and sandboxed self-made tools; Swagger UI. Public-launch items are milestone M7 in `docs/SDD.md` §12.
